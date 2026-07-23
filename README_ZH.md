@@ -18,7 +18,6 @@ GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼�
 | Java | 默认使用 JDK 21；编译目标为 Java 17 字节码 |
 | GTCEu | 26.7.3；清单范围 `[26.7.3,26.8)` |
 | GTOCore | 0.5.6-beta；清单范围 `[0.5.6-beta,0.5.7)` |
-| GTOLib | 26.7.4；清单范围 `[26.7.4,26.8)` |
 | AE2 | 目标整合包使用 15.267.4；ME 总成及其配方需要 AE2 内容 |
 
 本地编译所需的额外 API 包括 RecipeSearch 1.3、AE2 15.267.4 和 GTMThings 26.7.1。GTMThings 是间接编译 ABI 依赖，因为 GTOCore 的机器父类继承了它的 `IBindable` 接口；运行时副本由目标整合包提供。大型花药台等功能依赖整合包已经提供的 Botania、AppBot 及 GTO 相关集成模组；不要用 README 中的版本表替换整合包自身锁定的依赖集合。
