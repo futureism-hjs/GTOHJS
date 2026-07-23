@@ -1,0 +1,59 @@
+# Gradle and ForgeGradle output
+.gradle/
+build/
+/outputs/
+out/
+bin/
+run/
+runs/
+
+# Local binary dependencies (keep Gradle Wrapper files tracked)
+/libs/*.jar
+
+# Java and JVM diagnostics
+*.class
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# IDE metadata
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Runtime logs and crash output
+logs/
+crash-reports/
+debug/
+*.log
+*.pid
+
+# Local configuration and temporary files
+.env
+.env.*
+local.properties
+.cache/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Scratch package tree created by local decompilation tools
+/com/
+
+# Internal development documentation is not part of public releases
+/docs/
+/GTOHJS_REGISTRATION_TEMPLATES_ZH.md
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
