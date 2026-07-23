@@ -18,10 +18,6 @@
 - 所有公开 README 增加 AI 生成或 AI 辅助内容警告。
 - 公开预发布暂不包含详细开发文档、注册模板、内部分析和历史验收记录。
 
-移除：
-
-- 自定义机床、大型自定义切割机及其专用配方和旧 native/JVMTI 加载代码。
-
 ### English
 
 Added:
@@ -37,7 +33,3 @@ Changed:
 - Source code is licensed under `LGPL-3.0-only`; original GTOHJS textures and quest content are licensed under `CC-BY-NC-SA-4.0`.
 - Added an AI-generated or AI-assisted content warning to every public README.
 - Detailed development documentation, registration templates, internal analysis and historical validation records are not included in the public pre-release.
-
-Removed:
-
-- Custom Lathe, Large Custom Cutter, their dedicated recipe, and the old native/JVMTI loading code.
