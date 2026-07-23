@@ -18,7 +18,6 @@ The current pre-release is `1.0-pre1-for-gtocore-0.5.6-beta`. Pre1 packages the 
 | Java | JDK 21 by default; Java 17 bytecode target |
 | GTCEu | 26.7.3; manifest range `[26.7.3,26.8)` |
 | GTOCore | 0.5.6-beta; manifest range `[0.5.6-beta,0.5.7)` |
-| GTOLib | 26.7.4; manifest range `[26.7.4,26.8)` |
 | AE2 | The target pack uses 15.267.4; the ME assemblies and their recipes require AE2 content |
 
 The additional local compile APIs are RecipeSearch 1.3, AE2 15.267.4 and GTMThings 26.7.1. GTMThings is an indirect compile-time ABI dependency because a GTOCore machine superclass inherits its `IBindable` interface; the target modpack supplies the runtime copy. Features such as the Large Petal Apothecary rely on the pack's existing Botania, AppBot and GTO integration mods. Do not use this table to replace the dependency set locked by the modpack.
