@@ -212,6 +212,88 @@ function buildMEInputAssemblyRecipes() {
     return instructions;
 }
 
+function beginAssemblyLineRecipe(rawPath) {
+    var instructions = new InsnList();
+    instructions.add(new FieldInsnNode(
+        Opcodes.GETSTATIC,
+        'com/gtocore/common/data/GTORecipeTypes',
+        'ASSEMBLY_LINE_RECIPES',
+        'Lcom/gtolib/api/recipe/RecipeType;'
+    ));
+    appendResourceLocation(instructions, 'gtohjs', rawPath);
+    instructions.add(new MethodInsnNode(
+        Opcodes.INVOKEVIRTUAL,
+        'com/gtolib/api/recipe/RecipeType',
+        'recipeBuilder',
+        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
+        false
+    ));
+    return instructions;
+}
+
+function appendImportedRecipeConfiguration(instructions, methodName) {
+    instructions.add(new InsnNode(Opcodes.DUP));
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        methodName,
+        '(Lcom/gtolib/api/recipe/RecipeBuilder;)V',
+        ASMAPI.MethodType.STATIC
+    ));
+}
+
+function buildImportedLargePetalApothecaryRecipe() {
+    var instructions = beginAssemblerRecipe('large_petal_apothecary');
+    appendImportedRecipeConfiguration(instructions, 'configureLargePetalApothecary');
+    appendRecipeSaveAndAccept(
+        instructions,
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        'acceptLargePetalApothecary'
+    );
+    return instructions;
+}
+
+function buildImportedHyperdimensionalChemicalFactoryRecipe() {
+    var instructions = beginAssemblyLineRecipe('hyperdimensional_chemical_factory');
+    appendImportedRecipeConfiguration(instructions, 'configureHyperdimensionalChemicalFactory');
+    appendRecipeSaveAndAccept(
+        instructions,
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        'acceptHyperdimensionalChemicalFactory'
+    );
+    return instructions;
+}
+
+function buildImportedHyperdimensionalSmelterRecipe() {
+    var instructions = beginAssemblyLineRecipe('hyperdimensional_smelter');
+    appendImportedRecipeConfiguration(instructions, 'configureHyperdimensionalSmelter');
+    appendRecipeSaveAndAccept(
+        instructions,
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        'acceptHyperdimensionalSmelter'
+    );
+    return instructions;
+}
+
+function buildImportedRecipeDirectoryRecipes() {
+    var instructions = new InsnList();
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        'beginInjectedRegistration',
+        '()V',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(buildImportedLargePetalApothecaryRecipe());
+    instructions.add(buildImportedHyperdimensionalChemicalFactoryRecipe());
+    instructions.add(buildImportedHyperdimensionalSmelterRecipe());
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
+        'completeInjectedRegistration',
+        '()V',
+        ASMAPI.MethodType.STATIC
+    ));
+    return instructions;
+}
+
 function buildImportedChemicalRecipe(
     rawPath,
     inputMaterialField,
@@ -646,6 +728,7 @@ function buildCustomRecipes() {
         '()V',
         ASMAPI.MethodType.STATIC
     ));
+    instructions.add(buildImportedRecipeDirectoryRecipes());
     instructions.add(buildImportedChemicalRecipes());
     instructions.add(buildOneStopRareEarthRecipes());
     return instructions;
@@ -1048,6 +1131,12 @@ function initializeCoreMod() {
                         ));
                         validations.add(ASMAPI.buildMethodCall(
                             'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
+                            'validateFinalized',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        validations.add(ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
                             'validateFinalized',
                             '()V',
                             ASMAPI.MethodType.STATIC

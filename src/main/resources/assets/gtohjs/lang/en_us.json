@@ -14,6 +14,15 @@
   "gtohjs.machine.me_stocking_input_assembly.mode.1": "Automatically stocking items and fluids",
   "gtohjs.machine.me_stocking_input_assembly.mode.2": "Automatically stocking items only",
   "gtohjs.machine.me_stocking_input_assembly.mode.3": "Automatically stocking fluids only",
+  "item.gtohjs.basic_ae_component_pack": "Basic AE Component Pack",
+  "item.gtohjs.ae_machine_component_pack": "AE Machine Component Pack",
+  "item.gtohjs.advanced_ae_hatch_component_pack": "Advanced AE Hatch Component Pack",
+  "gtohjs.item.basic_ae_component_pack.tooltip.0": "Preloaded with basic AE components",
+  "gtohjs.item.ae_machine_component_pack.tooltip.0": "Preloaded with AE machine components",
+  "gtohjs.item.advanced_ae_hatch_component_pack.tooltip.0": "Preloaded with advanced AE hatch components",
+  "gtohjs.item.ae_component_pack.tooltip.amount": "Each item: 16M (16,777,216)",
+  "gtohjs.item.ae_component_pack.tooltip.power": "Fully charged by default: 20,000 AE",
+  "gtohjs.item.ae_component_pack.tooltip.portable": "Usable as a portable ME item cell",
   "item.gtohjs.recipe_editor": "GTOHJS Recipe Editor",
   "item.gtohjs.multiblock_structure_generator": "Custom Multiblock Structure Exporter",
   "block.gtohjs.integral_bronze_framework": "Integral Bronze Framework",
@@ -50,6 +59,7 @@
   "gtohjs.machine.advanced_generator_array.limit": "Internal generator limit: %s",
   "gtohjs.machine.advanced_alchemy_cauldron.chance_inputs": "Chanced inputs require one copy and are not consumed",
   "gtohjs.machine.advanced_alchemy_cauldron.chance_outputs": "All chanced outputs are produced reliably",
+  "gtohjs.machine.advanced_alchemy_cauldron.no_bathing": "Cannot be used for bathing",
   "gtohjs.recipe_editor.field.id": "Recipe ID",
   "gtohjs.recipe_editor.field.circuit": "Circuit configuration",
   "gtohjs.recipe_editor.field.eut": "Voltage (EU/t)",
@@ -138,5 +148,6 @@
   "gtohjs.machine.hyperdimensional.parallel_setting": "Set parallelism",
   "gtohjs.machine.hyperdimensional.thread_setting": "Set threads",
   "gtohjs.machine.hyperdimensional.parallel_limit": "Custom parallel range: 1 - %s (not coil-limited)",
-  "gtohjs.machine.hyperdimensional.thread_limit": "Custom thread range: 1 - %s (not coil-limited)"
+  "gtohjs.machine.hyperdimensional.thread_limit": "Custom thread range: 1 - %s (not coil-limited)",
+  "gtohjs.item.ae_component_pack.initialization_failed": "AE component-pack initialization failed; see the log"
 }

@@ -39,6 +39,10 @@ public final class CustomCraftingRecipeRegistration {
             GTOHJS.id("lv_machine_hull");
     public static final ResourceLocation MV_MACHINE_HULL_RECIPE_ID =
             GTOHJS.id("mv_machine_hull");
+    public static final ResourceLocation HYPERDIMENSIONAL_FORGE_RECIPE_ID =
+            GTOHJS.id("hyperdimensional_forge");
+    public static final ResourceLocation HYPERDIMENSIONAL_STEAM_FURNACE_RECIPE_ID =
+            GTOHJS.id("hyperdimensional_steam_furnace");
     private static volatile State state = State.NOT_STARTED;
     private static volatile Item integralBronzeFrameworkOutput;
     private static volatile Item oneStopPlantOutput;
@@ -47,6 +51,8 @@ public final class CustomCraftingRecipeRegistration {
     private static volatile Item fluixManaPoolOutput;
     private static volatile Item lvMachineHullOutput;
     private static volatile Item mvMachineHullOutput;
+    private static volatile Item hyperdimensionalForgeOutput;
+    private static volatile Item hyperdimensionalSteamFurnaceOutput;
 
     private CustomCraftingRecipeRegistration() {
     }
@@ -71,6 +77,12 @@ public final class CustomCraftingRecipeRegistration {
             Item mvMachineHull = requiredItem("gtceu:mv_machine_hull");
             Item lvMachineCasing = requiredItem("gtceu:lv_machine_casing");
             Item mvMachineCasing = requiredItem("gtceu:mv_machine_casing");
+            Item hyperdimensionalForge = requiredItem("gtocore:hyperdimensional_forge");
+            Item airlock = requiredItem("ad_astra:airlock");
+            Item leapForwardBlastFurnace = requiredItem("gtocore:leap_forward_one_blast_furnace");
+            Item hyperdimensionalSteamFurnace = requiredItem("gtocore:hyperdimensional_steam_furnace");
+            Item precisionSteamMechanism = requiredItem("gtocore:precision_steam_mechanism");
+            Item largeSteamFurnace = requiredItem("gtocore:large_steam_furnace");
 
             VanillaRecipeHelper.addShapedRecipe(
                     INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
@@ -144,6 +156,29 @@ public final class CustomCraftingRecipeRegistration {
                     'B', new MaterialEntry(TagPrefix.cableGtSingle, GTMaterials.Copper),
                     'C', mvMachineCasing);
 
+            VanillaRecipeHelper.addShapedRecipe(
+                    HYPERDIMENSIONAL_FORGE_RECIPE_ID,
+                    hyperdimensionalForge,
+                    "ABA",
+                    "BCB",
+                    "DDD",
+                    'A', new MaterialEntry(TagPrefix.foil, GTMaterials.Steel),
+                    'B', airlock,
+                    'C', leapForwardBlastFurnace,
+                    'D', new MaterialEntry(TagPrefix.ingot, GTMaterials.Steel));
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    HYPERDIMENSIONAL_STEAM_FURNACE_RECIPE_ID,
+                    hyperdimensionalSteamFurnace,
+                    "ABA",
+                    "CDC",
+                    "EBE",
+                    'A', new MaterialEntry(TagPrefix.rodLong, GTMaterials.Bronze),
+                    'B', precisionSteamMechanism,
+                    'C', integralBronzeFramework,
+                    'D', largeSteamFurnace,
+                    'E', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.Bronze));
+
             integralBronzeFrameworkOutput = integralBronzeFramework;
             oneStopPlantOutput = oneStopPlant;
             advancedAlchemyCauldronOutput = advancedAlchemyCauldron;
@@ -151,8 +186,11 @@ public final class CustomCraftingRecipeRegistration {
             fluixManaPoolOutput = fluixManaPool;
             lvMachineHullOutput = lvMachineHull;
             mvMachineHullOutput = mvMachineHull;
+            hyperdimensionalForgeOutput = hyperdimensionalForge;
+            hyperdimensionalSteamFurnaceOutput = hyperdimensionalSteamFurnace;
             state = State.REGISTERED;
-            ModLog.info("Registered crafting recipes {}, {}, {}, {}, {}, {}, {}; outputs={}, {}, {}, {}, {}, {}, {}",
+            ModLog.info("Registered crafting recipes {}, {}, {}, {}, {}, {}, {}, {}, {}; " +
+                            "outputs={}, {}, {}, {}, {}, {}, {}, {}, {}",
                     INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
                     ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID,
                     ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID,
@@ -160,13 +198,17 @@ public final class CustomCraftingRecipeRegistration {
                     FLUIX_MANA_POOL_RECIPE_ID,
                     LV_MACHINE_HULL_RECIPE_ID,
                     MV_MACHINE_HULL_RECIPE_ID,
+                    HYPERDIMENSIONAL_FORGE_RECIPE_ID,
+                    HYPERDIMENSIONAL_STEAM_FURNACE_RECIPE_ID,
                     integralBronzeFramework,
                     oneStopPlant,
                     advancedAlchemyCauldron,
                     advancedGeneratorArray,
                     fluixManaPool,
                     lvMachineHull,
-                    mvMachineHull);
+                    mvMachineHull,
+                    hyperdimensionalForge,
+                    hyperdimensionalSteamFurnace);
         } catch (Throwable error) {
             state = State.FAILED;
             clearOutputs();
@@ -196,6 +238,8 @@ public final class CustomCraftingRecipeRegistration {
         fluixManaPoolOutput = null;
         lvMachineHullOutput = null;
         mvMachineHullOutput = null;
+        hyperdimensionalForgeOutput = null;
+        hyperdimensionalSteamFurnaceOutput = null;
     }
 
     /**
@@ -211,12 +255,15 @@ public final class CustomCraftingRecipeRegistration {
                 advancedGeneratorArrayOutput == null || advancedGeneratorArrayOutput == Items.AIR ||
                 fluixManaPoolOutput == null || fluixManaPoolOutput == Items.AIR ||
                 lvMachineHullOutput == null || lvMachineHullOutput == Items.AIR ||
-                mvMachineHullOutput == null || mvMachineHullOutput == Items.AIR) {
+                mvMachineHullOutput == null || mvMachineHullOutput == Items.AIR ||
+                hyperdimensionalForgeOutput == null || hyperdimensionalForgeOutput == Items.AIR ||
+                hyperdimensionalSteamFurnaceOutput == null || hyperdimensionalSteamFurnaceOutput == Items.AIR) {
             throw new IllegalStateException("Custom crafting recipes were not registered; state=" + state);
         }
         ModLog.info("Validated crafting registration {}; native map keys at load: " +
                         "integral={}, oneStop={}, advancedAlchemy={}, advancedGenerator={}, fluixManaPool={}, " +
-                        "lvMachineHull={}, mvMachineHull={}",
+                        "lvMachineHull={}, mvMachineHull={}, hyperdimensionalForge={}, " +
+                        "hyperdimensionalSteamFurnace={}",
                 state,
                 GTRecipes.RECIPE_MAP.containsKey(INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID),
                 GTRecipes.RECIPE_MAP.containsKey(ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID),
@@ -224,7 +271,9 @@ public final class CustomCraftingRecipeRegistration {
                 GTRecipes.RECIPE_MAP.containsKey(ADVANCED_GENERATOR_ARRAY_RECIPE_ID),
                 GTRecipes.RECIPE_MAP.containsKey(FLUIX_MANA_POOL_RECIPE_ID),
                 GTRecipes.RECIPE_MAP.containsKey(LV_MACHINE_HULL_RECIPE_ID),
-                GTRecipes.RECIPE_MAP.containsKey(MV_MACHINE_HULL_RECIPE_ID));
+                GTRecipes.RECIPE_MAP.containsKey(MV_MACHINE_HULL_RECIPE_ID),
+                GTRecipes.RECIPE_MAP.containsKey(HYPERDIMENSIONAL_FORGE_RECIPE_ID),
+                GTRecipes.RECIPE_MAP.containsKey(HYPERDIMENSIONAL_STEAM_FURNACE_RECIPE_ID));
     }
 
     public static State state() {

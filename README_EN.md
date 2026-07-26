@@ -5,9 +5,9 @@
 
 [中文](README_ZH.md) | [Changelog](CHANGELOG.md)
 
-GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It adds machines, multiblock parts, recipe types and recipes inside GTOCore and GTOLib's native registration windows without modifying GTOCore, GTOLib or EMI files.
+GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It adds machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current pre-release is `1.0-pre1-for-gtocore-0.5.6-beta`. Pre1 packages the feature set validated during the fix67 development cycle as a standalone GitHub source repository; the version cleanup does not change machine, recipe or runtime behavior.
+The current pre-release is `1.0-per3-for-gtocore-0.5.6-beta`. Per3 imports the current recipe-editor drafts, lets both new assembly-line recipes accept any ZPM circuit, and prevents heat hatches from forming the Advanced Alchemy Cauldron.
 
 ## Runtime and development dependencies
 
@@ -42,7 +42,7 @@ node --check src\main\resources\coremods\gtohjs_machine_registration.js
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-1.0-pre1-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-1.0-per3-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown partial dependency state.
@@ -61,7 +61,7 @@ The current source includes:
 - Advanced Generator Array, Advanced Alchemy Cauldron and Large Petal Apothecary.
 - A Botania petal-apothecary proxy for the Large Petal Apothecary, with no mana output from proxy recipes.
 - ME Input Assembly and ME Stocking Input Assembly.
-- Native GTO recipes, shaped crafting recipes, bulk forge-hammer recipes and imported chemical/rare-earth recipes.
+- Native GTO recipes, shaped crafting recipes, bulk forge-hammer recipes and imported chemical/rare-earth recipes. Per3 also includes the Large Petal Apothecary assembler recipe, assembly-line recipes for the Hyperdimensional Chemical Factory and Hyperdimensional Smelter, and shaped recipes for the Hyperdimensional Forge and Hyperdimensional Steam Furnace. The two assembly-line recipes accept 16 and 64 circuits from the ZPM circuit tag, respectively.
 
 ## Public documentation scope
 

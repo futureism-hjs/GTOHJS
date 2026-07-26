@@ -5,9 +5,9 @@
 
 [English](README_EN.md) | [更新日志](CHANGELOG.md)
 
-GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼容扩展。项目在 GTOCore 和 GTOLib 的原生注册窗口内增加机器、仓室、配方页和配方，不修改 GTOCore、GTOLib 或 EMI 的原始文件。
+GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼容扩展。项目通过 GTOCore 的原生注册窗口增加机器、仓室、配方页和配方，不修改 GTOCore 或 EMI 的原始文件。
 
-当前预发布版本为 `1.0-pre1-for-gtocore-0.5.6-beta`。pre1 将 fix67 开发周期中已经完成客户端自动验收的功能整理为独立 GitHub 源码仓库；版本整理本身不改变机器、配方或运行逻辑。
+当前预发布版本为 `1.0-per3-for-gtocore-0.5.6-beta`。per3 导入当前配方编辑器草稿，使两条新装配线配方可使用任意 ZPM 电路，并禁止高级炼金锅使用导热仓成型。
 
 ## 运行与开发依赖
 
@@ -42,7 +42,7 @@ node --check src\main\resources\coremods\gtohjs_machine_registration.js
 正式 JAR 输出到：
 
 ```text
-build\libs\gtohjs-1.0-pre1-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-1.0-per3-for-gtocore-0.5.6-beta.jar
 ```
 
 网络依赖下载失败时停止构建并等待人工处理，不在未知依赖状态下继续打包。
@@ -61,7 +61,7 @@ build\libs\gtohjs-1.0-pre1-for-gtocore-0.5.6-beta.jar
 - 进阶发电阵列、高级炼金锅和大型花药台。
 - 大型花药台对 Botania 花药台配方的代理转换，不产生魔力输出。
 - ME 输入总成和 ME 库存输入总成。
-- 原生 GTO 配方、工作台有序配方、批量锻造锤配方及已导入的化学/稀土配方。
+- 原生 GTO 配方、工作台有序配方、批量锻造锤配方及已导入的化学/稀土配方；per3 另含大型花药台装配机配方、超维度化工厂和超维度冶炼炉装配线配方，以及超维度锻炉和超维度蒸汽熔炉工作台配方。两条装配线配方分别接受 16 个和 64 个任意 ZPM 等级电路。
 
 ## 公开资料范围
 

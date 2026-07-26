@@ -6,11 +6,13 @@ import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.Predicates;
+import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.client.renderer.machine.ArrayMachineRenderer;
 import com.gtocore.common.data.GTORecipeTypes;
+import com.gtocore.common.data.GTOMachines;
 import com.gtocore.utils.register.MachineRegisterUtils;
 import com.gtohjs.machine.AdvancedAlchemyCauldronMachine;
 import com.gtohjs.machine.HyperdimensionalPatternResources;
@@ -19,6 +21,7 @@ import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.recipe.GTORecipeModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 /** Registers the multiblock reconstructed from the advanced cauldron litematic. */
 public final class AdvancedAlchemyCauldronRegistration {
@@ -69,7 +72,9 @@ public final class AdvancedAlchemyCauldronRegistration {
                                 Component.translatable(
                                         "gtohjs.machine.advanced_alchemy_cauldron.chance_inputs"),
                                 Component.translatable(
-                                        "gtohjs.machine.advanced_alchemy_cauldron.chance_outputs"))
+                                        "gtohjs.machine.advanced_alchemy_cauldron.chance_outputs"),
+                                Component.translatable(
+                                        "gtohjs.machine.advanced_alchemy_cauldron.no_bathing"))
                         .recipeTypes(GTORecipeTypes.ALCHEMY_CAULDRON_RECIPES)
                         .recipeModifier(GTORecipeModifiers.PARALLEL)
                         .block(GTBlocks.CASING_STEEL_SOLID)
@@ -80,9 +85,9 @@ public final class AdvancedAlchemyCauldronRegistration {
                                 .where('B', Predicates.blocks(GTBlocks.CASING_STEEL_SOLID.get())
                                         .or(Predicates.abilities(PartAbility.PARALLEL_HATCH)
                                                 .setMaxGlobalLimited(1).setPreviewCount(1))
-                                        .or(Predicates.abilities(PartAbility.IMPORT_FLUIDS)
+                                        .or(abilitiesWithoutHeatHatches(PartAbility.IMPORT_FLUIDS)
                                                 .setMaxGlobalLimited(4).setPreviewCount(1))
-                                        .or(Predicates.abilities(PartAbility.IMPORT_ITEMS)
+                                        .or(abilitiesWithoutHeatHatches(PartAbility.IMPORT_ITEMS)
                                                 .setMaxGlobalLimited(4).setPreviewCount(1))
                                         .or(Predicates.abilities(PartAbility.EXPORT_FLUIDS)
                                                 .setMaxGlobalLimited(4).setPreviewCount(1))
@@ -152,6 +157,18 @@ public final class AdvancedAlchemyCauldronRegistration {
             throw new IllegalStateException("Unexpected '" + symbol + "' count in " + PATTERN_NAME +
                     ": expected=" + expected + ", actual=" + actual);
         }
+    }
+
+    private static TraceabilityPredicate abilitiesWithoutHeatHatches(PartAbility ability) {
+        Block heatHatch = GTOMachines.HEAT_HATCH.get();
+        Block advancedHeatHatch = GTOMachines.ADVANCED_HEAT_HATCH.get();
+        Block[] candidates = ability.getAllBlocks().stream()
+                .filter(block -> block != heatHatch && block != advancedHeatHatch)
+                .toArray(Block[]::new);
+        if (candidates.length == 0) {
+            throw new IllegalStateException("No candidates remain after excluding heat hatches from " + ability);
+        }
+        return Predicates.blocks(candidates);
     }
 
     public static synchronized void validateLoaded() {

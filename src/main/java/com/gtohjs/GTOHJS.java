@@ -9,6 +9,7 @@ import com.gtohjs.bootstrap.HyperdimensionalForgeRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalSmelterRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalSteamFurnaceRegistration;
 import com.gtohjs.bootstrap.ImportedChemicalReactorRecipeRegistration;
+import com.gtohjs.bootstrap.ImportedRecipeDirectoryRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRecipeTypeRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRegistration;
 import com.gtohjs.bootstrap.MEInputAssemblyRegistration;
@@ -51,10 +52,12 @@ public final class GTOHJS {
 
     private void onLoadComplete(FMLLoadCompleteEvent event) {
         GTOHJSBlocks.validateLoaded();
+        GTOHJSItems.validateLoaded();
         OneStopRareEarthRecipeTypeRegistration.validateLoaded();
         LargePetalApothecaryRecipeTypeRegistration.validateLoaded();
         MEInputAssemblyRegistration.validateLoaded();
         MEInputAssemblyRecipeRegistration.validateLoaded();
+        ImportedRecipeDirectoryRegistration.validateLoaded();
         UniversalSteamFactoryRegistration.validateLoaded();
         ForgeHammerBulkRecipeRegistration.validateLoaded();
         OneStopRareEarthProcessingPlantRegistration.validateLoaded();
@@ -73,6 +76,7 @@ public final class GTOHJS {
                         "rareEarthPlant={}, rareEarthPlantState={}, " +
                         "rareEarthRecipes={}, rareEarthRecipesState={}, " +
                         "importedChemicalRecipes={}, importedChemicalRecipesState={}, " +
+                        "importedDirectoryRecipes={}, importedDirectoryRecipesState={}, " +
                         "craftingRecipeState={}, sludgeRecipe={}, sludgeRecipeState={}, " +
                         "bulkForgeHammerRecipes={}, bulkForgeHammerState={}, " +
                         "hyperdimensionalForge={}, hyperdimensionalForgeState={}, " +
@@ -97,6 +101,8 @@ public final class GTOHJS {
                 OneStopRareEarthRecipeRegistration.state(),
                 ImportedChemicalReactorRecipeRegistration.definitions(),
                 ImportedChemicalReactorRecipeRegistration.state(),
+                ImportedRecipeDirectoryRegistration.definitions(),
+                ImportedRecipeDirectoryRegistration.state(),
                 CustomCraftingRecipeRegistration.state(),
                 PlatinumGroupSludgeRecipeRegistration.definition(),
                 PlatinumGroupSludgeRecipeRegistration.state(),
