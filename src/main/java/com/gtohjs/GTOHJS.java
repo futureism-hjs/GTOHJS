@@ -3,7 +3,11 @@ package com.gtohjs;
 import com.gtohjs.bootstrap.CustomCraftingRecipeRegistration;
 import com.gtohjs.bootstrap.AdvancedAlchemyCauldronRegistration;
 import com.gtohjs.bootstrap.AdvancedGeneratorArrayRegistration;
+import com.gtohjs.bootstrap.AdvancedSteamArrayRegistration;
 import com.gtohjs.bootstrap.ForgeHammerBulkRecipeRegistration;
+import com.gtohjs.bootstrap.FragmentWorldCollectionMachineRegistration;
+import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeRegistration;
+import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeTypeRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalChemicalFactoryRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalForgeRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalSmelterRegistration;
@@ -14,14 +18,18 @@ import com.gtohjs.bootstrap.LargePetalApothecaryRecipeTypeRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRegistration;
 import com.gtohjs.bootstrap.MEInputAssemblyRegistration;
 import com.gtohjs.bootstrap.MEInputAssemblyRecipeRegistration;
+import com.gtohjs.bootstrap.MESuperPatternBufferRegistration;
+import com.gtohjs.bootstrap.MESuperWildcardPatternBufferRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthProcessingPlantRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthRecipeRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthRecipeTypeRegistration;
 import com.gtohjs.bootstrap.PlatinumGroupSludgeRecipeRegistration;
 import com.gtohjs.bootstrap.UniversalSteamFactoryRegistration;
+import com.gtohjs.bootstrap.SteamArrayRegistration;
 import com.gtohjs.block.GTOHJSBlocks;
 import com.gtohjs.item.GTOHJSItems;
 import com.gtohjs.item.GTOHJSItemTooltipHandler;
+import com.gtohjs.config.MEPatternBufferConfig;
 import com.gtohjs.util.ModLog;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,6 +45,7 @@ public final class GTOHJS {
 
     public GTOHJS() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        MEPatternBufferConfig.initialize();
         GTOHJSBlocks.register(modBus);
         GTOHJSItems.register(modBus);
         MinecraftForge.EVENT_BUS.addListener(GTOHJSItemTooltipHandler::onItemTooltip);
@@ -55,8 +64,11 @@ public final class GTOHJS {
         GTOHJSItems.validateLoaded();
         OneStopRareEarthRecipeTypeRegistration.validateLoaded();
         LargePetalApothecaryRecipeTypeRegistration.validateLoaded();
+        FragmentWorldCollectionRecipeTypeRegistration.validateLoaded();
         MEInputAssemblyRegistration.validateLoaded();
         MEInputAssemblyRecipeRegistration.validateLoaded();
+        MESuperPatternBufferRegistration.validateLoaded();
+        MESuperWildcardPatternBufferRegistration.validateLoaded();
         ImportedRecipeDirectoryRegistration.validateLoaded();
         UniversalSteamFactoryRegistration.validateLoaded();
         ForgeHammerBulkRecipeRegistration.validateLoaded();
@@ -68,8 +80,22 @@ public final class GTOHJS {
         HyperdimensionalChemicalFactoryRegistration.validateLoaded();
         AdvancedGeneratorArrayRegistration.validateLoaded();
         AdvancedAlchemyCauldronRegistration.validateLoaded();
+        SteamArrayRegistration.validateLoaded();
+        AdvancedSteamArrayRegistration.validateLoaded();
         LargePetalApothecaryRegistration.validateLoaded();
+        FragmentWorldCollectionMachineRegistration.validateLoaded();
+        FragmentWorldCollectionRecipeRegistration.validateLoaded();
+        ModLog.info("Fragment-world load complete; recipeType={}, recipeTypeState={}, single={}, large={}, " +
+                        "machineState={}, mappedRecipes={}, recipeState={}",
+                FragmentWorldCollectionRecipeTypeRegistration.definition(),
+                FragmentWorldCollectionRecipeTypeRegistration.state(),
+                FragmentWorldCollectionMachineRegistration.singleDefinition(),
+                FragmentWorldCollectionMachineRegistration.largeDefinition(),
+                FragmentWorldCollectionMachineRegistration.state(),
+                FragmentWorldCollectionRecipeRegistration.definitions(),
+                FragmentWorldCollectionRecipeRegistration.state());
         ModLog.info("Load complete; meInputAssembly={}, meStockingInputAssembly={}, meAssemblyState={}, " +
+                        "meSuperPatternBuffer={}, meSuperPatternBufferProxy={}, meSuperPatternBufferState={}, " +
                         "meAssemblyRecipes={}, meAssemblyRecipesState={}, " +
                         "universalSteamFactory={}, universalSteamFactoryState={}, " +
                         "rareEarthRecipeType={}, rareEarthRecipeTypeState={}, " +
@@ -90,6 +116,9 @@ public final class GTOHJS {
                 MEInputAssemblyRegistration.inputDefinition(),
                 MEInputAssemblyRegistration.stockingInputDefinition(),
                 MEInputAssemblyRegistration.state(),
+                MESuperPatternBufferRegistration.bufferDefinition(),
+                MESuperPatternBufferRegistration.proxyDefinition(),
+                MESuperPatternBufferRegistration.state(),
                 MEInputAssemblyRecipeRegistration.definitions(),
                 MEInputAssemblyRecipeRegistration.state(),
                 UniversalSteamFactoryRegistration.definition(), UniversalSteamFactoryRegistration.state(),
@@ -127,6 +156,7 @@ public final class GTOHJS {
     }
 
     private void onServerStarted(ServerStartedEvent event) {
+        CustomCraftingRecipeRegistration.validateServerRecipes(event.getServer());
         int recipes = LargePetalApothecaryRecipeTypeRegistration.validateProxyRecipes(
                 event.getServer());
         ModLog.info("Server started; validated large petal apothecary proxy recipes={}", recipes);

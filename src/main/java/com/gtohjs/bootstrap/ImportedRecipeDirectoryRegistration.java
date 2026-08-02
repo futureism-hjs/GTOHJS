@@ -66,8 +66,8 @@ public final class ImportedRecipeDirectoryRegistration {
                             material(TagPrefix.ingot, () -> GTOMaterials.OriginalBronze, 4)),
                     List.of(item("gtocore:large_petal_apothecary", 1)),
                     List.of(),
-                    700L,
-                    200),
+                    7L,
+                    400),
             new RecipeSpec(
                     HYPERDIMENSIONAL_CHEMICAL_FACTORY_RAW_ID,
                     GTORecipeTypes.ASSEMBLY_LINE_RECIPES,
@@ -157,8 +157,8 @@ public final class ImportedRecipeDirectoryRegistration {
                 .inputItems("appbot:fluix_mana_pool")
                 .inputItems(TagPrefix.ingot, GTOMaterials.OriginalBronze, 4)
                 .outputItems("gtocore:large_petal_apothecary")
-                .EUt(700L)
-                .duration(200);
+                .EUt(7L)
+                .duration(400);
     }
 
     /** Applies the chemical-factory assembly-line draft with a ZPM circuit tag. */

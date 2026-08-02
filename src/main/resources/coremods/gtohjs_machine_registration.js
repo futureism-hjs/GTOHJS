@@ -602,6 +602,68 @@ function buildPlatinumGroupSludgeElectrolysisRecipe() {
     return instructions;
 }
 
+function buildFragmentWorldRecipe(index) {
+    var instructions = new InsnList();
+
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeTypeRegistration',
+        'definition',
+        '()Lcom/gtolib/api/recipe/RecipeType;',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(new IntInsnNode(Opcodes.SIPUSH, index));
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+        'rawId',
+        '(I)Lnet/minecraft/resources/ResourceLocation;',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(new MethodInsnNode(
+        Opcodes.INVOKEVIRTUAL,
+        'com/gtolib/api/recipe/RecipeType',
+        'recipeBuilder',
+        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
+        false
+    ));
+
+    // Keep save() inline in GTO's native registration window. The Java helper only
+    // configures the already-created builder, matching the verified imported-recipe path.
+    instructions.add(new InsnNode(Opcodes.DUP));
+    instructions.add(new IntInsnNode(Opcodes.SIPUSH, index));
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+        'configure',
+        '(Lcom/gtolib/api/recipe/RecipeBuilder;I)V',
+        ASMAPI.MethodType.STATIC
+    ));
+    appendRecipeSaveAndAccept(
+        instructions,
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+        'accept'
+    );
+    return instructions;
+}
+
+function buildFragmentWorldRecipes() {
+    var instructions = new InsnList();
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+        'beginInjectedRegistration',
+        '()V',
+        ASMAPI.MethodType.STATIC
+    ));
+    for (var index = 0; index < 254; index++) {
+        instructions.add(buildFragmentWorldRecipe(index));
+    }
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+        'completeInjectedRegistration',
+        '()V',
+        ASMAPI.MethodType.STATIC
+    ));
+    return instructions;
+}
+
 function buildForgeHammerBulkRecipe() {
     var instructions = new InsnList();
     var end = new LabelNode();
@@ -721,6 +783,7 @@ function buildForgeHammerBulkRecipe() {
 function buildCustomRecipes() {
     var instructions = new InsnList();
     instructions.add(buildPlatinumGroupSludgeElectrolysisRecipe());
+    instructions.add(buildFragmentWorldRecipes());
     instructions.add(buildMEInputAssemblyRecipes());
     instructions.add(ASMAPI.buildMethodCall(
         'com/gtohjs/bootstrap/CustomCraftingRecipeRegistration',
@@ -893,6 +956,12 @@ function initializeCoreMod() {
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeTypeRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
                         injected++;
                     }
                 }
@@ -997,6 +1066,18 @@ function initializeCoreMod() {
                             ASMAPI.MethodType.STATIC
                         ));
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/SteamArrayRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/AdvancedSteamArrayRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
                             'com/gtohjs/bootstrap/AdvancedAlchemyCauldronRegistration',
                             'register',
                             '()V',
@@ -1004,6 +1085,12 @@ function initializeCoreMod() {
                         ));
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
                             'com/gtohjs/bootstrap/LargePetalApothecaryRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/FragmentWorldCollectionMachineRegistration',
                             'register',
                             '()V',
                             ASMAPI.MethodType.STATIC
@@ -1040,6 +1127,18 @@ function initializeCoreMod() {
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/MESuperPatternBufferRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/MESuperWildcardPatternBufferRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
                         injected++;
                     }
                 }
@@ -1048,7 +1147,7 @@ function initializeCoreMod() {
                     throw new Error('GTOHJS could not find RETURN in GTAEMachines.<clinit>()V');
                 }
 
-                ASMAPI.log('INFO', 'GTOHJS injected ME input assembly registration into ' +
+                ASMAPI.log('INFO', 'GTOHJS injected ME input assembly and super pattern buffer registration into ' +
                     injected + ' GTAEMachines.<clinit> return path(s)');
                 return method;
             }
@@ -1141,6 +1240,12 @@ function initializeCoreMod() {
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
+                        validations.add(ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
+                            'validateFinalized',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
                         method.instructions.insert(node, validations);
                         finalized++;
                     }
@@ -1158,6 +1263,134 @@ function initializeCoreMod() {
                 }
                 ASMAPI.log('INFO', 'GTOHJS injected native custom recipe builders after RecipeFilter.init() ' +
                     'and finalized validations after RecipeBuilder.finish()');
+                return method;
+            }
+        },
+        'gtohjs_scroll_gto_pattern_buffer_modes': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine',
+                'methodName': 'attachSideTabs',
+                'methodDesc': '(Lcom/gregtechceu/gtceu/api/gui/fancy/TabsWidget;)V'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var newCount = 0;
+                var initCount = 0;
+                var owner = 'com/gtocore/api/gui/configurators/MultiMachineModeFancyConfigurator';
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.NEW && node.desc === owner) {
+                        var duplicate = node.getNext();
+                        if (duplicate === null || duplicate.getOpcode() !== Opcodes.DUP) {
+                            throw new Error('GTOHJS expected DUP after GTO pattern mode configurator NEW');
+                        }
+                        method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 0));
+                        method.instructions.remove(duplicate);
+                        method.instructions.remove(node);
+                        newCount++;
+                    } else if (node.getOpcode() === Opcodes.INVOKESPECIAL &&
+                               node.owner === owner &&
+                               node.name === '<init>' &&
+                               node.desc === '(Ljava/util/List;Lcom/gregtechceu/gtceu/api/recipe/GTRecipeType;Ljava/util/function/Consumer;)V') {
+                        method.instructions.set(node, new MethodInsnNode(
+                            Opcodes.INVOKESTATIC,
+                            'com/gtohjs/machine/PatternBufferModeSupport',
+                            'createConfigurator',
+                            '(Lcom/gtocore/common/machine/multiblock/part/ae/MEPatternBufferPartMachine;Ljava/util/List;Lcom/gregtechceu/gtceu/api/recipe/GTRecipeType;Ljava/util/function/Consumer;)Lcom/gregtechceu/gtceu/api/gui/fancy/IFancyUIProvider;',
+                            false
+                        ));
+                        initCount++;
+                    }
+                }
+                if (newCount !== 1 || initCount !== 1) {
+                    throw new Error('GTOHJS expected one GTO pattern mode configurator construction, found NEW=' +
+                        newCount + ', INIT=' + initCount);
+                }
+                if (method.maxStack < 6) {
+                    method.maxStack = 6;
+                }
+                ASMAPI.log('INFO', 'GTOHJS added the selective five-row scrollable ME pattern mode configurator');
+                return method;
+            }
+        },
+        'gtohjs_dynamic_gto_pattern_grid': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.part.ae.MEPatternPartMachineUIHelperKt',
+                'methodName': 'createPatternPageWidget',
+                'methodDesc': '(Lcom/gtolib/api/gui/ktflexible/VBoxBuilder;Lcom/gtocore/common/machine/multiblock/part/ae/MEPatternPartMachineKt;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Z)Lcom/gtocore/api/gui/ktflexible/MultiPageVScroll;'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var columns = 0;
+                var rows = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.BIPUSH && node.operand === 9) {
+                        method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 1));
+                        method.instructions.insertBefore(node, ASMAPI.buildMethodCall(
+                            'com/gtohjs/config/MEPatternBufferConfig',
+                            'columnsFor',
+                            '(Lcom/gtocore/common/machine/multiblock/part/ae/MEPatternPartMachineKt;)I',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.remove(node);
+                        columns++;
+                    } else if (node.getOpcode() === Opcodes.BIPUSH && node.operand === 6) {
+                        method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 1));
+                        method.instructions.insertBefore(node, ASMAPI.buildMethodCall(
+                            'com/gtohjs/config/MEPatternBufferConfig',
+                            'rowsFor',
+                            '(Lcom/gtocore/common/machine/multiblock/part/ae/MEPatternPartMachineKt;)I',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.remove(node);
+                        rows++;
+                    }
+                }
+                if (columns !== 1 || rows !== 1) {
+                    throw new Error('GTOHJS expected one pattern grid column and row constant, found columns=' +
+                        columns + ', rows=' + rows);
+                }
+                if (method.maxStack < 3) {
+                    method.maxStack = 3;
+                }
+                ASMAPI.log('INFO', 'GTOHJS made GTO ME pattern grid columns and rows configurable');
+                return method;
+            }
+        },
+        'gtohjs_dynamic_gto_pattern_ui_width': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.part.ae.MEPatternPartMachineKt',
+                'methodName': 'createUIWidget',
+                'methodDesc': '()Lcom/lowdragmc/lowdraglib/gui/widget/Widget;'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var widths = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.SIPUSH && node.operand === 176) {
+                        method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 0));
+                        method.instructions.insertBefore(node, ASMAPI.buildMethodCall(
+                            'com/gtohjs/config/MEPatternBufferConfig',
+                            'uiWidthFor',
+                            '(Lcom/gtocore/common/machine/multiblock/part/ae/MEPatternPartMachineKt;)I',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.remove(node);
+                        widths++;
+                    }
+                }
+                if (widths !== 1) {
+                    throw new Error('GTOHJS expected one native ME pattern UI width constant, found ' + widths);
+                }
+                if (method.maxStack < 2) {
+                    method.maxStack = 2;
+                }
+                ASMAPI.log('INFO', 'GTOHJS made the ME super pattern buffer UI width follow its column count');
                 return method;
             }
         }

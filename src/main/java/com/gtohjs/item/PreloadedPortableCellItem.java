@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -48,13 +49,24 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
     private static final String USED_BYTES = "byte";
     private static final String USED_TYPES = "type";
     private static final String INITIALIZED = "gtohjs:component_pack_initialized";
+    private static final String CONTENT_VERSION = "gtohjs:component_pack_content_version";
+    private static final int LEGACY_CONTENT_VERSION = 1;
     private static final double FULL_POWER = 20_000.0d;
     private static final int PORTABLE_CELL_TYPES = 18;
     private static final Set<String> REPORTED_FAILURES = ConcurrentHashMap.newKeySet();
 
     private final String packageName;
     private final List<ResourceLocation> contentIds;
+    private final int contentVersion;
+    private final List<ResourceLocation> migrationContentIds;
+
     public PreloadedPortableCellItem(String packageName, List<ResourceLocation> contentIds,
+                                     Item.Properties properties, int defaultColor) {
+        this(packageName, contentIds, LEGACY_CONTENT_VERSION, List.of(), properties, defaultColor);
+    }
+
+    public PreloadedPortableCellItem(String packageName, List<ResourceLocation> contentIds,
+                                     int contentVersion, List<ResourceLocation> migrationContentIds,
                                      Item.Properties properties, int defaultColor) {
         super(AEKeyType.items(), PORTABLE_CELL_TYPES, MEStorageMenu.PORTABLE_ITEM_CELL_TYPE,
                 StorageTier.SIZE_256K, properties.stacksTo(1), defaultColor);
@@ -64,8 +76,17 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
         if (contentIds == null || contentIds.isEmpty()) {
             throw new IllegalArgumentException("A component pack must contain at least one item type");
         }
+        if (contentVersion < LEGACY_CONTENT_VERSION) {
+            throw new IllegalArgumentException("Invalid component-pack content version: " + contentVersion);
+        }
+        if (migrationContentIds == null || !contentIds.containsAll(migrationContentIds)
+                || new HashSet<>(migrationContentIds).size() != migrationContentIds.size()) {
+            throw new IllegalArgumentException("Invalid component-pack migration contents: " + packageName);
+        }
         this.packageName = packageName;
         this.contentIds = List.copyOf(contentIds);
+        this.contentVersion = contentVersion;
+        this.migrationContentIds = List.copyOf(migrationContentIds);
     }
 
     @Override
@@ -151,7 +172,13 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
 
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.getBoolean(INITIALIZED) && tag.hasUUID(CELL_UUID)) {
-            return true;
+            int storedVersion = tag.contains(CONTENT_VERSION)
+                    ? tag.getInt(CONTENT_VERSION)
+                    : LEGACY_CONTENT_VERSION;
+            if (storedVersion >= contentVersion) {
+                return true;
+            }
+            return migrateContents(stack, tag, storedVersion, level);
         }
 
         try {
@@ -226,6 +253,7 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
             setAEMaxPower(stack, FULL_POWER);
             setAECurrentPower(stack, FULL_POWER);
             tag.putBoolean(INITIALIZED, true);
+            tag.putInt(CONTENT_VERSION, contentVersion);
             storage.setDirty();
             ModLog.info("Initialized AE component pack {}: uuid={}, types={}, bytes={}, amountPerType={}, power={}",
                     packageName, uuid, map.size(), expectedBytes,
@@ -238,10 +266,165 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
         }
     }
 
+    private boolean migrateContents(ItemStack stack, CompoundTag tag, int storedVersion, Level level) {
+        if (storedVersion < LEGACY_CONTENT_VERSION || storedVersion >= contentVersion
+                || migrationContentIds.isEmpty()) {
+            reportFailure("migration-version", new IllegalStateException(
+                    "Unsupported component-pack migration " + storedVersion + " -> " + contentVersion));
+            return false;
+        }
+
+        try {
+            List<Item> additions = resolveContentItems(migrationContentIds);
+            if (additions == null) {
+                return false;
+            }
+
+            UUID uuid = tag.getUUID(CELL_UUID);
+            CellDataStorage storage = CellDataStorage.get(uuid);
+            if (storage == CellDataStorage.EMPTY || storage.getStoredMap() == null) {
+                reportFailure("migration-storage", new IllegalStateException(
+                        "Existing GTO cell storage is unavailable"));
+                return false;
+            }
+
+            AEKeyMap<AEKey> originalMap = new AEKeyMap<>(storage.getStoredMap());
+            AEKeyMap<AEKey> mergedMap = new AEKeyMap<>(originalMap);
+            double originalBytes = storage.getBytes();
+            long originalSummaryBytes = tag.getLong(USED_BYTES);
+            int originalSummaryTypes = tag.getInt(USED_TYPES);
+            int addedTypes = 0;
+            MinecraftServer server = level.getServer();
+            if (server == null) {
+                reportFailure("migration-server", new IllegalStateException(
+                        "The component-pack migration requires a running server"));
+                return false;
+            }
+
+            for (Item item : additions) {
+                AEItemKey key = AEItemKey.of(item);
+                if (key == null) {
+                    reportFailure("migration-key:" + item,
+                            new IllegalStateException("Could not create AE item key"));
+                    return false;
+                }
+                if (!mergedMap.containsKey(key)) {
+                    mergedMap.put(key, AEComponentPackContents.AMOUNT_PER_TYPE);
+                    addedTypes++;
+                }
+            }
+
+            double totalBytes = calculateStoredBytes(mergedMap);
+            try {
+                storage.setStoredMap(mergedMap);
+                storage.setBytes(totalBytes);
+                storage.cache.invalidateCache();
+                storage.setDirty();
+
+                StorageCell cell = StorageCells.getCellInventory(stack, null);
+                if (cell == null) {
+                    throw new IllegalStateException("AE2 did not expose the existing cell inventory");
+                }
+                cell.persist();
+                storage.cache.invalidateCache();
+
+                long expectedBytes = (long) totalBytes;
+                if (tag.getInt(USED_TYPES) != mergedMap.size()
+                        || tag.getLong(USED_BYTES) != expectedBytes) {
+                    throw new IllegalStateException(
+                            "GTO did not recalculate the migrated byte/type summary");
+                }
+
+                AEKeyMap<AEKey> authoritativeMap = storage.getStoredMap();
+                if (authoritativeMap == null || authoritativeMap.size() != mergedMap.size()) {
+                    throw new IllegalStateException("The authoritative migrated key set changed");
+                }
+                for (AEKey key : originalMap.keySet()) {
+                    if (!authoritativeMap.containsKey(key)
+                            || authoritativeMap.getLong(key) != originalMap.getLong(key)) {
+                        throw new IllegalStateException(
+                                "An existing component amount changed during migration: " + key);
+                    }
+                }
+                for (AEKey key : mergedMap.keySet()) {
+                    if (!authoritativeMap.containsKey(key)
+                            || authoritativeMap.getLong(key) != mergedMap.getLong(key)) {
+                        throw new IllegalStateException(
+                                "The authoritative migrated amount differs: " + key);
+                    }
+                }
+                for (Item item : additions) {
+                    AEItemKey key = AEItemKey.of(item);
+                    if (key == null) {
+                        throw new IllegalStateException("A migrated component key was lost");
+                    }
+                    long expectedAmount = originalMap.containsKey(key)
+                            ? originalMap.getLong(key)
+                            : AEComponentPackContents.AMOUNT_PER_TYPE;
+                    if (authoritativeMap.getLong(key) != expectedAmount) {
+                        throw new IllegalStateException(
+                                "A migrated component has the wrong amount: " + key);
+                    }
+                }
+
+                // Persist the external cell file while the ItemStack still advertises its old version. If a
+                // crash happens after this save, the next load safely repeats the idempotent merge.
+                if (!server.saveEverything(true, false, false) || storage.isDirty()) {
+                    throw new IllegalStateException(
+                            "GTO did not durably save the migrated external storage");
+                }
+                tag.putInt(CONTENT_VERSION, contentVersion);
+                ModLog.info("Migrated AE component pack {}: uuid={}, version={}->{}, addedTypes={}, totalTypes={}",
+                        packageName, uuid, storedVersion, contentVersion, addedTypes, mergedMap.size());
+                return true;
+            } catch (Throwable migrationError) {
+                try {
+                    restoreMigratedStorage(storage, originalMap, originalBytes, tag,
+                            originalSummaryTypes, originalSummaryBytes);
+                    if (!server.saveEverything(true, false, false) || storage.isDirty()) {
+                        migrationError.addSuppressed(new IllegalStateException(
+                                "Failed to durably save the component-pack rollback"));
+                    }
+                } catch (Throwable rollbackError) {
+                    migrationError.addSuppressed(rollbackError);
+                }
+                throw migrationError;
+            }
+        } catch (Throwable error) {
+            reportFailure("migration-exception", error);
+            return false;
+        }
+    }
+
+    private double calculateStoredBytes(AEKeyMap<AEKey> map) {
+        double totalBytes = 0.0d;
+        int amountPerByte = AEKeyType.items().getAmountPerByte();
+        for (AEKey key : map.keySet()) {
+            totalBytes += (double) map.getLong(key) / amountPerByte;
+        }
+        return totalBytes;
+    }
+
+    private void restoreMigratedStorage(CellDataStorage storage, AEKeyMap<AEKey> originalMap,
+                                        double originalBytes, CompoundTag tag,
+                                        int originalSummaryTypes, long originalSummaryBytes) {
+        storage.setStoredMap(originalMap);
+        storage.setBytes(originalBytes);
+        storage.cache.invalidateCache();
+        storage.setDirty();
+        tag.putInt(USED_TYPES, originalSummaryTypes);
+        tag.putLong(USED_BYTES, originalSummaryBytes);
+    }
+
     @Nullable
     private List<Item> resolveContentItems() {
-        List<Item> result = new java.util.ArrayList<>(contentIds.size());
-        for (ResourceLocation id : contentIds) {
+        return resolveContentItems(contentIds);
+    }
+
+    @Nullable
+    private List<Item> resolveContentItems(List<ResourceLocation> ids) {
+        List<Item> result = new java.util.ArrayList<>(ids.size());
+        for (ResourceLocation id : ids) {
             Item item = ForgeRegistries.ITEMS.getValue(id);
             if (item == null || item == net.minecraft.world.item.Items.AIR) {
                 reportFailure("missing:" + id, new IllegalStateException("Required item is not registered: " + id));
@@ -270,6 +453,7 @@ public final class PreloadedPortableCellItem extends PortableCellItem {
         tag.remove(USED_BYTES);
         tag.remove(USED_TYPES);
         tag.remove(INITIALIZED);
+        tag.remove(CONTENT_VERSION);
     }
 
     private void reportFailure(String reason, Throwable error) {

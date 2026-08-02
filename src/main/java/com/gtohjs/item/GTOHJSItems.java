@@ -12,6 +12,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+
 public final class GTOHJSItems {
     private static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, GTOHJS.MOD_ID);
@@ -53,6 +55,8 @@ public final class GTOHJSItems {
             () -> new PreloadedPortableCellItem(
                     "advanced_ae_hatch_component_pack",
                     AEComponentPackContents.ADVANCED_AE_HATCH_COMPONENTS,
+                    2,
+                    AEComponentPackContents.ADVANCED_AE_HATCH_COMPONENTS_V2_ADDITIONS,
                     new Item.Properties(),
                     0xDDDDDD));
 
@@ -60,7 +64,46 @@ public final class GTOHJSItems {
             GTOHJSBlocks.INTEGRAL_BRONZE_FRAMEWORK_ID,
             () -> new BlockItem(GTOHJSBlocks.INTEGRAL_BRONZE_FRAMEWORK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_OVERWORLD = worldFragment("overworld");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_NETHER = worldFragment("nether");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_END = worldFragment("end");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_REACTOR = worldFragment("reactor");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_MOON = worldFragment("moon");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_MARS = worldFragment("mars");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_VENUS = worldFragment("venus");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_MERCURY = worldFragment("mercury");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_CERES = worldFragment("ceres");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_IO = worldFragment("io");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_GANYMEDE = worldFragment("ganymede");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_PLUTO = worldFragment("pluto");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_ENCELADUS = worldFragment("enceladus");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_TITAN = worldFragment("titan");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_GLACIO = worldFragment("glacio");
+    public static final RegistryObject<Item> WORLD_FRAGMENTS_BARNARDA = worldFragment("barnarda");
+
+    public static final List<RegistryObject<Item>> WORLD_FRAGMENTS = List.of(
+            WORLD_FRAGMENTS_OVERWORLD,
+            WORLD_FRAGMENTS_NETHER,
+            WORLD_FRAGMENTS_END,
+            WORLD_FRAGMENTS_REACTOR,
+            WORLD_FRAGMENTS_MOON,
+            WORLD_FRAGMENTS_MARS,
+            WORLD_FRAGMENTS_VENUS,
+            WORLD_FRAGMENTS_MERCURY,
+            WORLD_FRAGMENTS_CERES,
+            WORLD_FRAGMENTS_IO,
+            WORLD_FRAGMENTS_GANYMEDE,
+            WORLD_FRAGMENTS_PLUTO,
+            WORLD_FRAGMENTS_ENCELADUS,
+            WORLD_FRAGMENTS_TITAN,
+            WORLD_FRAGMENTS_GLACIO,
+            WORLD_FRAGMENTS_BARNARDA);
+
     private GTOHJSItems() {
+    }
+
+    private static RegistryObject<Item> worldFragment(String world) {
+        return ITEMS.register("world_fragments_" + world, () -> new Item(new Item.Properties()));
     }
 
     public static void register(IEventBus modBus) {
@@ -79,12 +122,18 @@ public final class GTOHJSItems {
             event.accept(AE_MACHINE_COMPONENT_PACK.get().getDefaultInstance());
             event.accept(ADVANCED_AE_HATCH_COMPONENT_PACK.get().getDefaultInstance());
         }
+        if (CreativeModeTabs.INGREDIENTS.equals(event.getTabKey())) {
+            WORLD_FRAGMENTS.forEach(fragment -> event.accept(fragment.get()));
+        }
     }
 
     public static void validateLoaded() {
         if (!BASIC_AE_COMPONENT_PACK.isPresent() || !AE_MACHINE_COMPONENT_PACK.isPresent()
                 || !ADVANCED_AE_HATCH_COMPONENT_PACK.isPresent()) {
             throw new IllegalStateException("AE component-pack items were not registered");
+        }
+        if (WORLD_FRAGMENTS.size() != 16 || WORLD_FRAGMENTS.stream().anyMatch(fragment -> !fragment.isPresent())) {
+            throw new IllegalStateException("World-fragment items were not all registered");
         }
     }
 }

@@ -11,6 +11,10 @@ public final class AEComponentPackContents {
 
     public static final long AMOUNT_PER_TYPE = 16L * 1024L * 1024L;
 
+    /** Items added to the advanced hatch pack after its original format shipped. */
+    public static final List<ResourceLocation> ADVANCED_AE_HATCH_COMPONENTS_V2_ADDITIONS = locations(
+            "gtocore:me_wireless_connection_machine");
+
     public static final List<ResourceLocation> BASIC_AE_COMPONENTS = locations(
             "ae2:tiny_tnt",
             "ae2:toggle_bus",
@@ -200,12 +204,15 @@ public final class AEComponentPackContents {
             "gtocore:me_extend_pattern_buffer_ultra",
             "gtmthings:me_export_buffer",
             "gtocore:directed_tesseract_generator",
-            "gtceu:me_pattern_buffer_proxy");
+            "gtceu:me_pattern_buffer_proxy",
+            "gtocore:me_wireless_connection_machine");
 
     static {
         validate("basic AE component pack", BASIC_AE_COMPONENTS, 123);
         validate("AE machine component pack", AE_MACHINE_COMPONENTS, 42);
-        validate("advanced AE hatch component pack", ADVANCED_AE_HATCH_COMPONENTS, 20);
+        validate("advanced AE hatch component pack", ADVANCED_AE_HATCH_COMPONENTS, 21);
+        validate("advanced AE hatch component pack v2 additions",
+                ADVANCED_AE_HATCH_COMPONENTS_V2_ADDITIONS, 1);
     }
 
     private AEComponentPackContents() {}

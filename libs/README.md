@@ -8,11 +8,12 @@ Third-party mod JARs are intentionally excluded from this repository. Obtain the
 - `appliedenergistics2-forge-1.20.1-15.267.4.jar`
 - `RecipeSearch-1.3.jar`
 - `gtmthings-forge-1.20.1-26.7.1.jar`
+- `configuration-forge-1.20.1-3.1.0.jar`
 - `ldlib-forge-1.20.1-1.0.50.jar`
 - `gtceu-forge-1.20.1-26.7.3.jar`
 - `gtocore-forge-1.20.1-0.5.6-beta.jar`
 - The additional GTO runtime API JAR declared in `build.gradle`.
 
-The build uses these seven files as local compile-only or deobfuscation dependencies. GTOHJS does not directly import GTMThings classes, but GTOCore's public machine ABI inherits `IBindable`, so javac must be able to resolve the matching GTMThings API. The runtime copy is supplied by the GTO installation. Do not substitute nearby versions without auditing GTOCore API and Coremod bytecode compatibility.
+The build uses these eight files as local compile-only or deobfuscation dependencies. GTOHJS does not directly import GTMThings classes, but GTOCore's public machine ABI inherits `IBindable`, so javac must be able to resolve the matching GTMThings API. Configuration 3.1.0 supplies the same annotation-driven in-game config UI used by GTOCore. Runtime copies are supplied by the GTO installation. Do not substitute nearby versions without auditing GTOCore API and Coremod bytecode compatibility.
 
 All third-party JARs in this directory are local-only and must remain untracked. In particular, `gtceu-1.20.1-1.8.0.jar` is not required by the current build and should not be added.

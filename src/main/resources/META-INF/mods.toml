@@ -53,3 +53,10 @@ mandatory = true
 versionRange = "[15.267.4,15.268)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "configuration"
+mandatory = true
+versionRange = "[3.1.0,4)"
+ordering = "AFTER"
+side = "BOTH"

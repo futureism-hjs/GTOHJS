@@ -13,6 +13,8 @@ public final class GTOHJSItemTooltipHandler {
     private static final Set<String> GTOCORE_MACHINE_PATHS = Set.of(
             "me_input_assembly",
             "me_stocking_input_assembly",
+            "me_super_pattern_buffer",
+            "me_super_pattern_buffer_proxy",
             "universal_steam_factory",
             "one_stop_rare_earth_processing_plant",
             "hyperdimensional_forge",
@@ -21,7 +23,11 @@ public final class GTOHJSItemTooltipHandler {
             "hyperdimensional_chemical_factory",
             "advanced_generator_array",
             "advanced_alchemy_cauldron",
-            "large_petal_apothecary"
+            "large_petal_apothecary",
+            "steam_array",
+            "advanced_steam_array",
+            "ulv_fragment_world_collection_machine",
+            "large_fragment_world_collection_machine"
     );
 
     private GTOHJSItemTooltipHandler() {
