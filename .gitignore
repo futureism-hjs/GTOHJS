@@ -48,10 +48,6 @@ temp/
 # Scratch package tree created by local decompilation tools
 /com/
 
-# Internal development documentation is not part of public releases
-/docs/
-/GTOHJS_REGISTRATION_TEMPLATES_ZH.md
-
 # Operating-system metadata
 .DS_Store
 Thumbs.db
