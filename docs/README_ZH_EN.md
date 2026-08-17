@@ -3,7 +3,7 @@
 > [!WARNING]
 > 本项目包含 AI 生成或 AI 辅助的代码、文档、材质与任务内容，使用前必须自行审查和测试。 This project contains AI-generated or AI-assisted code, documentation, textures and quest content. Review and test it before use.
 
-**当前公开版本 / Current public release:** `gtohjs-1.0-beta-for-gtocore-0.5.6-beta.jar`
+**当前清洁构建基线 / Current clean-build baseline:** `gtohjs-2.1-alpha-for-gtocore-0.5.6-beta.jar`
 
 **运行基线 / Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
@@ -44,6 +44,9 @@
 33. `34_me_placement_tool_gto_port.md`：ME Placement Tool 的 GTO AE2 适配与独立 Mod 拆分边界。
 34. `35_alpha_shaped_recipe_id_validation.md`：工作台有序配方 raw/final ID 验证规则。
 35. `36_me_super_pattern_buffer_config.md`：ME超级样板总成配置入口、字段命名、容量迁移和缩容警告。
+36. `37_me_super_wildcard_pattern_buffer.md`：ME 超级通配符样板总成的槽位、配置和隔离行为。
+37. `38_fix1_dedicated_server_renderer_validation.md`：专用服务端渲染器校验与双端注册边界。
+38. `39_fixed_parallel_runtime_and_coremod_architecture.md`：固定并行真实执行链、可填充忽略位、Coremod/Java 职责边界和文档优先维护规则。
 
 ## English reading order
 
@@ -58,6 +61,7 @@ The same files contain an English section after the Chinese section. Start with 
 - 除非用户要求，不做哈希对比；/ Skip hash comparisons unless requested.
 - 网络下载失败时停止并等待用户；/ Stop and wait for the user on network download failure.
 - GTOLib 只读参考已恢复；/ GTOLib is available for read-only ABI audits again.
+- 后续修改优先查阅本目录文档；仅在文档缺失、ABI 变化、行为冲突或验证失败时定向复查上游源码。 / Consult these documents first; re-audit upstream sources only for missing coverage, ABI changes, behavioral conflicts, or failed verification.
 
 ## 当前源码摘要 / Current source summary
 
@@ -70,12 +74,12 @@ universal_steam_factory: REGISTERED, 5 x 5 x 5 patternBuilt=true, cachedPatterns
 universal steam recipes: 15 modes, MV-and-below only, final duration locked to 1t
 hyperdimensional machines: forge, steam furnace, smelter, imported chemical factory 3
 patterns: 15x43x15, 15x43x15, 49x34x39, 49x34x39
-forge/steam structures: user-authored tall models, 1957 monitored positions each
+forge/steam structures: user-authored tall models; forge uses explicit runtime parallel expansion, steam delegates it to BaseSteamMultiblockMachine
 chemical design: user-authored final model with base, pipes, starmetal coils and two frame materials
 chemical topology: 14511 positions, 922 coils, zero forbidden rotors, one component
 chemical modes: large chemical reactor + polymerization; large chemical proxies ordinary chemical recipes
 advanced generator array: stock behavior and structure, isolated fixed internal limit=16
-advanced alchemy cauldron: 5x3x5, alchemy recipes, non-consumable chanced inputs, guaranteed chanced outputs, both heat hatches excluded
+advanced alchemy cauldron: 5x3x5, 14 ignored/fillable interior positions, non-consumable chanced inputs, guaranteed chanced outputs, both heat hatches excluded
 pattern topology: one six-neighbor component per machine; smelter and chemical factory each use the same 27-position controller service face
 footprint: at most 4 x 4 chunks under arbitrary chunk alignment
 smelter: final user-authored model, naquadah-alloy controller casing, 825 coils and five top-crown muffler candidates with exactly one required muffler

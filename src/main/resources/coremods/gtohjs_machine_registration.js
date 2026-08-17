@@ -424,26 +424,6 @@ function appendOneStopRecipeBuilder(instructions, rawPath) {
     ));
 }
 
-function appendRecipePowerAndDuration(instructions, eut, duration) {
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, eut));
-    instructions.add(new InsnNode(Opcodes.I2L));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'EUt',
-        '(J)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, duration));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'duration',
-        '(I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
 function appendOneStopSaveAndAccept(instructions, acceptMethod) {
     instructions.add(new MethodInsnNode(
         Opcodes.INVOKEVIRTUAL,

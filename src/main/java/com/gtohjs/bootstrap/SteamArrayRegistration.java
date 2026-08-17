@@ -106,7 +106,7 @@ public final class SteamArrayRegistration {
         if (buildPattern && candidate.getPatternFactory()[0].get() == null) {
             throw new IllegalStateException("Steam array pattern could not be built");
         }
-        if (!(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
+        if (GTCEu.isClientSide() && !(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
             throw new IllegalStateException("Steam array renderer is not ArrayMachineRenderer");
         }
     }

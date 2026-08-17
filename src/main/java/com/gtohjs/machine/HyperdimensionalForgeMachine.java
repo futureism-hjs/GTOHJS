@@ -3,6 +3,7 @@ package com.gtohjs.machine;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.handler.RecipeHandlerUnit;
+import com.gregtechceu.gtceu.api.recipe.modifier.ParallelLogic;
 import com.gtolib.api.machine.multiblock.NoEnergyCustomParallelMultiblockMachine;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +21,7 @@ public final class HyperdimensionalForgeMachine extends NoEnergyCustomParallelMu
         if (HyperdimensionalRecipeSupport.hasOverclockHatch(this)) {
             return null;
         }
-        GTRecipe modified = super.getRealRecipe(unit, recipe);
+        GTRecipe modified = ParallelLogic.accurateParallel(this, unit, recipe, getParallel());
         if (modified != null) {
             modified.duration = 1;
         }

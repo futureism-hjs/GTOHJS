@@ -129,7 +129,7 @@ public final class AdvancedGeneratorArrayRegistration {
         if (buildPattern && candidate.getPatternFactory()[0].get() == null) {
             throw new IllegalStateException("Advanced generator array pattern could not be built");
         }
-        if (!(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
+        if (GTCEu.isClientSide() && !(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
             throw new IllegalStateException("Advanced generator array renderer does not match the stock array");
         }
     }

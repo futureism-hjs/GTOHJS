@@ -29,7 +29,7 @@ public final class AdvancedAlchemyCauldronRegistration {
     private static final int EXPECTED_FIREBOXES = 25;
     private static final int EXPECTED_CASINGS = 31;
     private static final int EXPECTED_PIPES = 4;
-    private static final int EXPECTED_AIR = 14;
+    private static final int EXPECTED_IGNORED_SPACES = 14;
 
     public enum State {
         NOT_STARTED,
@@ -101,7 +101,7 @@ public final class AdvancedAlchemyCauldronRegistration {
                                                 .setExactLimit(1).setPreviewCount(1)))
                                 .where('C', Predicates.blocks(GTBlocks.CASING_STEEL_PIPE.get()))
                                 .where('S', Predicates.controller(machine))
-                                .where(' ', Predicates.air())
+                                .where(' ', Predicates.any())
                                 .build())
                         .renderer(() -> new ArrayMachineRenderer(
                                 GTCEu.id("block/casings/solid/machine_casing_solid_steel"),
@@ -137,7 +137,7 @@ public final class AdvancedAlchemyCauldronRegistration {
         validateSymbolCount('A', EXPECTED_FIREBOXES);
         validateSymbolCount('B', EXPECTED_CASINGS);
         validateSymbolCount('C', EXPECTED_PIPES);
-        validateSymbolCount(' ', EXPECTED_AIR);
+        validateSymbolCount(' ', EXPECTED_IGNORED_SPACES);
         validateSymbolCount('S', 1);
         if (candidate.getPatternFactory() == null || candidate.getPatternFactory().length != 1) {
             throw new IllegalStateException("Advanced alchemy cauldron pattern supplier was not created");

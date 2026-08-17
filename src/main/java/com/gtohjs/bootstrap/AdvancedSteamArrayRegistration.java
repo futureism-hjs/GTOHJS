@@ -110,7 +110,7 @@ public final class AdvancedSteamArrayRegistration {
         if (buildPattern && candidate.getPatternFactory()[0].get() == null) {
             throw new IllegalStateException("Advanced steam array pattern could not be built");
         }
-        if (!(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
+        if (GTCEu.isClientSide() && !(candidate.getRenderer() instanceof ArrayMachineRenderer)) {
             throw new IllegalStateException("Advanced steam array renderer is not ArrayMachineRenderer");
         }
     }

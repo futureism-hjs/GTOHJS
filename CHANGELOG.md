@@ -1,5 +1,77 @@
 # GTO HJS 更新日志 / Changelog
 
+## 2.2-alpha-for-gtocore-0.5.6-beta - 2026-08-17
+
+### 中文
+
+与上一个版本 `2.1-alpha-for-gtocore-0.5.6-beta` 对比：
+
+修复：
+
+- 修复超维度锻炉只显示 `524288` 并行、实际配方仍以 1 并行运行的问题；无能源控制器现在通过 GTCEu 原生精确并行算法生成真实并行配方。
+- 高级炼金锅的 14 个内部空间改为完全忽略位置，可以放置任意方块且不影响结构成型，也不会附加额外仓室能力。
+
+调整：
+
+- 删除 Coremod 中一份重复的配方功率与耗时辅助函数，保持生成字节码不变。
+- 新增固定并行运行链、结构忽略位、Coremod/Java 职责边界及文档优先维护流程的中英文开发文档。
+
+构建：
+
+- 使用 Java 21 完成构建；按用户要求未执行额外源码审查、客户端验证或服务端验证。
+
+### English
+
+Compared with `2.1-alpha-for-gtocore-0.5.6-beta`:
+
+Fixed:
+
+- Fixed the Hyperdimensional Forge displaying 524288 parallelism while its running recipe remained at one parallel. The no-energy controller now creates the actual parallel recipe through GTCEu's accurate parallel algorithm.
+- Changed the Advanced Alchemy Cauldron's fourteen internal spaces into fully ignored positions. Arbitrary blocks may occupy them without invalidating the structure or attaching additional part abilities.
+
+Changed:
+
+- Removed one duplicate Coremod helper for recipe power and duration without changing the emitted bytecode.
+- Added bilingual development documentation for fixed-parallel execution, ignored pattern positions, Coremod/Java responsibilities, and the documentation-first maintenance workflow.
+
+Build:
+
+- Built with Java 21. Per user instruction, no additional source review, client validation, or server validation was performed.
+
+## 2.1-alpha-for-gtocore-0.5.6-beta - 2026-08-12
+
+### 中文
+
+与上一个清洁构建 `2.0-alpha-for-gtocore-0.5.6-beta` 对比：
+
+修复：
+
+- 修复专用服务端注册 `gtocore:advanced_generator_array`、`gtocore:steam_array` 和 `gtocore:advanced_steam_array` 时被错误判定失败的问题。
+- GTCEu 在服务端按设计使用 `IRenderer.EMPTY`；GTOHJS 现在只在客户端检查 `ArrayMachineRenderer`，服务端继续验证机器注册表、配方类型、结构供应器和最终注册状态。
+- 服务端现在可以完成 GTOHJS 的 `FMLLoadCompleteEvent`，不再因阵列机器的客户端渲染器校验抛出致命加载错误。
+
+验证：
+
+- 使用 Java 21 完成清洁构建。
+- 在指定 GTO 服务端启动并到达 `Done`，随后通过 `stop` 正常退出，退出码为 0。
+- 固定 GTO 客户端已完成双端兼容验证；未修改 EMI 或任何只读参考资源。
+
+### English
+
+Compared with the previous clean build `2.0-alpha-for-gtocore-0.5.6-beta`:
+
+Fixed:
+
+- Fixed dedicated-server registration for `gtocore:advanced_generator_array`, `gtocore:steam_array`, and `gtocore:advanced_steam_array`.
+- GTCEu intentionally uses `IRenderer.EMPTY` on a dedicated server. GTOHJS now checks the concrete `ArrayMachineRenderer` type only on the client while continuing to validate the machine registry, recipe type, pattern supplier, and finalized registration state on both sides.
+- GTOHJS no longer aborts `FMLLoadCompleteEvent` because of a client-only renderer assertion, allowing the dedicated server to finish loading.
+
+Verification:
+
+- Clean-built with Java 21.
+- Started the specified GTO server to `Done`, then stopped it through the console with exit code 0.
+- The fixed GTO client passed the dual-side compatibility check. EMI and all read-only reference resources were left untouched.
+
 ## 2.0-alpha-for-gtocore-0.5.6-beta - 2026-08-02
 
 ### 中文

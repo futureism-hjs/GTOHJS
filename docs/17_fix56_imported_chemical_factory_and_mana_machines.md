@@ -2,7 +2,7 @@
 
 > 历史基线：fix56 的化工厂实心屋面和旋转节点已由 fix57 取代；进阶发电阵列仍有效，高级炼金锅除 pre3 新增的导热仓过滤和提示文本外仍有效。当前化工厂结构见 `18_fix57_sealed_rear_open_signal_array.md`，炼金锅最新约束见 `29_pre3_recipe_directory_and_cauldron_constraints.md`。
 >
-> Historical baseline: fix57 replaces the fix56 solid roof and rotor nodes. The Advanced Generator Array remains valid; the Advanced Alchemy Cauldron section remains valid except for the pre3 heat-hatch filter and tooltip additions. See `18_fix57_sealed_rear_open_signal_array.md` for the current factory structure and `29_pre3_recipe_directory_and_cauldron_constraints.md` for the latest cauldron contract.
+> Historical baseline: fix57 replaces the fix56 solid roof and rotor nodes. The Advanced Generator Array remains valid; the Advanced Alchemy Cauldron section remains valid except for the pre3 heat-hatch filter/tooltips and fix1's 14 ignored, fillable interior positions. See `18_fix57_sealed_rear_open_signal_array.md`, `29_pre3_recipe_directory_and_cauldron_constraints.md`, and `39_fixed_parallel_runtime_and_coremod_architecture.md` for the current contracts.
 
 ## 中文
 
@@ -55,7 +55,7 @@ AdvancedGeneratorArraySupport.resolveLimit(holder, configured)
 
 ### 高级炼金锅
 
-结构来自 `高级炼金锅.litematic`，尺寸 `5 x 3 x 5`，钻石替代方块 local `(0,1,2)` 是控制器。因为控制器位于 X 端，pattern 以 `x=4 -> x=0` 作为五个 aisle；每个 aisle 的行仍按底到顶排列。结构包含 25 个钢火箱、31 个固体钢机壳、4 个钢管机壳和 14 个锅腔空气位。
+结构来自 `高级炼金锅.litematic`，尺寸 `5 x 3 x 5`，钻石替代方块 local `(0,1,2)` 是控制器。因为控制器位于 X 端，pattern 以 `x=4 -> x=0` 作为五个 aisle；每个 aisle 的行仍按底到顶排列。结构包含 25 个钢火箱、31 个固体钢机壳、4 个钢管机壳和 14 个内部位置；这些位置自 fix1 起使用 `Predicates.any()`，可放任意方块且完全不参与成型监听。
 
 控制器继承 `ElectricManaMultiblockMachine`，但 `isGeneratorMana()` 返回 false，使 `ManaTrait` 收集魔力输入仓。仓室数量基线来自 `mana_garden`：并行仓最多 1、物品输入最多 4、流体输入最多 4、流体输出最多 4、能源输入仓和恰好一个维护仓。为让炼金锅配方可运行，做两项必要修正：
 
@@ -95,7 +95,7 @@ The stock controller is final and owns dynamic fuel types, internal-machine filt
 
 ### Advanced Alchemy Cauldron
 
-The cauldron pattern is a `5 x 3 x 5` axis-transposed representation of the supplied litematic, with the diamond controller marker at local `(0,1,2)`. It contains 25 steel fireboxes, 31 solid steel casings, four steel pipe casings and 14 required air positions. Its controller consumes mana and runs `ALCHEMY_CAULDRON_RECIPES` with the stock parallel modifier.
+The cauldron pattern is a `5 x 3 x 5` axis-transposed representation of the supplied litematic, with the diamond controller marker at local `(0,1,2)`. It contains 25 steel fireboxes, 31 solid steel casings, four steel pipe casings and 14 interior positions. Since fix1 these positions use `Predicates.any()`, so any blocks may occupy them without participating in formation monitoring. Its controller consumes mana and runs `ALCHEMY_CAULDRON_RECIPES` with the stock parallel modifier.
 
 Mana Garden's capability counts are retained, but `OUTPUT_MANA` is changed to `INPUT_MANA` and up to four item export buses are added. These are functional corrections: 30 of 39 cauldron recipes consume positive mana, and most cauldron recipes have item outputs. Before parallel processing, chanced item/fluid inputs are changed to chance 0 and chanced outputs to chance 10000 while preserving content amount and tier boost. The runtime copy changes only this machine; recipe definitions, EMI and the stock cauldron remain unchanged.
 
