@@ -648,7 +648,7 @@ if (node.getOpcode() === Opcodes.INVOKESTATIC &&
 默认使用 Java 21 和联网构建：
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
+$env:JAVA_HOME = '[Java 21 安装目录]'
 .\gradlew.bat clean build --stacktrace
 ```
 

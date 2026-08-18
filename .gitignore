@@ -53,3 +53,15 @@ temp/
 Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+# Private AI/agent state and project caches (never publish)
+Agent cache/
+Agent cache--Global/
+**/Agent cache/
+**/Agent cache--Global/
+.codex/
+.claude/
+.cursor/
+.continue/
+.trae/
+.aider*/

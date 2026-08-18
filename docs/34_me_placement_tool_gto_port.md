@@ -7,7 +7,7 @@
 ### Beta 拆分基线 / Beta split baseline
 
 - 独立活动工程：`work/ME-Placement-Tool-for-gto`
-- 正式源码目录：`E:\program\java\GregTech-Odyssey\ME-Placement-Tool-for-gto-Development-Project\ME Placement Tool for gto`
+- 正式源码目录：`[你的工作区目录]\ME-Placement-Tool-for-gto-Development-Project\ME Placement Tool for gto`
 - 独立 Mod ID：`meplacementtool`
 - 五个物品、模型、翻译、GUI 与最终配方 ID 统一使用原版 `meplacementtool:*` 命名空间。
 - 菜单、网络频道、配置生命周期和 Forge 主入口归独立 Mod；GTOHJS 不再内嵌放置工具 Java、资源或配方注册。

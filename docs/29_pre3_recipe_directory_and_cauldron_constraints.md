@@ -6,7 +6,7 @@
 
 ### 1. 输入基线
 
-本次只读扫描 `E:\program\java\GregTech-Odyssey\GTOHJS-Development-Project\Required-development-files\Developers-file\配方`，共导入五个草稿，不修改原文件：
+本次只读扫描 `[你的工作区目录]\GTOHJS-Development-Project\Required-development-files\Developers-file\配方`，共导入五个草稿，不修改原文件：
 
 | 草稿 | 注册目标 | 关键变化 |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ GTOCore 的普通导热仓与高级导热仓都同时声明了 `PartAbility.IMPO
 
 ### 1. Imported drafts
 
-Pre3 reads all five drafts from `E:\program\java\GregTech-Odyssey\GTOHJS-Development-Project\Required-development-files\Developers-file\配方` without modifying those files. It imports one assembler recipe, two assembly-line recipes and two shaped crafting recipes. The Large Petal Apothecary recipe retains its eight item inputs and now uses `7 EU/t` for `400t`.
+Pre3 reads all five drafts from `[你的工作区目录]\GTOHJS-Development-Project\Required-development-files\Developers-file\配方` without modifying those files. It imports one assembler recipe, two assembly-line recipes and two shaped crafting recipes. The Large Petal Apothecary recipe retains its eight item inputs and now uses `7 EU/t` for `400t`.
 
 Both fixed circuit inputs are generalized to the ZPM circuit tag. The chemical factory accepts 16 items from `CustomTags.ZPM_CIRCUITS`. The smelter accepts 64 items from the same tag because GTOCore explicitly places `gtocore:bioware_processor` in `#gtceu:circuits/zpm`.
 

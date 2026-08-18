@@ -5,9 +5,15 @@
 
 [中文](README_ZH.md) | [Full historical changelog](CHANGELOG.md) | [2.0-per1 to 2.0-alpha changelog](CHANGELOG_2.0_PER1_TO_2.0_ALPHA.md)
 
+Development documentation entry: [`docs/README_ZH_EN.md`](docs/README_ZH_EN.md). It covers machine, part, recipe registration, GTOCore/GTOLib research and Java toolchain rules.
+
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
 The current release is `2.0-alpha-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, 18 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
+
+### GTOHJS and GTOHJS-API compatibility
+
+`GTOHJS` and `GTOHJS-API` are separate repositories. GTOHJS versions before `3.0-alpha` do not require the API Mod. GTOHJS `3.0-alpha` and later require a matching standalone `gtohjs_api` release from the separate API repository. The current `2.0-alpha` release does not require the API.
 
 ## Runtime and development dependencies
 
@@ -30,7 +36,7 @@ After closing the client, place the GTOHJS JAR in the `mods` directory of a Mine
 Use Java 21 and an online Gradle build by default:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
+$env:JAVA_HOME = '[Java 21 安装目录]'
 .\gradlew.bat clean build --stacktrace
 ```
 

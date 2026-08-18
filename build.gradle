@@ -45,6 +45,9 @@ dependencies {
     implementation fg.deobf(files('libs/gtceu-forge-1.20.1-26.7.3.jar'))
     implementation fg.deobf(files('libs/gtolib-forge-1.20.1-26.7.4.jar'))
     implementation fg.deobf(files('libs/gtocore-forge-1.20.1-0.5.6-beta.jar'))
+    // The 3.0 migration copy consumes the stable API contract; native GTO
+    // registration remains owned by the existing Coremod templates.
+    compileOnly files('libs/gtohjs_api-1.0-gamma-for-gtocore-0.5.6-beta.jar')
     // GTOCore's Kotlin API is referenced by the copied wildcard UI implementation.
     compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:1.9.10'
 }

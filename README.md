@@ -5,11 +5,14 @@
 
 Current release / 当前正式版本：`gtohjs-2.0-alpha-for-gtocore-0.5.6-beta.jar`
 
+Compatibility / 兼容关系: `GTOHJS` and `GTOHJS-API` are separate repositories. GTOHJS versions before `3.0-alpha` do not require the API Mod. GTOHJS `3.0-alpha` and later require a matching `gtohjs_api` release from the separate API repository.
+
 - [中文完整说明](README_ZH.md)
 - [Complete English README](README_EN.md)
 - [完整历史更新日志 / Full historical changelog](CHANGELOG.md)
 - [2.0-per1 至 2.0-alpha 更新日志 / 2.0-per1 to 2.0-alpha changelog](CHANGELOG_2.0_PER1_TO_2.0_ALPHA.md)
 - [本地依赖说明 / Local dependency guide](libs/README.md)
+- [开发文档目录 / Development documentation](docs/README_ZH_EN.md)
 
 GTO HJS 为 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 扩展更多机器和配方。GTO HJS expands the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta with additional machines and recipes.
 

@@ -5,9 +5,15 @@
 
 [English](README_EN.md) | [完整历史更新日志](CHANGELOG.md) | [2.0-per1 至 2.0-alpha 更新日志](CHANGELOG_2.0_PER1_TO_2.0_ALPHA.md)
 
+开发文档入口：[`docs/README_ZH_EN.md`](docs/README_ZH_EN.md)。该目录包含机器、仓室、配方注册、GTOCore/GTOLib 研究和 Java 工具链说明。
+
 GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼容扩展，用于为 GTO 扩展更多机器和配方。项目通过 GTOCore 的原生注册窗口增加物品、方块、机器、仓室、配方类型与配方，不修改 GTOCore 或 EMI 的原始文件。
 
 当前正式版本为 `2.0-alpha-for-gtocore-0.5.6-beta`。当前源码实际注册 22 个 `gtohjs` 物品、1 个独立方块、18 个 `gtocore` 机器或仓室定义和 3 个新配方类型。GTO 适配版 ME Placement Tool 已分离为完全独立的 Mod `ME Placement Tool for gto`；它不是 GTOHJS 的依赖，GTOHJS 不再注册或引用其工具、物品 ID、UI、网络频道和配方，两个 Mod 均可单独安装。
+
+### GTOHJS 与 GTOHJS-API 的兼容关系
+
+`GTOHJS` 和 `GTOHJS-API` 是两个独立仓库。`3.0-alpha` 之前的 GTOHJS 版本不需要 API Mod；`3.0-alpha` 及以上版本必须安装与 GTOHJS 版本匹配的独立 `gtohjs_api` Mod。当前 `2.0-alpha` 版本不需要 API。
 
 ## 运行与开发依赖
 
@@ -30,7 +36,7 @@ GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼�
 默认使用 Java 21 和联网 Gradle 构建：
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
+$env:JAVA_HOME = '[Java 21 安装目录]'
 .\gradlew.bat clean build --stacktrace
 ```
 
@@ -186,7 +192,7 @@ build\libs\gtohjs-2.0-alpha-for-gtocore-0.5.6-beta.jar
 - 机器和配方注册使用 GTO 原生生命周期，并在加载完成后校验注册表、配方表、结构和能力。
 - 样板网格、动态 UI 宽度、模式滚轮、代理输出和隔离修复只作用于对应的 GTOHJS 机器，不改变普通 GTO 样板总成。
 - 大型花药台会向 GTO 客户端配方缓存同步运行时代理结果，以便显示 71 条配方；项目没有修改 EMI 源文件。
-- 当前清洁源码包包含 `docs` 下的全部开发文档、注册模板、项目规则与索引。公开 Git 镜像是否包含内部开发文档由发布操作单独决定。
+- 当前 Git 源码镜像是面向其他开发者的独立工程，包含构建、接入和注册所需的公开 `docs`、注册模板、项目规则与索引；不需要配套下载本机活动源码。
 - 当前源码不包含自定义车床、大型自定义切割机、终级终端或导出器预览功能；历史遗留翻译键不代表物品已经注册。
 
 ## 许可证

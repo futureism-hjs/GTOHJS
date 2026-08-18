@@ -31,6 +31,7 @@ import com.gtohjs.item.GTOHJSItems;
 import com.gtohjs.item.GTOHJSItemTooltipHandler;
 import com.gtohjs.config.MEPatternBufferConfig;
 import com.gtohjs.util.ModLog;
+import com.gtohjs.api.GTOHJSApi;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -51,6 +52,9 @@ public final class GTOHJS {
         MinecraftForge.EVENT_BUS.addListener(GTOHJSItemTooltipHandler::onItemTooltip);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         modBus.addListener(this::onLoadComplete);
+        // The migration copy publishes its existing content as API metadata;
+        // the proven Coremod still performs the actual native registration.
+        GTOHJSApi.registerProvider(new LegacyGTOHJSApiProvider());
         // GTO recipe and machine classes must initialize only in their native registry windows.
         ModLog.info("Mod constructed; machine registration is owned by the early ASM coremod");
     }

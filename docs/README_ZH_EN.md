@@ -93,3 +93,9 @@ parallel/thread: smelter and chemical factory use fully custom left-tab values w
 thread note: only coil machines use GTOLib CrossRecipe threads; forge/steam remain single-recipe controllers
 ignored spaces: Predicates.any(), not registered as monitored pattern positions
 ```
+
+## Java 工具链 / Java toolchain
+
+详见 `40_java_toolchain_and_build.md`：GTOLib 源码使用 JDK 23 Gradle toolchain，但目标为 Java 21；GTOHJS 和 GTOHJS API 默认使用 JDK 21。GTOLib 工程中的 JDK 25 仅是本地 IDE 设置。
+
+See `40_java_toolchain_and_build.md`: GTOLib uses a JDK 23 Gradle toolchain while targeting Java 21. GTOHJS and GTOHJS API use JDK 21 by default. The JDK 25 entry in the GTOLib IDE project is local only.

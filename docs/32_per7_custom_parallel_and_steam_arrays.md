@@ -65,7 +65,7 @@
 
 ```powershell
 node --check src\main\resources\coremods\gtohjs_machine_registration.js
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
+$env:JAVA_HOME = '[Java 21 安装目录]'
 .\gradlew.bat clean build --stacktrace
 ```
 
