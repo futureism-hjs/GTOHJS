@@ -1,32 +1,32 @@
-# GTO 六类多方块机器研究笔记
+# GTO Six-family Multiblock Machine Source Research
 
-> 研究目标：为 GTOHJS 后续稳定注册多方块机器、生成结构文件和接入配方提供可核对的依据。
+> **Research objective:** Establish reviewable evidence for stable future GTOHJS multiblock registration, structure-file generation, and recipe integration.
 >
-> 版本范围：GTOCore 源码对应 `0.5.6-beta`，GTM 源码为随仓库提供的 1.20.1 分支，gtolib 运行时为 `26.7.4`。GTO/gtolib 的一部分核心类在最新版 JAR 中是 native/混淆实现；本文优先引用同版本仓库源码，其次引用社区 `gtolib_3` 的可读实现，并明确标注推断边界。
+> **Version scope:** GTOCore source corresponds to `0.5.6-beta`, GTM source is the bundled 1.20.1 branch, and GTOLib runtime is `26.7.4`. Some current GTO/GTOLib core classes are native or obfuscated. This document gives priority to same-version repository source, then uses readable community `gtolib_3` with explicit inference boundaries.
 
-## 1. 结论速览
+## 1. Summary
 
-| 机器 | 注册入口/控制器类 | 配方类型 | 结构能力的实际来源 | 关键加成 |
+| Machine | Registration/controller | Recipe type | Real source of structure abilities | Key bonus |
 |---|---|---|---|---|
-| `gtocore:steam_pressor` | `MachineRegisterUtils.multiblock` → `SteamMultiblockMachine` | `gtceu:compressor` | `steam_pressor.mbs` 中 `X` predicate | 低级蒸汽并行上限；默认蒸汽过载，不能用普通 I/O 总线 |
-| `gtocore:large_steam_macerator` | `MachineRegisterUtils.multiblock` → `LargeSteamMultiblockMachine` | `gtceu:macerator` | `large_steam_macerator.mbs` 中 `a` predicate | 更高蒸汽并行上限；额外普通输入/输出总线；可调蒸汽 OC |
-| `gtceu:vacuum_freezer` | GTM 原始定义被 GTO mixin 重定向 → `ElectricMultiblockMachine` | `gtceu:vacuum_freezer` | GTM 3×3×3 pattern + `GTMachineModify` 未改主形状 | 普通升级模块；维护仓；**没有消声仓/并行仓** |
-| `gtceu:electric_blast_furnace` | GTM 原始定义被 GTO mixin 重定向 → `CoilMultiblockMachine` | `gtceu:electric_blast_furnace` | GTM 主 pattern + GTO optional sub-pattern | 线圈温度、消声仓、维护仓；可选扩展能源/加速仓；升级模块 |
-| `gtceu:large_circuit_assembler` | GTO `GCYMMachines` 的 `GTM.multiblock` → `GCYMMultiblockMachine` | `gtceu:circuit_assembler` | GTO 7×5×3 pattern | 55 个最低大型装配 casing；整体框架限等级；维护、并行、加速、1–8 能源、魔力增幅 |
-| `gtocore:nano_forge` | GTO `MultiBlockD` → `NanoForgeMachine` | `gtocore:nano_forge` | 动态 3 档 pattern（纳米材料决定） | 只接受激光输入；内部纳米蜂群决定并行；机器等级高于配方时获得额外并行/完美 OC |
+| `gtocore:steam_pressor` | `MachineRegisterUtils.multiblock` -> `SteamMultiblockMachine` | `gtceu:compressor` | `X` predicate in `steam_pressor.mbs` | Low-steam parallel cap and steam runtime; no ordinary I/O |
+| `gtocore:large_steam_macerator` | `MachineRegisterUtils.multiblock` -> `LargeSteamMultiblockMachine` | `gtceu:macerator` | `a` predicate in `large_steam_macerator.mbs` | Higher steam parallelism, ordinary I/O, configurable steam OC |
+| `gtceu:vacuum_freezer` | Original GTM definition redirected by GTO Mixin -> `ElectricMultiblockMachine` | `gtceu:vacuum_freezer` | GTM 3x3x3 pattern; `GTMachineModify` retains main shape | Upgrade modules and maintenance; no muffler or parallel hatch |
+| `gtceu:electric_blast_furnace` | Original GTM definition redirected -> `CoilMultiblockMachine` | `gtceu:electric_blast_furnace` | GTM main pattern plus GTO optional sub-pattern | Coil temperature, muffler, maintenance, optional energy/acceleration extension, upgrades |
+| `gtceu:large_circuit_assembler` | `GTM.multiblock` in GTO `GCYMMachines` -> `GCYMMultiblockMachine` | `gtceu:circuit_assembler` | GTO 7x3x5 pattern | Minimum 55 assembling casings, tier framework, maintenance, parallel, acceleration, 1-8 energy, mana amplification |
+| `gtocore:nano_forge` | GTO `MultiBlockD` -> `NanoForgeMachine` | `gtocore:nano_forge` | Three dynamic patterns selected by nanite material | Laser-only energy; stored nanites set parallelism; higher machine tier adds parallel/perfect OC |
 
-最重要的工程原则：**“能否放某个仓”只看最终 `where` predicate，不看机器名字、tooltip 或配方类型。** 例如大型电路组装机的并行仓来自 `autoAbilities(true, false, true)`，而真空冷冻机明确传入 `false` 关闭消声仓和并行仓。
+The primary engineering rule is: **the final `where` predicate decides whether a hatch may be installed.** Machine name, tooltip, and recipe type do not. For example, the Large Circuit Assembler gains a parallel hatch through `autoAbilities(true, false, true)`, while the Vacuum Freezer passes false for both muffler and parallel support.
 
-## 2. 注册和运行时流程
+## 2. Registration and runtime flow
 
-### 2.1 GTO 注册器
+### 2.1 GTO registrar
 
-GTO 自有机器通常这样进入注册表：
+GTO-owned machines normally register as:
 
 ```java
 public static final MultiblockMachineDefinition MACHINE =
-    MachineRegisterUtils.multiblock("name", "中文名", Controller::new)
-        .allRotation() // 或 nonYAxisRotation()
+    MachineRegisterUtils.multiblock("name", "Localized Name", Controller::new)
+        .allRotation() // or nonYAxisRotation()
         .recipeTypes(RECIPE_TYPE)
         .recipeModifier(MODIFIER)
         .block(CASING)
@@ -35,87 +35,91 @@ public static final MultiblockMachineDefinition MACHINE =
         .register();
 ```
 
-`MachineRegisterUtils.multiblock` 先写入语言表，再调用 `GTORegistration.GTO.multiblock`（`GTOCore/src/main/java/com/gtocore/utils/register/MachineRegisterUtils.java:97-105`）。因此 GTO 机器的命名空间是 `gtocore`；GCYM/被 mixin 接管的 GTM 机器仍然是 `gtceu`。
+`MachineRegisterUtils.multiblock` writes localization and calls `GTORegistration.GTO.multiblock` (`MachineRegisterUtils.java:97-105`). GTO machines therefore use `gtocore`. GCYM or Mixin-owned GTM machines remain `gtceu`.
 
-GTO `MultiblockBuilder.register()` 会把 builder 的 `upgradable` 和 `maxTier` 写入 `MultiblockDefinition`（社区 gtolib_3 `MultiblockBuilder.java:222-235`）。`steamOverclock()` 还会设置 `maxTier(1)`、蒸汽 tooltip 和特殊并行 tooltip（`MultiblockBuilder.java:453-465`）；这里的 `maxTier` 主要影响 GTO/EMI 的等级筛选，不是“只允许某等级仓”的 pattern 限制。
+Readable older `MultiblockBuilder.register()` writes `upgradable` and `maxTier` into `MultiblockDefinition` (`gtolib_3/MultiblockBuilder.java:222-235`). `steamOverclock()` sets `maxTier(1)` and steam/parallel tooltips (`453-465`). That `maxTier` is primarily GTO/EMI tier metadata; it is not a pattern-level hatch-tier restriction.
 
-### 2.2 GTM 原生定义被 GTO 重定向
+### 2.2 GTO redirects native GTM definitions
 
-`GTMultiMachinesMixin` 在 GTM `GTMultiMachines.<clinit>` 中按 invocation ordinal 重定向 builder：
+`GTMultiMachinesMixin` redirects builder invocations inside `GTMultiMachines.<clinit>` by ordinal:
 
-- ordinal 2（EBF）：`GTORegistration.GTM.multiblock(..., CoilMultiblockMachine.createCoilMachine(true, false)).moduleTooltips(ACCELERATE_HATCH, EXTRA_ENERGY_HATCH).upgradable()`；
-- ordinal 9（真空冷冻机）：`GTORegistration.GTM.multiblock(..., ElectricMultiblockMachine::new).upgradable()`；
-- ordinal 12/13（GTM steam grinder/oven）：改为 GTO 蒸汽控制器。
+- ordinal 2, EBF: `GTORegistration.GTM.multiblock(..., CoilMultiblockMachine.createCoilMachine(true, false)).moduleTooltips(ACCELERATE_HATCH, EXTRA_ENERGY_HATCH).upgradable()`;
+- ordinal 9, Vacuum Freezer: `GTORegistration.GTM.multiblock(..., ElectricMultiblockMachine::new).upgradable()`;
+- ordinals 12/13, GTM steam grinder/oven: GTO steam controllers.
 
-证据：`GTOCore/src/main/java/com/gtocore/mixin/gtm/registry/GTMultiMachinesMixin.java:31-59`。
+Evidence: `GTOCore/src/main/java/com/gtocore/mixin/gtm/registry/GTMultiMachinesMixin.java:31-59`.
 
-因此不能只复制 GTM `GTMultiMachines.java` 的一段定义；必须同时检查 mixin ordinal、GTO builder 和之后的 `GTMachineModify.init()`。
+Do not copy one block from GTM `GTMultiMachines.java` in isolation. Inspect the Mixin ordinal, GTO builder, and subsequent `GTMachineModify.init()`.
 
-### 2.3 成形后的配方修改顺序
+### 2.3 Recipe modification after formation
 
-GTM `WorkableMultiblockMachine.onStructureFormed()` 会收集所有实现 `IWorkableMultiPart` 的部件，并建立 `modifyRecipePart`（`GregTech-Modern/.../WorkableMultiblockMachine.java:177-230`）。实际运行顺序是：
+`WorkableMultiblockMachine.onStructureFormed()` collects all `IWorkableMultiPart` parts and builds `modifyRecipePart` (`WorkableMultiblockMachine.java:177-230`). Runtime order is:
 
-1. 依次调用部件 `part.modifyRecipe(...)`（维护仓、加速仓、魔力增幅仓等）；
-2. 最后调用控制器 definition 的 `recipeModifier`（`WorkableMultiblockMachine.java:259-272`）。
+1. invoke each `part.modifyRecipe(...)`, including maintenance, acceleration, and mana amplification;
+2. invoke the controller definition's recipe modifier (`259-272`).
 
-所以加速仓缩短的 duration 会进入后续 GCYM/EBF overclock；若某个部件返回 `null`，配方直接被拒绝。
+Acceleration therefore changes duration before later GCYM/EBF overclocking. Any part returning null rejects the recipe.
 
-### 2.4 结构文件和方向
+### 2.4 Structure files and direction
 
-可读版 `MultiBlockFileReader` 从 `pattern/<machine>.mbs` 读取压缩结构，并按文件中的 aisle 顺序调用 `FactoryBlockPattern.aisle`（社区 gtolib_3 `MultiBlockFileReader.java:40-72`）。默认相对方向是 `LEFT, UP, FRONT`（同文件 10-12、40-42）。文件第一组 aisle 是远端/最后面的 aisle；导出器不要用“从最小 Z 到最大 Z”的直觉顺序。当前 GTOHJS 结构导出器应使用 `maxZ -> minZ`，并按默认 UP 轴保留每个 aisle 内 `minY -> maxY` 的行顺序（底到顶）。
+Readable `MultiBlockFileReader` loads compressed `pattern/<machine>.mbs` and calls `FactoryBlockPattern.aisle` in file order (`gtolib_3 MultiBlockFileReader.java:40-72`). Default relative directions are `LEFT, UP, FRONT`. The first aisle is the far/back aisle.
 
-## 3. 能力 predicate 的精确展开
+The GTOHJS exporter must therefore emit `maxZ -> minZ` aisles and preserve `minY -> maxY` rows, bottom-to-top, for the default UP axis.
+
+## 3. Exact predicate expansion
 
 ### 3.1 GTM `autoAbilities`
 
-`GregTech-Modern/.../api/pattern/Predicates.java:106-186`：
+GTCEu `Predicates.java:106-186`:
 
-`autoAbilities(recipeTypes)` 总是先允许最多 1 个控制仓（previewCount=0），再根据 recipe type 的最大 I/O 自动加入：
+`autoAbilities(recipeTypes)` always allows at most one control hatch with preview zero, then follows maximum recipe I/O:
 
-- 输入能源仓：最少 1、最多 2、preview 1；
-- 输出能源仓：最少 1、最多 2、preview 1（仅发电配方）；
-- 物品输入/输出仓：无显式全局上限，preview 1；
-- 流体输入/输出仓：无显式全局上限，preview 1。
+- energy input: min 1, max 2, preview 1;
+- energy output: min 1, max 2, preview 1 for generator recipes;
+- item input/output: no explicit global max, preview 1;
+- fluid input/output: no explicit global max, preview 1.
 
-`autoAbilities(checkMaintenance, checkMuffler, checkParallel)` 分别加入维护仓、消声仓、并行仓；维护仓的最小数量受 `enableMaintenance` 配置影响，最大 1；消声仓最大 1 且最少 1；并行仓最大 1。
+`autoAbilities(checkMaintenance, checkMuffler, checkParallel)` adds maintenance, muffler, and parallel. Maintenance min depends on configuration and max is one; muffler min/max are one; parallel max is one.
 
-### 3.2 GTO `autoIOAbilities` 和 `autoGCYMAbilities`
+### 3.2 GTO `autoIOAbilities` and `autoGCYMAbilities`
 
-`GTOCore/src/main/java/com/gtocore/api/pattern/GTOPredicates.java:91-111`：
+`GTOCore/.../GTOPredicates.java:91-111`:
 
 ```java
-autoIOAbilities(type) = autoAbilities(type, false, false, true, true, true, true)
+autoIOAbilities(type) =
+    autoAbilities(type, false, false, true, true, true, true);
+
 autoGCYMAbilities(type) = autoIOAbilities(type)
     .or(INPUT_ENERGY, min=1, max=8, preview=1)
     .or(ACCELERATE_HATCH, max=1)
-    .or(MANA_AMPLIFIER_HATCH / ME_MANA_AMPLIFIER_HATCH, max=1)
+    .or(MANA_AMPLIFIER_HATCH / ME_MANA_AMPLIFIER_HATCH, max=1);
 ```
 
-注意 `autoGCYMAbilities` 不包含维护仓、消声仓或普通并行仓；这些由机器自己的第二个 `autoAbilities(...)` predicate 提供。
+`autoGCYMAbilities` does not include maintenance, muffler, or ordinary parallel. Machine patterns add those through a second `autoAbilities(...)` predicate.
 
-### 3.3 其他关键 predicate
+### 3.3 Other predicates
 
-- `heatingCoils()` 会把线圈 block 映射为 `Predicates.DataKey.COIL_TYPE`，整个结构必须使用同一种线圈；见 GTM `Predicates.java:189-209`。
-- `GTOPredicates.integralFramework()` 使用 `tierBlock(INTEGRALFRAMEWORKMAP, INTEGRAL_FRAMEWORK_TIER)`，同一结构中所有该 predicate 命中的框架必须同等级；见 `GTOPredicates.java:75-77,129-152`。
-- `abilities(PartAbility.X)` 只展开该 ability 的已注册 block 集合；它不会自动按机器等级筛选。`PartAbility.STEAM` 的匹配范围由注册表决定。
+- `heatingCoils()` writes a coil block to `Predicates.DataKey.COIL_TYPE` and requires one coil type throughout (`Predicates.java:189-209`).
+- `GTOPredicates.integralFramework()` uses `tierBlock(INTEGRALFRAMEWORKMAP, INTEGRAL_FRAMEWORK_TIER)`, requiring one framework tier (`GTOPredicates.java:75-77,129-152`).
+- `abilities(PartAbility.X)` expands registered blocks only. It does not filter by machine tier.
 
-## 4. `gtocore:steam_pressor`（低级蒸汽多方块）
+## 4. `gtocore:steam_pressor`
 
-### 4.1 注册链和资源
+### 4.1 Registration and resources
 
-- 注册：`GTOCore/src/main/java/com/gtocore/common/data/machines/MultiBlockA.java:954-971`。
-- helper：`MachineRegisterUtils.multiblock("steam_pressor", ..., SteamMultiblockMachine::new)`。
-- 旋转：`allRotation()`。
-- recipe type：`GTRecipeTypes.COMPRESSOR_RECIPES`。
-- modifier：`.steamOverclock()`；该调用设置蒸汽机器等级 tooltip、特殊并行 tooltip 和 `maxTier(1)`。
-- tooltip：`.addTooltipsFromClass(SteamMultiblockMachine.class)`，并由 `.block(...)` 自动追加 recipe type tooltip。
-- appearance：`GTBlocks.CASING_BRONZE_BRICKS`。
-- renderer：`block/casings/solid/machine_casing_bronze_plated_bricks` + `gtocore:block/multiblock/steam_pressor`。
-- pattern：`GTOCore/src/main/resources/pattern/steam_pressor.mbs`，GZip 压缩的 MBS。
+- Definition: `MultiBlockA.java:954-971`.
+- Helper/controller: `MachineRegisterUtils.multiblock("steam_pressor", ..., SteamMultiblockMachine::new)`.
+- Rotation: `allRotation()`.
+- Recipe type: `GTRecipeTypes.COMPRESSOR_RECIPES`.
+- Modifier: `.steamOverclock()`, adding steam tier/special-parallel tooltips and `maxTier(1)`.
+- Tooltip class: `SteamMultiblockMachine.class`.
+- Appearance: `GTBlocks.CASING_BRONZE_BRICKS`.
+- Renderer: `block/casings/solid/machine_casing_bronze_plated_bricks` plus `gtocore:block/multiblock/steam_pressor`.
+- Pattern: GZip-compressed `GTOCore/src/main/resources/pattern/steam_pressor.mbs`.
 
-### 4.2 结构几何和仓位
+### 4.2 Geometry and hatch positions
 
-解压后的 aisle（每个 aisle 3 行、宽 3，共 4 个 aisle）为：
+Four aisles, each three rows by width three:
 
 ```text
 XXX / XXX / XXX
@@ -124,7 +128,7 @@ XXX / X#X / XXX
 XXX / XSX / XXX
 ```
 
-总尺寸 3（宽）×3（高）×4（深），字符计数 `X=33, #=2, S=1`。
+Dimensions: width 3 x height 3 x depth 4. Counts: `X=33, #=2, S=1`.
 
 ```java
 .where('S', controller(definition))
@@ -136,41 +140,39 @@ XXX / XSX / XXX
 .where('#', air())
 ```
 
-实际约束：
+Actual contract:
 
-- 必须恰好 1 个 `PartAbility.STEAM` 蒸汽输入仓；
-- 必须恰好 1 个 `gtocore:steam_vent_hatch`；
-- 蒸汽物品输入总线最多 1，蒸汽物品输出总线最多 1；
-- 没有普通 `IMPORT_ITEMS`/`EXPORT_ITEMS`、流体仓、维护仓、消声仓、并行仓或加速仓 predicate；
-- `X` 没有 casing 最小数量，因此逻辑上可把大量 X 替换为允许的能力，但上面的全局上限仍生效。
+- exactly one `STEAM` input;
+- exactly one `gtocore:steam_vent_hatch`;
+- at most one steam item input and one steam item output;
+- no ordinary item/fluid I/O, maintenance, muffler, parallel, or acceleration predicate;
+- no casing minimum on X, although global ability limits still apply.
 
-“低级”在当前源码中主要体现在只给蒸汽 I/O 总线以及 `SteamMultiblockMachine` 的基础运行参数；**`abilities(STEAM)` 本身没有显式过滤 `LARGE_STEAM_HATCH`/高压/超临界蒸汽仓**。如果产品设计要求只能放普通 `gtceu:steam_input_hatch`，必须改成指定 block predicate 或新增按等级的 GTO predicate，不能只依赖机器名称或 `.steamOverclock()`。
+Low-level behavior comes from steam-specific I/O and `SteamMultiblockMachine` runtime. The source `abilities(STEAM)` does **not** explicitly exclude large/high-pressure/supercritical hatches. A strict low-level product must use exact `gtceu:steam_input_hatch` or a tier predicate.
 
-### 4.3 控制器运行和加成
+### 4.3 Runtime
 
-`SteamMultiblockMachine`（`GTOCore/.../steam/SteamMultiblockMachine.java:9-40`）继承 `BaseSteamMultiblockMachine`。动态初始值：
+`SteamMultiblockMachine` extends `BaseSteamMultiblockMachine`. Dynamic defaults:
 
-| 难度 | duration multiplier | 最大并行 |
+| Difficulty | Duration multiplier | Maximum parallelism |
 |---|---:|---:|
 | Easy | 1.2 | 16 |
 | Normal | 1.5 | 8 |
 | Expert | 1.6 | 8 |
 
-`BaseSteamMultiblockMachine`（`.../BaseSteamMultiblockMachine.java:51-116`）的核心逻辑：
+`BaseSteamMultiblockMachine.java:51-116`:
 
-1. 找到第一个 `SteamHatchPartMachine`，建立蒸汽 energy container；普通蒸汽换算默认为 `2 mb/EU`；
-2. 允许 recipe `inputEUt <= (32 << euMultiplier)`，超出直接返回 `null`；
-3. `ParallelLogic.accurateParallel(..., maxParallels)`；
-4. duration 乘难度 multiplier；
-5. 只有 `oc()` 为真时才开放 `amountOC` UI 和蒸汽 OC。`SteamMultiblockMachine` 没有覆盖 `oc()`，因此没有额外 OC 调节项。
+1. Finds the first `SteamHatchPartMachine` and creates a steam energy container; ordinary conversion defaults to 2 mB/EU.
+2. Rejects recipes with `inputEUt > (32 << euMultiplier)`.
+3. Applies `ParallelLogic.accurateParallel(..., maxParallels)`.
+4. Multiplies duration by difficulty.
+5. Exposes `amountOC` only when `oc()` is true. `SteamMultiblockMachine` does not override it.
 
-### 4.4 UI
+### 4.4 UI and controller recipe
 
-父类 GTM `SteamParallelMultiblockMachine` 的 UI（`GregTech-Modern/.../SteamParallelMultiblockMachine.java:132-168`）是 176×216 的蒸汽背景：标题、蒸汽存量、工作状态、并行数、进度、低蒸汽警告和玩家背包。GTO 的普通部件文本会通过 controller 的 display pipeline 追加。
+Parent `SteamParallelMultiblockMachine` uses a 176x216 steam UI with title, steam amount, working status, parallelism, progress, low-steam warning, and inventory.
 
-### 4.5 控制器配方
-
-`GTOCore/src/main/java/com/gtocore/data/recipe/classified/Vanilla.java:255-259`：
+Controller crafting (`Vanilla.java:255-259`):
 
 ```text
 ABA / CDC / AEA
@@ -181,25 +183,25 @@ D = gtceu:lp_steam_compressor
 E = wrought iron gear
 ```
 
-这是控制器物品合成配方，不是压缩机过程配方；过程配方仍写入 `gtceu:compressor` recipe map。
+This is controller crafting; processing recipes remain in `gtceu:compressor`.
 
-## 5. `gtocore:large_steam_macerator`（高级蒸汽多方块）
+## 5. `gtocore:large_steam_macerator`
 
-### 5.1 注册链
+### 5.1 Registration
 
-- 注册：`MultiBlockA.java:993-1016`。
-- 控制器：`LargeSteamMultiblockMachine::new`。
-- 旋转：`nonYAxisRotation()`（不允许 Y 轴任意旋转）。
-- recipe type：`GTRecipeTypes.MACERATOR_RECIPES`。
-- modifier：`.steamOverclock()`。
-- tooltip：`.addTooltipsFromClass(LargeSteamMultiblockMachine.class)`；`steamOverclock()` 还会自动显示大型蒸汽并行/OC 说明。
-- casing：`GTBlocks.CASING_BRONZE_BRICKS`。
-- renderer：`gtocore:block/multiblock/steam_grinder`。
-- pattern：`pattern/large_steam_macerator.mbs`。
+- Definition: `MultiBlockA.java:993-1016`.
+- Controller: `LargeSteamMultiblockMachine::new`.
+- Rotation: `nonYAxisRotation()`.
+- Recipe type: `GTRecipeTypes.MACERATOR_RECIPES`.
+- Modifier: `.steamOverclock()`.
+- Tooltip class: `LargeSteamMultiblockMachine.class`.
+- Appearance: bronze brick casing.
+- Renderer: `gtocore:block/multiblock/steam_grinder`.
+- Pattern: `pattern/large_steam_macerator.mbs`.
 
-### 5.2 结构几何和精确限制
+### 5.2 Geometry and limits
 
-解压后的 5 个 aisle、每个 4 行、宽 5：
+Five aisles, four rows, width five:
 
 ```text
 AaaaA / BaaaB / BaaaB / ABBBA
@@ -209,7 +211,7 @@ ABBBA / aCDCa / aDCDa / ABBBA
 AaaaA / BaaaB / BaaaB / ABBBA
 ```
 
-尺寸 5×4×5；字符计数：`A=20, B=31, C=8, D=8, E=1, F=2, G=1, a=29`。
+Dimensions 5x4x5. Counts: `A=20, B=31, C=8, D=8, E=1, F=2, G=1, a=29`.
 
 ```java
 .where('A', frame(Bronze))
@@ -228,26 +230,34 @@ AaaaA / BaaaB / BaaaB / ABBBA
 .where('G', abilities(MUFFLER))
 ```
 
-与挤压机相比，关键扩展是 `IMPORT_ITEMS` 最多 1 和 `EXPORT_ITEMS` 最多 3；它允许普通高等级输入/输出总线与蒸汽总线并存。仍然没有 `MAINTENANCE`、`PARALLEL_HATCH`、`ACCELERATE_HATCH` predicate；`G` 位置固定为一个 GTM 消声仓。
+It adds ordinary item input max one and output max three alongside steam buses. It has no maintenance, parallel, or acceleration predicate. One fixed G position is a GTM muffler.
 
-### 5.3 运行逻辑和蒸汽仓等级
+### 5.3 Runtime and steam tiers
 
-`LargeSteamMultiblockMachine`（`.../LargeSteamMultiblockMachine.java:9-46`）的动态值：Easy 1.0×/64 并行，Normal 1.2×/32 并行，Expert 1.5×/32 并行；并覆盖 `oc()` 为 `true`。
+`LargeSteamMultiblockMachine` dynamic values:
 
-因此成形后 UI 会显示 `amountOC`，可用 `[-]/[+]` 调节 0 到当前大型蒸汽仓允许的 `o` 值。`BaseSteamMultiblockMachine.addSteamEnergy()`（`.../BaseSteamMultiblockMachine.java:76-93`）读取 `LargeSteamHatchPartMachine.o/c/f`：
+| Difficulty | Duration multiplier | Maximum parallelism |
+|---|---:|---:|
+| Easy | 1.0 | 64 |
+| Normal | 1.2 | 32 |
+| Expert | 1.5 | 32 |
 
-- `o`：提高允许的 EU tier，并作为蒸汽 OC 上限；
-- `c`：mb/EU 换算率；
-- `f`：接受的蒸汽流体；
-- `m`：大型蒸汽仓罐体容量移位参数。
+It overrides `oc()` to true, so UI exposes `amountOC` from zero through the current large hatch's `o`.
 
-当前 GTO 仓定义见 `GTOMachines.java:509-537`：普通大型蒸汽仓 `o=2,c=2`；高压蒸汽仓 `o=4,c=0.25`；超临界蒸汽仓 `o=6,c=0.125`。由于 pattern 使用的是通用 `abilities(STEAM)`，这三类都可能匹配；若设计要限制等级，应显式收窄 predicate。
+Large steam fields read by `BaseSteamMultiblockMachine.addSteamEnergy()`:
 
-### 5.4 UI 和控制器配方
+- `o`: increases accepted EU tier and caps steam OC;
+- `c`: mB/EU conversion;
+- `f`: accepted steam fluid;
+- `m`: capacity-shift parameter.
 
-UI 继承 `SteamParallelMultiblockMachine`，再叠加 `BaseSteamMultiblockMachine.addDisplayText` 中的蒸汽 OC 行（`BaseSteamMultiblockMachine.java:118-138`）。
+Current definitions (`GTOMachines.java:509-537`): ordinary large `o=2,c=2`; high-pressure `o=4,c=0.25`; supercritical `o=6,c=0.125`. Generic `abilities(STEAM)` admits all registered candidates.
 
-控制器合成（`Vanilla.java:614-618`）：
+### 5.4 UI and recipes
+
+UI inherits the steam parallel screen and adds the steam OC line from `BaseSteamMultiblockMachine.addDisplayText`.
+
+Controller crafting (`Vanilla.java:614-618`):
 
 ```text
 ABA / CDC / ABA
@@ -257,19 +267,17 @@ C = gtocore:precision_steam_mechanism
 D = gtceu:steam_grinder
 ```
 
-过程配方直接复用 `gtceu:macerator` map；GTO `Macerator.java`、生成矿物配方和 GTM `OreRecipeHandler` 是主要来源。
+Processing reuses `gtceu:macerator`. The definition has no `recoveryItems`, so its muffler does not imply EBF-style ash recovery.
 
-该 definition 没有设置 `recoveryItems`；虽然结构有一个 `MUFFLER` 位置，当前源码不会像 EBF 那样自动产出灰尘副产物。
+## 6. `gtceu:vacuum_freezer`
 
-## 6. `gtceu:vacuum_freezer`（无消声仓的电力多方块）
+### 6.1 Registration and Mixin
 
-### 6.1 注册和 mixin
+Original GTM definition: `GTMultiMachines.java:407-425`, initially using `WorkableElectricMultiblockMachine::new` and `RecipeModifier.OVERCLOCKING`.
 
-原始 GTM 定义：`GregTech-Modern/.../GTMultiMachines.java:407-425`，本来使用 `WorkableElectricMultiblockMachine::new` 和 `RecipeModifier.OVERCLOCKING`。GTO 在 `GTMultiMachinesMixin.java:46-49` 把 builder 重定向为 `ElectricMultiblockMachine::new` 并标记 `.upgradable()`；`GTMachineModify.init()` 再在 `GTOCore/.../GTMachineModify.java:52-65` 设置 `GTORecipeModifiers.UPGRADE_OVERCLOCK`。
+GTO `GTMultiMachinesMixin.java:46-49` redirects it to `ElectricMultiblockMachine::new` and `.upgradable()`. `GTMachineModify.java:52-65` applies `GTORecipeModifiers.UPGRADE_OVERCLOCK`.
 
-### 6.2 主结构和仓位
-
-原始 pattern（`GTMultiMachines.java:413-424`）：
+### 6.2 Main structure
 
 ```text
 XXX / XXX / XXX
@@ -277,7 +285,7 @@ XXX / X#X / XXX
 XXX / XSX / XXX
 ```
 
-3×3×3，`X` 总数 25、`#` 为空气、`S` 控制器。`X` 是：
+3x3x3; X count 25, one air, one controller.
 
 ```java
 CASING_ALUMINIUM_FROSTPROOF.setMinGlobalLimited(14)
@@ -285,15 +293,17 @@ CASING_ALUMINIUM_FROSTPROOF.setMinGlobalLimited(14)
     .or(autoAbilities(true, false, false))
 ```
 
-以 `VACUUM_RECIPES` 的 I/O 上限为依据，第一段允许：最多 1 控制仓、1–2 输入能源仓、物品输入/输出仓、流体输入/输出仓；第二段只加入维护仓（消声 false、并行 false）。因此它**没有消声仓，也没有普通并行仓**。至少 14 个铝冷冻 casing 必须保留。
+For `VACUUM_RECIPES` this permits one control hatch, 1-2 energy inputs, item/fluid I/O, and maintenance only. There is no muffler or parallel hatch. At least 14 frostproof aluminium casings remain.
 
-### 6.3 配方和加成
+### 6.3 Recipes and bonuses
 
-`GTRecipeTypes.VACUUM_RECIPES`（`GTRecipeTypes.java:631-634`）：MULTIBLOCK，最大 I/O `1 item in / 1 item out / 2 fluid in / 1 fluid out`，输入能源，默认 MV EUt，冷却音效。
+`GTRecipeTypes.VACUUM_RECIPES` (`GTRecipeTypes.java:631-634`) is a MULTIBLOCK type with maximum I/O 1 item in, 1 item out, 2 fluid in, 1 fluid out, energy input, default MV EUt, and cooling sound.
 
-GTO 设置 `UPGRADE_OVERCLOCK`，其公开旧实现（`gtolib_3/.../RecipeModifierFunction.java:263-345`）是普通 4× EU / 2× duration overclock，且把 GTO upgrade module 的 energy/speed multiplier 纳入计算。GTO 当前 JAR 中同名函数为 native，调试时应以运行时日志/测试为最终依据。
+GTO `UPGRADE_OVERCLOCK` has an older readable contract of ordinary 4x EU / 2x duration overclock plus GTO upgrade speed/energy multipliers. The current implementation is native and requires runtime verification.
 
-主要过程配方：`GTOCore/.../data/recipe/classified/Vacuum.java`、`.../gtm/chemistry/ChemistryRecipes.java`、生成的 `GTOMaterialRecipeHandler`，以及 GTM `MaterialRecipeHandler`。控制器合成在 GTM `MetaTileEntityLoader.java:556-558`：
+Recipe sources include `classified/Vacuum.java`, `gtm/chemistry/ChemistryRecipes.java`, generated material handlers, and GTM `MaterialRecipeHandler`.
+
+Controller crafting (`MetaTileEntityLoader.java:556-558`):
 
 ```text
 PPP / CMC / WCW
@@ -305,15 +315,15 @@ W = single gold cable
 
 ### 6.4 UI
 
-控制器实际是 GTO `ElectricMultiblockMachine`，因此使用 GTO mixin 改写的电力多方块 UI：基础 `WorkableElectricMultiblockMachine.createUI` 为 198×208，内部 `FancyMachineUIWidget`（GTM `WorkableElectricMultiblockMachine.java:99-110`）；Fancy configurator 面板提供结构检查、开关、批处理/超频配置（若可用），部件通过 sub-tabs 展示。`WorkableElectricMultiblockMachineMixin.java:129-157` 覆盖 `attachConfigurators` 和 `addDisplayText`；`MachineUtils.addMachineText` 负责能耗、等级、并行、模式、进度、配方输出和部件文本。
+GTO `ElectricMultiblockMachine` uses the 198x208 `FancyMachineUIWidget`. GTO Mixins supply structure inspection, working controls, batch/overclock configuration, energy/tier/parallel/mode/progress text, and part sub-tabs. `.upgradable()` permits GTO speed/energy modules whose values persist as `speed` and `energy`.
 
-`.upgradable()` 使右键使用 GTO speed/energy upgrade module 成为可能；升级数据写入控制器 NBT 的 `speed`/`energy`（`WorkableElectricMultiblockMachineMixin.java:98-123`）。
+## 7. `gtceu:electric_blast_furnace`
 
-## 7. `gtceu:electric_blast_furnace`（线圈+消声仓电力多方块）
+### 7.1 Registration
 
-### 7.1 注册链
+Original pattern/type/renderer: `GTMultiMachines.java:123-159`.
 
-原始 pattern/recipe type/renderer 在 GTM `GTMultiMachines.java:123-159`。GTO ordinal-2 redirect（`GTMultiMachinesMixin.java:31-34`）注入：
+GTO ordinal-2 redirect:
 
 ```java
 GTORegistration.GTM.multiblock(
@@ -323,11 +333,11 @@ GTORegistration.GTM.multiblock(
     .upgradable();
 ```
 
-随后 `GTMachineModify.init()`（`GTMachineModify.java:57,138-154`）设置 `UPGRADE_EBF_OVERCLOCK`，替换/追加一个 optional sub-pattern，并清空原 additional display 以避免温度信息重复。
+`GTMachineModify.java:57,138-154` sets `UPGRADE_EBF_OVERCLOCK`, appends an optional sub-pattern, and clears duplicate additional temperature display.
 
-### 7.2 主结构
+### 7.2 Main pattern
 
-GTM 主 pattern（3×4×3）：
+3x4x3:
 
 ```text
 XXX / CCC / CCC / XXX
@@ -335,66 +345,60 @@ XXX / C#C / C#C / XMX
 XSX / CCC / CCC / XXX
 ```
 
-predicate（`GTMultiMachines.java:129-140`）：
+- X: Invar heatproof casing min 9, recipe-type auto abilities, and maintenance-only `autoAbilities(true,false,false)`.
+- C: `heatingCoils()`.
+- M: exactly one muffler.
+- #: air.
+- S: controller.
 
-- `X`：不变热防护 casing 至少 9；`autoAbilities(recipeTypes)`；`autoAbilities(true,false,false)`（维护仓，不要消声/并行）；
-- `C`：`heatingCoils()`，全结构线圈类型一致；
-- `M`：恰好一个 `MUFFLER`；
-- `#`：空气；
-- `S`：控制器。
+Counts: X=16, C=16, M=1, S=1, air=2. Energy is 1-2, recipe I/O follows type, maintenance max one, muffler exactly one, and ordinary parallel is absent.
 
-主结构总共 16 个 X、16 个 C、1 个 M、1 个 S、2 个空气位。能源仓 1–2、物品/流体 I/O 由配方最大 I/O 自动决定，维护仓最多 1，消声仓固定 1，普通并行仓不在主结构中。
+### 7.3 Optional GTO sub-pattern
 
-### 7.3 GTO optional sub-pattern（扩展仓室）
+`GTMachineModify.java:138-153` defines a separate 5x4x5 optional pattern. `MultiblockControllerMachine.checkPattern()` checks main then optional patterns and merges successful states (`MultiblockControllerMachine.java:223-275`).
 
-`GTMachineModify.java:138-153` 的 sub-pattern 是 5×4×5（5 个 aisle、每个 aisle 4 行、宽 5），不是主结构的替代定义；`MultiblockControllerMachine.checkPattern()` 先检查主 pattern，再逐个独立检查 sub-pattern，并把成功的 sub-state 合并（GTM `MultiblockControllerMachine.java:223-275`）。因此扩展可以不放置，放置后才贡献部件和加成。
-
-扩展字符：
-
-```java
+```text
 A = INVAR_HEATPROOF
-    .or(autoIOAbilities(recipeTypes))
-    .or(INPUT_ENERGY max=2)
-    .or(ACCELERATE_HATCH max=1)
+    or autoIOAbilities(recipeTypes)
+    or INPUT_ENERGY max=2
+    or ACCELERATE_HATCH max=1
 B = StainlessSteel frame
 C = INVAR_HEATPROOF
 D = Steel pipe
 E = controller
-空格 = any()
+space = any()
 ```
 
-主结构的能源/维护/消声限制和扩展的能源限制是两个 pattern state；实际可用的扩展能源仓上限应按 GTO 运行时合并规则验证，不要把它误写成“主结构 energy max=4”。GTO tooltip 将这类扩展标成 `ACCELERATE_HATCH`、`EXTRA_ENERGY_HATCH` 模块。
+Main and optional energy limits belong to separate pattern states. Verify their merged runtime result; do not describe main-pattern energy as max four. `EXTRA_ENERGY_HATCH` is tooltip/module language, while source actually matches ordinary `INPUT_ENERGY`.
 
-这里的 `EXTRA_ENERGY_HATCH` 是模块/tooltip 语义；sub-pattern 源码实际匹配的是普通 `PartAbility.INPUT_ENERGY`，没有单独的 `EXTRA_ENERGY_HATCH` block predicate。自定义机器若要复刻该行为，应复制 predicate，而不是只调用 `moduleTooltips`。
+### 7.4 Coil temperature and modifier
 
-### 7.4 线圈温度和 EBF 配方 modifier
+`CoilMultiblockMachine` creates `CoilTrait(this, true, false)`. The first true adds 100 K per machine tier above MV; false delegates temperature rejection to `UPGRADE_EBF_OVERCLOCK`.
 
-GTO `CoilMultiblockMachine` 创建 `CoilTrait(this, true, false)`（社区 gtolib_3 `CoilMultiblockMachine.java:9-19`）。第一个 `true` 表示机器等级高于 MV 时每级额外 +100 K；第二个 `false` 不在 trait 中重复执行温度拒绝，温度检查交给 `UPGRADE_EBF_OVERCLOCK`。
+The definition sets `recoveryStaticItems(...Ash...)`, so its muffler can recover tiny ash through `IMufflerMachine.afterWorking`. Other representative machines do not inherit this from having an exhaust block.
 
-原生 EBF definition 还设置了 `recoveryStaticItems(...Ash...)`（`GTMultiMachines.java:141`）。所以唯一的消声仓完成配方后可以按 GTM `IMufflerMachine.afterWorking` 回收灰烬微尘；其它五台 definition 没有这一项，不能从“有消声/有排气方块”推断副产物。
+Readable older `ebfOverclock`:
 
-公开旧实现 `RecipeModifierFunction.ebfOverclock`（`gtolib_3/.../RecipeModifierFunction.java:132-212`）的关键步骤：
+1. machine temperature = coil temperature + `100 * max(0, machineTier - 2)`;
+2. reject higher `ebf_temp` with `INSUFFICIENT_TEMPERATURE`;
+3. apply `OverclockingLogic.getCoilEUtDiscount(requiredTemp, machineTemp)`;
+4. include upgrade speed/energy and power amplifier;
+5. faster OC follows `(machineTemp-requiredTemp)/1800`;
+6. at duration/parallel boundaries, batch through `ParallelLogic.getContentMultiplier`.
 
-1. 机器温度 = 线圈温度 + `100 * max(0, machineTier - 2)`；
-2. 若 recipe `ebf_temp` 更高，设置 `INSUFFICIENT_TEMPERATURE` 并拒绝；
-3. 使用 `OverclockingLogic.getCoilEUtDiscount(requiredTemp, machineTemp)`；
-4. 纳入 upgrade speed/energy、power amplifier；
-5. 按线圈温差决定更快 OC（`(machineTemp-requiredTemp)/1800`）；
-6. 若达到 duration/并行边界，使用 `ParallelLogic.getContentMultiplier` 做批量化。
+`BLAST_RECIPES` maximum I/O is 3 item in, 3 item out, 1 fluid in, 1 fluid out and exposes `ebf_temp` plus minimum coil information in recipe viewers.
 
-`GTRecipeTypes.BLAST_RECIPES`（`GTRecipeTypes.java:510-536`）最大 I/O 为 3 item in/3 item out/1 fluid in/1 fluid out，并在 EMI/JEI 增加 `ebf_temp` 和最低线圈等级信息；UI 会循环显示所有达到温度的线圈。
-
-EBF 控制器合成配方受 `hardMultiRecipes` 配置影响（`MetaTileEntityLoader.java:543-554`）：软配方使用 furnace，硬配方使用 LV electric furnace；两者都以 Invar heatproof casing、LV circuits、tin cable 为核心。
+Controller crafting depends on `hardMultiRecipes`: soft uses a furnace, hard uses an LV electric furnace; both use Invar heatproof casing, LV circuits, and tin cable.
 
 ### 7.5 UI
 
-Fancy controller UI 显示能耗/等级、线圈最高温度、维护/消声状态、进度和部件子页。`GTMachineModify.setAdditionalDisplay((m,l)->{})` 是有意的：GTO `CoilTrait.customText` 已负责温度行，否则会重复。
+Fancy UI shows power/tier, coil maximum temperature, maintenance/muffler, progress, and part pages. Clearing additional display is deliberate because `CoilTrait.customText` already emits temperature.
 
-## 8. `gtceu:large_circuit_assembler`（高级 GCYM）
+## 8. `gtceu:large_circuit_assembler`
 
-### 8.1 注册链
+### 8.1 Registration
 
-`GTOCore/src/main/java/com/gtocore/common/data/machines/GCYMMachines.java:295-324`：
+`GCYMMachines.java:295-324`:
 
 ```java
 GTM.multiblock("large_circuit_assembler", GCYMMultiblockMachine::new)
@@ -411,17 +415,17 @@ GTM.multiblock("large_circuit_assembler", GCYMMultiblockMachine::new)
     .register();
 ```
 
-`GCYMMultiblockMachine`（`.../electric/gcym/GCYMMultiblockMachine.java:9-24`）继承 `TierCasingMultiblockMachine`，传入 `INTEGRAL_FRAMEWORK_TIER`，成形后执行：
+`GCYMMultiblockMachine` extends `TierCasingMultiblockMachine` with `INTEGRAL_FRAMEWORK_TIER` and applies:
 
 ```java
 tier = Math.min(getCasingTier(INTEGRAL_FRAMEWORK_TIER), tier);
 ```
 
-并明确允许 GTO upgrade module。
+It explicitly allows GTO upgrade modules.
 
-### 8.2 结构和仓室
+### 8.2 Structure and hatches
 
-GTO pattern（`GCYMMachines.java:305-321`）尺寸 7×3×5（宽 7、每 aisle 高 3、深 5）：
+GTO pattern dimensions: width 7 x height 3 x depth 5.
 
 ```text
 XXXXXXX / XXXXXXX / XXXXXXX
@@ -431,7 +435,7 @@ XXXXXXX / XTTTTXX / XXXXXXX
 #####XX / #####SX / #####XX
 ```
 
-字符计数：`X=65, P=5, G=10, A=3, T=4, a=1, S=1, #=5`。
+Counts: `X=65, P=5, G=10, A=3, T=4, a=1, S=1, #=5`.
 
 ```java
 .where('X', CASING_LARGE_SCALE_ASSEMBLING.setMinGlobalLimited(55)
@@ -445,36 +449,36 @@ XXXXXXX / XTTTTXX / XXXXXXX
 .where('a', GTOPredicates.integralFramework())
 ```
 
-能力展开（以 `CIRCUIT_ASSEMBLER_RECIPES` 最大 I/O 6 item in/1 item out/1 fluid in 为准）：
+With recipe I/O max 6 item in, 1 item out, and 1 fluid in:
 
-- 控制仓最多 1（由 `autoAbilities` 内部带出）；
-- 普通物品输入/输出仓、流体输入仓；无流体输出仓；
-- 输入能源仓最少 1、最多 8；
-- `ACCELERATE_HATCH` 最多 1；
-- 普通维护仓最多 1（启用维护时最少 1）；
-- 普通 `PARALLEL_HATCH` 最多 1；
-- 普通消声仓不允许；
-- GTO 普通/ME 魔力增幅仓二选一位置最多 1；
-- `a` 必须是同一等级的整体框架，框架等级把控制器 tier 限制到 `min(能源 tier, 框架 tier)`。
+- control hatch max one;
+- ordinary item input/output and fluid input, no fluid output;
+- energy input min one/max eight;
+- acceleration max one;
+- maintenance max one and min one when enabled;
+- ordinary parallel max one;
+- no ordinary muffler;
+- ordinary or ME mana amplifier max one;
+- framework tier limits controller to `min(energy tier, framework tier)`.
 
-由于 casing 最小值为 55，65 个 X 位置中理论上最多替换 10 个能力仓；实际还要满足能源最少 1、并行/维护等配置要求。导出器生成结构时不能把所有 X 都替成仓室。
+At least 55 of 65 X positions remain casings, so at most ten may be substitutions before other constraints. The exporter must not replace every X.
 
-### 8.3 配方和 multiplier
+### 8.3 Recipe and multipliers
 
-`GTRecipeTypes.CIRCUIT_ASSEMBLER_RECIPES`（`GTRecipeTypes.java:386-405`）最大 I/O 为 6/1/1/0，输入能源；若没有流体输入，GTM 会自动复制一份 soldering alloy recipe，并给原配方补 tin/solder fluid。GTO `RecipeTypeModify.init()`（`GTOCore/.../common/recipe/RecipeTypeModify.java:123-135`）按 EU tier 改写无流体配方的焊料：HV 以下 tin，UV 以下 soldering alloy，更高使用 mutated/super-mutated living solder。
+`CIRCUIT_ASSEMBLER_RECIPES` has maximum I/O 6/1/1/0. GTM duplicates fluidless recipes with soldering alloy and adds tin/solder fluid. `RecipeTypeModify.init()` changes solder by EU tier: tin below HV, soldering alloy below UV, mutated/super-mutated living solder above.
 
-GTO modifier 名称为 `UPGRADE_GCYM_OVERCLOCKING`；公开旧实现 `GCYM_OVERCLOCKING`（`gtolib_3/.../RecipeModifierFunction.java:35-39`）等价于：
+Readable older `GCYM_OVERCLOCKING`:
 
 ```text
-hatchParallel() → accurateParallel()
+hatchParallel() -> accurateParallel()
 EU multiplier = 0.8
 duration multiplier = 0.6
 normal OC factor = 0.5
 ```
 
-当前 JAR 的 `GTORecipeModifiers` 方法体为 native，故精确边界以运行时为准；builder 上的 `.eutMultiplierTooltips(0.8)`、`.durationMultiplierTooltips(0.6)` 是稳定的用户可见契约。
+Current `GTORecipeModifiers` is native. The builder's visible 0.8 and 0.6 tooltips are the stable contract.
 
-主配方/控制器合成见 `GTOCore/.../data/recipe/GCYRecipes.java:63-66`：
+Controller crafting (`GCYRecipes.java:63-66`):
 
 ```text
 RKR / CXC / MKM
@@ -485,20 +489,20 @@ X = IV circuit assembler
 K = single platinum cable
 ```
 
-### 8.4 UI 和仓室加成
+### 8.4 UI and part bonuses
 
-`ElectricMultiblockMachine` 的 Fancy UI（198×208）会显示能耗、当前 tier、并行、批处理、结构模块数、GTO idle reason 和各部件子页。`parallelizableTooltips()`、`moduleTooltips`/GTO auto predicates 会把并行/加速/魔力增幅能力写入 tooltip。
+The 198x208 Fancy UI shows power, tier, parallelism, batching, module count, GTO idle reason, and part tabs.
 
-- 加速仓部件 `AccelerateHatchPartMachine`（`GTOCore/.../AccelerateHatchPartMachine.java:24-50`）将 duration 乘当前百分比；若配方 tier 高于仓 tier，每级额外增加 20 个百分点，最多 100%。
-- 并行仓的当前值由 `ParallelLogic` 读取并交给 GCYM modifier；不要手写 `recipe.parallels++`。
-- 魔力增幅仓在工作时消耗相当于机器 overclock voltage 的 mana，成功后把配方标记为 perfect（社区 gtolib_3 `ManaAmplifierPartMachine.java:47-61`）；ME 版本可从网络补充 mana/source。
-- `UpgradeModuleItem` 右键可改变 controller 的 speed/energy multiplier，但只有 `gtolib$canUpgraded()` 为真时生效；GCYM 类覆盖为 true（`GCYMMultiblockMachine.java:21-24`）。
+- `AccelerateHatchPartMachine` multiplies duration by its percentage; each recipe tier above hatch tier adds 20 percentage points up to 100%.
+- `ParallelLogic` reads the hatch value and passes it to the GCYM modifier; never write ad hoc `recipe.parallels++` logic.
+- Mana amplifier consumes mana equal to machine overclock voltage and marks the recipe perfect on success in readable older semantics; ME version may draw mana/source from the network.
+- `UpgradeModuleItem` changes speed/energy only when `gtolib$canUpgraded()` is true; GCYM returns true.
 
-## 9. `gtocore:nano_forge`（激光输入+等级框架的纳米锻炉）
+## 9. `gtocore:nano_forge`
 
-### 9.1 注册
+### 9.1 Registration
 
-`GTOCore/src/main/java/com/gtocore/common/data/machines/MultiBlockD.java:523-543`：
+`MultiBlockD.java:523-543`:
 
 ```java
 multiblock("nano_forge", "纳米锻炉", NanoForgeMachine::new)
@@ -514,27 +518,30 @@ multiblock("nano_forge", "纳米锻炉", NanoForgeMachine::new)
     .register();
 ```
 
-### 9.2 动态机器等级和存储槽
+The Chinese name is preserved above because it is a real localization literal in the audited registration.
 
-`NanoForgeMachine`（`.../electric/nano/NanoForgeMachine.java:42-79`）：
+### 9.2 Dynamic tier and storage
 
-- 继承 `StorageMultiblockMachine`，槽位上限 64，只接受 `ChemicalHelper.getPrefix(item) == GTOTagPrefix.NANITES`；
-- 槽内材料为 Carbon → `machineTier=1`，Amprosium → 2，Draconium → 3；未知/空为 0；
-- 材料变化后 `requestCheck()`，动态切换 pattern；
-- `getMaxParallel()` = 槽内纳米蜂群数量（tier=0 时为 0）；
-- Storage UI 在电力 Fancy UI 的右下角增加一个机器专用槽（社区 gtolib_3 `IStorageMultiblock.java:48-58`）。
+`NanoForgeMachine.java:42-79`:
 
-### 9.3 三档结构
+- extends `StorageMultiblockMachine` with capacity 64;
+- accepts only items whose prefix is `GTOTagPrefix.NANITES`;
+- Carbon -> machine tier 1, Amprosium -> 2, Draconium -> 3, unknown/empty -> 0;
+- calls `requestCheck()` on material changes to switch pattern;
+- `getMaxParallel()` equals stored nanite count, or zero at tier zero;
+- storage UI adds one dedicated slot at the bottom right of electric Fancy UI.
 
-`getBlockPattern(int tier, definition)` 使用缓存 `PATTERNS`（`NanoForgeMachine.java:44,81-155`），所有结构高度为 38 行：
+### 9.3 Three pattern tiers
 
-| 档位 | 平面宽度 | aisle 深度 | 主 casing/框架 |
+`getBlockPattern(int tier, definition)` uses cached `PATTERNS`. Every pattern is height 38:
+
+| Tier | Width | Aisle depth | Primary casing/framework |
 |---:|---:|---:|---|
-| 1（default） | 9 | 9 | `NAQUADAH_ALLOY_CASING` + Ruridit frame |
-| 2 | 19 | 13 | `NAQUADAH_ALLOY_CASING` + Ruridit frame + `CASING_ASSEMBLY_LINE` |
-| 3 | 29 | 13 | `NAQUADAH_ALLOY_CASING` + Ruridit frame + `ADVANCED_ASSEMBLY_LINE_UNIT` |
+| 1, default | 9 | 9 | Naquadah alloy casing plus Ruridit frame |
+| 2 | 19 | 13 | Same plus assembly-line casing |
+| 3 | 29 | 13 | Same plus advanced assembly-line unit |
 
-三档共同的能力 predicate 都是：
+Shared ability predicate:
 
 ```java
 CASING_NAQUADAH_ALLOY
@@ -544,11 +551,11 @@ CASING_NAQUADAH_ALLOY
     .or(INPUT_LASER)
 ```
 
-没有 `INPUT_ENERGY`、`OUTPUT_ENERGY`、维护、消声、普通并行或加速仓。激光仓是唯一能源入口；物品/流体输出仍需普通 GTM I/O 仓。控制器字符为 `~`，空气/空白为 `any()`。
+There is no ordinary energy input/output, maintenance, muffler, parallel, or acceleration hatch. Laser is the sole energy path. Controller symbol is `~` and blank space is `any()`.
 
-### 9.4 配方过滤、并行和 OC
+### 9.4 Recipe filtering, parallelism, and OC
 
-`getRealRecipe`（`NanoForgeMachine.java:54-63`）是纳米锻炉最关键的契约：
+`NanoForgeMachine.getRealRecipe`:
 
 ```java
 if (recipeTier > machineTier) return null;
@@ -558,43 +565,43 @@ recipe = overclocking(false, 1, 1,
     machineTier > recipeTier ? 0.25 : 0.5);
 ```
 
-同等级配方使用普通 0.5 OC factor；机器等级高于配方时使用 0.25 factor（更快/完美 OC），并且每高一级把并行上限翻倍。配方的 `NANO_FORGE_TIER` 是独立数据键，不是电压 tier。
+Same-tier recipes use 0.5 OC factor. Higher machine tier uses 0.25 perfect/faster OC and doubles parallel limit for each tier difference. `NANO_FORGE_TIER` is independent recipe data, not voltage tier.
 
-### 9.5 纳米锻炉配方完整索引
+### 9.5 Complete Nano Forge recipe index
 
-来源：`GTOCore/src/main/java/com/gtocore/data/recipe/classified/NanoForge.java:19-353`。共有 24 个 recipe，全部使用 `NANO_FORGE_RECIPES.recipeBuilder(...).save()`，输出对应材料的 `GTOTagPrefix.NANITES`；tier 是 `.addData(GTORecipeDataKeys.NANO_FORGE_TIER, n)`：
+Source: `classified/NanoForge.java:19-353`. All 24 recipes call `NANO_FORGE_RECIPES.recipeBuilder(...).save()`, output `GTOTagPrefix.NANITES`, and set `GTORecipeDataKeys.NANO_FORGE_TIER`:
 
-| recipe id | tier | recipe id | tier |
+| Recipe ID | Tier | Recipe ID | Tier |
 |---|---:|---|---:|
-| gold_nanites | 1 | osmium_nanites | 1 |
-| infuscolium_nanites | 2 | draconium_nanites | 2 |
-| spacetime_nanites | 3 | neutronium_nanites | 1 |
-| naquadah_nanites | 1 | carbon_nanites | 1 |
-| starmetal_nanites | 2 | silver_nanites | 1 |
-| orichalcum_nanites | 1 | iridium_nanites | 1 |
-| black_dwarf_mtter_nanites | 3 | copper_nanites | 1 |
-| rhenium_nanites | 1 | iron_nanites | 1 |
-| enderium_nanites | 2 | transcendent_metal_nanites | 3 |
-| eternity_nanites | 3 | cosmic_neutronium_nanites | 3 |
-| vibranium_nanites | 2 | white_dwarf_mtter_nanites | 3 |
-| uruium_nanites | 2 | glowstone_nanites | 1 |
+| `gold_nanites` | 1 | `osmium_nanites` | 1 |
+| `infuscolium_nanites` | 2 | `draconium_nanites` | 2 |
+| `spacetime_nanites` | 3 | `neutronium_nanites` | 1 |
+| `naquadah_nanites` | 1 | `carbon_nanites` | 1 |
+| `starmetal_nanites` | 2 | `silver_nanites` | 1 |
+| `orichalcum_nanites` | 1 | `iridium_nanites` | 1 |
+| `black_dwarf_mtter_nanites` | 3 | `copper_nanites` | 1 |
+| `rhenium_nanites` | 1 | `iron_nanites` | 1 |
+| `enderium_nanites` | 2 | `transcendent_metal_nanites` | 3 |
+| `eternity_nanites` | 3 | `cosmic_neutronium_nanites` | 3 |
+| `vibranium_nanites` | 2 | `white_dwarf_mtter_nanites` | 3 |
+| `uruium_nanites` | 2 | `glowstone_nanites` | 1 |
 
-所有配方还可含不可消耗透镜/量子异常/超立方体/永恒催化剂等 catalyst，EUt、duration 和输入材料均以该文件为唯一来源；新增配方应沿用 `addData(NANO_FORGE_TIER, tier)`，否则机器会把缺失数据当 tier 0 处理并产生异常并行。
+Recipes may include non-consumable lenses, quantum anomalies, hypercubes, or eternity catalysts. Source EUt, duration, and inputs exclusively from that file. Missing tier data defaults toward tier zero and can create invalid parallel behavior.
 
-### 9.6 控制器合成配方和 UI
+### 9.6 Controller assembly and UI
 
-装配线控制器配方：`GTOCore/.../data/recipe/classified/AssemblyLine.java:2954-2973`。输入 16 个 UV hull、16 个 Carbon nanites、16 个 ZPM field generator、16 个 UV robot arm、16 个 UV conveyor、32 个 UV motor、16 个 UV circuits、16 个 Naquadah octal wires，加四种流体各 4608；EUt 491520，duration 2400，研究站以 Carbon nanites 为 research stack。
+Assembly Line controller recipe (`AssemblyLine.java:2954-2973`): 16 UV hulls, 16 Carbon nanites, 16 ZPM field generators, 16 UV robot arms, 16 UV conveyors, 32 UV motors, 16 UV circuits, 16 Naquadah octal wires, and 4,608 units each of four fluids; EUt 491,520, duration 2,400, research stack Carbon nanites.
 
-UI 由 `StorageMultiblockMachine` 在电力 Fancy UI（198×208）右下角增加一个可放纳米蜂群的槽（社区 `IStorageMultiblock.createUIWidget` 将槽放在 `width-30,height-30`）；机器不提供并行仓 configurator，槽内数量就是并行上限。`laserTooltips()`/GTO pattern tooltip 明确提示只使用激光能源。
+The dedicated storage slot is at `width-30,height-30` in readable `IStorageMultiblock.createUIWidget`. There is no parallel-hatch configurator; stored nanite count is the parallel limit. Laser tooltips explicitly state laser-only energy.
 
-## 10. 六种配方类型的开发入口
+## 10. Recipe development entry points
 
-### 10.1 过程配方不是“挂到机器 ID”
+### 10.1 Recipes attach to recipe types, not controller IDs
 
-六台机器均通过 `.recipeTypes(...)` 绑定 recipe map。GTO `GTORecipeTypes` 对其中五个 GTM map 只是强类型别名（例如 `GTORecipeTypes.COMPRESSOR_RECIPES = GTRecipeTypes.COMPRESSOR_RECIPES`，可核对 `GTOCore/.../GTORecipeTypes.java:80-124`）；Nano forge 才是 GTO 自己注册的独立 map：
+All six definitions use `.recipeTypes(...)`. Five GTO fields are typed aliases to GTCEu maps, while Nano Forge is independently registered:
 
 ```java
-// 例如自定义蒸汽挤压配方（两种别名都指向同一个 GTM map）
+// Example custom steam-compression recipe; both aliases point to the same GTM map.
 GTRecipeTypes.COMPRESSOR_RECIPES.recipeBuilder("gtohjs_example")
     .inputItems(...)
     .outputItems(...)
@@ -603,32 +610,30 @@ GTRecipeTypes.COMPRESSOR_RECIPES.recipeBuilder("gtohjs_example")
     .save();
 ```
 
-机器 controller ID 不会自动创建独立 recipe type；若希望只让新机器看到配方，需要新建 recipe type 或在 controller 的 `getAvailableRecipeTypes`/modifier 中过滤，而不是复制旧 machine definition。
+A controller ID does not create a recipe type. To isolate recipes, register a new type or filter `getAvailableRecipeTypes`/the modifier rather than copying a machine definition.
 
-### 10.2 现有配方文件索引
+### 10.2 Existing recipe sources
 
-- Compressor：`GTOCore/.../data/recipe/classified/Compressor.java`、`GasCompressor.java`、`ImplosionCompressor.java`、`NeutronCompressor.java`，以及 generated/MachineRecipeLoader。
-- Macerator：`.../classified/Macerator.java`、`generated/GTOOreRecipeHandler.java`、`generated/GTOPartsRecipeHandler.java`。
-- Vacuum freezer：`.../classified/Vacuum.java`、`gtm/chemistry/ChemistryRecipes.java`、generated material handlers。
-- EBF：`.../classified/Blast.java`、`AlloyBlast.java`、`gtm/misc/GCYMRecipes.java`、generated material handlers。
-- Circuit assembler：`.../classified/CircuitAssembler.java`、`gtm/misc/CircuitRecipes.java`、`ae2/AE2.java`；GTM 类型还会自动补焊料。
-- Nano forge：仅 `.../classified/NanoForge.java` 的 24 个显式配方（另有控制器装配线配方）。
+- Compressor: `classified/Compressor.java`, `GasCompressor.java`, `ImplosionCompressor.java`, `NeutronCompressor.java`, and generated loaders.
+- Macerator: `classified/Macerator.java`, `generated/GTOOreRecipeHandler.java`, and `GTOPartsRecipeHandler.java`.
+- Vacuum Freezer: `classified/Vacuum.java`, `gtm/chemistry/ChemistryRecipes.java`, and generated material handlers.
+- EBF: `classified/Blast.java`, `AlloyBlast.java`, `gtm/misc/GCYMRecipes.java`, and generated handlers.
+- Circuit Assembler: `classified/CircuitAssembler.java`, `gtm/misc/CircuitRecipes.java`, and `ae2/AE2.java`; GTM also adds solder variants.
+- Nano Forge: 24 explicit recipes in `classified/NanoForge.java` plus controller assembly.
 
-### 10.3 新增配方的校验清单
+### 10.3 New recipe checklist
 
-1. 选对 recipe type：不要把 `gtocore:nano_forge` 写成 `GTRecipeTypes` 的同名猜测。
-2. 检查 recipe type 最大 I/O，确保 pattern 的 `autoAbilities` 会生成所需仓。
-3. 需要 EBF 温度时写 `GTRecipeDataKeys.EBF_TEMP`；需要 Nano 等级时写 `GTORecipeDataKeys.NANO_FORGE_TIER`。
-4. 不要在 recipe builder 中提前乘蒸汽并行、GCYM 并行或线圈 OC；这些由 controller/part modifier 负责。
-5. 用 `.save()` 进入 recipe map；不要调用只生成 JEI 显示而不注册的临时 builder。
+1. Use the real recipe type; do not guess a GTRecipeTypes field from `gtocore:nano_forge`.
+2. Check maximum I/O so automatic predicates expose required hatches.
+3. Set `GTRecipeDataKeys.EBF_TEMP` and `GTORecipeDataKeys.NANO_FORGE_TIER` when required.
+4. Do not pre-multiply steam/GCYM parallelism or coil OC in the builder.
+5. Call `.save()` into the map; do not create display-only temporary recipes.
 
-## 11. 对 GTOHJS 结构导出器的改良要求
+## 11. Structure exporter requirements
 
-以下约束可直接转成导出器的验证器：
+### 11.1 Ability-slot model
 
-### 11.1 能力槽模型
-
-导出器应把每个字符保存为“基础方块 + 能力候选 + 全局限制 + previewCount”，而不是简单的替代方块字符串。例如：
+Store base block, ability candidates, global limits, and preview count per symbol:
 
 ```json
 {
@@ -640,31 +645,31 @@ GTRecipeTypes.COMPRESSOR_RECIPES.recipeBuilder("gtohjs_example")
 }
 ```
 
-### 11.2 全局计数验证
+### 11.2 Global-count validation
 
-导出前至少检查：
+Before export, validate:
 
-- exact limit：蒸汽仓/蒸汽排气仓/EBF 消声仓/控制器；
-- min casing：vacuum 14、EBF 9、GCYM large circuit assembler 55；
-- max ability：steam pressor steam I/O 1、large macerator regular output 3、GCYM energy 8/parallel 1/accelerate 1；
-- sub-pattern：EBF 扩展单独统计并显示“可选模块”，不要把它与主结构混成一个固定方块盒；
-- tier predicate：整体框架/线圈必须同级，Nano 三档 pattern 必须与存储槽材料一致。
+- exact steam, vent, EBF muffler, and controller counts;
+- casing minimums: Vacuum Freezer 14, EBF 9, Large Circuit Assembler 55;
+- ability maximums: Steam Pressor steam I/O 1, Large Macerator ordinary output 3, GCYM energy 8/parallel 1/acceleration 1;
+- EBF extension as a separately displayed optional module;
+- uniform framework/coil tiers and Nano pattern agreement with stored material.
 
-### 11.3 方向和 preview
+### 11.3 Direction and preview
 
-- MBS aisle 输出顺序默认远端到控制器端；
-- pattern 的 `LEFT,UP,FRONT` 方向要写入导出元数据；
-- 预览需要分别显示主 pattern 和 optional sub-pattern；
-- EMI 缓存只会收集 `isRenderXEIPreview()` 为真的 definition，导出器生成的新机器应在注册后确认该标志和 `MultiblockDefinition.init()` 缓存非空。
+- Emit MBS aisles far-end to controller-end.
+- Persist `LEFT,UP,FRONT` metadata.
+- Preview main and optional sub-patterns independently.
+- Validate `isRenderXEIPreview()` and non-empty `MultiblockDefinition.init()` cache after registration.
 
-## 12. 证据路径总表
+## 12. Evidence paths
 
 ### GTOCore
 
 - `GTOCore/src/main/java/com/gtocore/common/data/machines/MultiBlockA.java`
 - `...\common\data\machines\GCYMMachines.java`
 - `...\common\data\machines\MultiBlockD.java`
-- `...\common\data\machines\GTMachineModify.java`
+- `...\common\data\GTMachineModify.java`
 - `...\common\machine\multiblock\steam\BaseSteamMultiblockMachine.java`
 - `...\common\machine\multiblock\steam\SteamMultiblockMachine.java`
 - `...\common\machine\multiblock\steam\LargeSteamMultiblockMachine.java`
@@ -686,7 +691,7 @@ GTRecipeTypes.COMPRESSOR_RECIPES.recipeBuilder("gtohjs_example")
 - `...\common\machine\multiblock\part\MaintenanceHatchPartMachine.java`
 - `...\api\machine\feature\multiblock\IMufflerMachine.java`
 
-### 社区可读 gtolib_3 / 当前反编译
+### Readable community GTOLib and current decompilation
 
 - `gtolib_3/src/main/java/com/gtolib/api/recipe/modifier/RecipeModifierFunction.java`
 - `...\api\machine\multiblock\ElectricMultiblockMachine.java`
@@ -694,11 +699,11 @@ GTRecipeTypes.COMPRESSOR_RECIPES.recipeBuilder("gtohjs_example")
 - `...\api\machine\trait\CoilTrait.java`
 - `...\api\machine\trait\TierCasingTrait.java`
 - `...\api\machine\feature\multiblock\IStorageMultiblock.java`
-- 当前 native 类的反编译依据：外部开发素材中的 `gtolib-26.7.4` 反编译目录。
+- Current native-class evidence: the external decompiled `gtolib-26.7.4` directory.
 
-## 13. 已知不确定项和测试建议
+## 13. Known uncertainties and required tests
 
-1. 最新 `gtolib-26.7.4` 的 `GTORecipeModifiers`、`StorageMultiblockMachine`、`CoilTrait` 方法体为 native；公开 `gtolib_3` 代码可用于公式和 UI 结构，但不能替代当前运行时验证。
-2. `abilities(STEAM)` 是否在运行时由 patcher 进一步过滤仓等级，需要在客户端分别放置普通/大型/高压/超临界蒸汽仓测试；源码 predicate 本身不做过滤。
-3. EBF 主 pattern 与 sub-pattern 合并后的能源仓全局上限应通过实际成形日志验证；不要仅根据单个 `setMaxGlobalLimited(2)` 推断总上限。
-4. 对每台机器启动客户端后执行结构检查，记录 `Pattern formed`、机器 tier、energy tier、recipe modifier、EMI shape cache 数量；结构导出器的自动验证应以这些日志作为回归基线。
+1. Current `GTORecipeModifiers`, `StorageMultiblockMachine`, and `CoilTrait` method bodies are native. Community source can explain formulas and UI shape but cannot replace runtime verification.
+2. Test ordinary, large, high-pressure, and supercritical steam hatches separately. The source `abilities(STEAM)` predicate itself does not filter tier; do not assume an undocumented patcher filter.
+3. Verify the merged EBF main/sub-pattern energy maximum through real formation logs rather than extrapolating from one `setMaxGlobalLimited(2)`.
+4. For every machine, record formation state, machine tier, energy tier, recipe modifier, and EMI shape-cache count. Use those logs as the exporter's regression baseline.

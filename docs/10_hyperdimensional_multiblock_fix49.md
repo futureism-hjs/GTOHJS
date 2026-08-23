@@ -1,45 +1,35 @@
-# GTOHJS fix49 超维度多方块 / Hyperdimensional Multiblocks
+# GTOHJS fix49 Hyperdimensional Multiblocks
 
-## 中文
+## Scope and resources
 
-### 范围与资源
+This version adds registrations only in the GTOHJS project. GTOCore, GTOLib, EMI, and the original structure files remain read-only. The four structure resources originate from user-provided Litematic drafts, are packaged as `data/gtohjs/structures/*.pattern`, and all measure 15 x 43 x 15. GTO's aisle order remains far-end to controller-end. The default UP axis of `FactoryBlockPattern.start(machine)` requires each aisle's rows to be written in `minY -> maxY` order, from bottom to top, placing the controller at `aisle=14,row=1,col=7`. Fix49 corrects the previous vertical inversion caused by incorrectly using `maxY -> minY`.
 
-本版本只在 GTOHJS 工程中新增注册；GTOCore、GTOLib、EMI 和结构原始文件均保持只读。四个结构资源来自用户提供的 Litematic 初稿，打包为 `data/gtohjs/structures/*.pattern`，尺寸均为 15 x 43 x 15。GTO 的 aisle 顺序保持从远端到控制器端；`FactoryBlockPattern.start(machine)` 的默认 UP 轴要求每个 aisle 的行按 `minY -> maxY`（底部到顶部）写入，控制器因此位于 `aisle=14,row=1,col=7`。fix49 修正了此前误用 `maxY -> minY` 导致的上下颠倒。
+## Four machines
 
-### 四台机器
-
-| ID | 控制器与配方 | 能源/并行 | 可替代仓室 | renderer |
+| ID | Controller and recipes | Energy/parallelism | Replaceable hatches | Renderer |
 | --- | --- | --- | --- | --- |
-| `gtocore:hyperdimensional_forge` | `PRIMITIVE_BLAST_FURNACE_RECIPES`（土高炉） | 无能源；固定 524288 并行；所有结果 1t | 39 个 H 位：任意等级物品输入最多 4、物品输出最多 2；无其他仓室 | 钢制机器外壳底材 + `primitive_blast_furnace` 表面 |
-| `gtocore:hyperdimensional_steam_furnace` | `FURNACE_RECIPES` | 蒸汽；固定 524288 并行；所有结果 1t | 39 个 H 位：1 个蒸汽仓、蒸汽物品输入/输出各最多 1、普通物品输入/输出各最多 1；不需要蒸汽排气仓 | 青铜底材 + `steam_oven` 表面 |
-| `gtocore:hyperdimensional_smelter` | `BLAST_RECIPES` + `ALLOY_BLAST_RECIPES` | 线圈温度公式 `2 * floor(K / 900)`；公式同时作为 CrossRecipe 线程数；所有结果 1t | 能源最多 2、激光最多 2、普通物品/流体 I/O、1 个维护仓、1 个消声仓；明确禁止并行/加速/线程/超频仓 | 高温冶炼底材 + `blast_alloy_smelter` 表面 |
-| `gtocore:hyperdimensional_chemical_factory` | `CHEMICAL_RECIPES`、`LARGE_CHEMICAL_RECIPES`、`POLYMERIZATION_REACTOR_RECIPES` | 线圈温度公式；真空等级 4；所有结果 1t；不需要外部热源 | 能源最多 2、激光最多 2、普通物品/流体 I/O、催化剂最多 2；不允许维护、并行、加速、线程、超频仓 | 惰性 PTFE 底材 + `chemical_reactor` 表面 |
+| `gtocore:hyperdimensional_forge` | `PRIMITIVE_BLAST_FURNACE_RECIPES` | No energy; fixed 524288 parallelism; all results take 1t | 39 H positions: at most four item inputs of any tier and two item outputs; no other hatches | Steel machine casing base plus `primitive_blast_furnace` overlay |
+| `gtocore:hyperdimensional_steam_furnace` | `FURNACE_RECIPES` | Steam; fixed 524288 parallelism; all results take 1t | 39 H positions: one steam hatch, at most one each of steam item input/output and ordinary item input/output; no steam vent required | Bronze base plus `steam_oven` overlay |
+| `gtocore:hyperdimensional_smelter` | `BLAST_RECIPES` + `ALLOY_BLAST_RECIPES` | Coil formula `2 * floor(K / 900)`, also used as the CrossRecipe thread count; all results take 1t | At most two energy and two laser hatches, ordinary item/fluid I/O, one maintenance hatch, and one muffler; parallel, acceleration, thread, and overclock hatches explicitly forbidden | High-temperature smelting base plus `blast_alloy_smelter` overlay |
+| `gtocore:hyperdimensional_chemical_factory` | `CHEMICAL_RECIPES`, `LARGE_CHEMICAL_RECIPES`, and `POLYMERIZATION_REACTOR_RECIPES` | Coil-temperature formula; vacuum tier 4; all results take 1t; no external heat source required | At most two energy and two laser hatches, ordinary item/fluid I/O, and two catalyst hatches; maintenance, parallel, acceleration, thread, and overclock hatches forbidden | Inert PTFE base plus `chemical_reactor` overlay |
 
-每台机器的 H 位都由 leap-forward-one 的仓位投影得到并在注册时断言为 39。空格使用 `testOnly` 谓词：普通方块可以放置，但其中的仓室不会附着到控制器；超频仓在匹配和运行时都被拒绝。这样不会因为“空气可放任何方块”意外启用增幅仓。
+Each machine's H positions come from leap-forward-one hatch projection and are asserted to total 39 during registration. Spaces use the `testOnly` predicate: ordinary blocks may be placed there, but hatches at those positions do not attach to the controller. Overclock hatches are rejected both during matching and at runtime. This prevents an "air accepts any block" rule from accidentally enabling enhancement hatches.
 
-### 线圈与过滤器
+## Coils and filters
 
-冶炼炉的 `heatingCoils()` 保证整机线圈类型一致。化工厂的 `cleanroomFilters()` 将过滤器映射为：`gtceu:filter_casing` = T1（普通超净间），`gtceu:sterilizing_filter_casing` = T2（无菌 + 普通），`gtocore:law_filter_casing` = T3（绝对无菌 + 无菌 + 普通）。配方条件优先读取 `CleanroomCondition`，并兼容 GTO 的 `FILTER_CASING` 数据键。
+The smelter's `heatingCoils()` guarantees a uniform coil type throughout the machine. The chemical factory's `cleanroomFilters()` maps filters as follows: `gtceu:filter_casing` = T1 (ordinary cleanroom), `gtceu:sterilizing_filter_casing` = T2 (sterile plus ordinary), and `gtocore:law_filter_casing` = T3 (absolute sterile plus sterile plus ordinary). Recipe conditions prefer `CleanroomCondition` and remain compatible with GTO's `FILTER_CASING` data key.
 
-### 线程边界
+## Threading boundary
 
-GTOLib 26.7.4 没有无能源或蒸汽 CrossRecipe 控制器，也没有通用 `IThreadMachine`。因此锻炉和蒸汽熔炉的 524288 是真实固定并行，不是独立配方线程；强行构造 524288 CrossRecipe 线程还会造成 `524288 x 524288` 的潜在调度/内存灾难。冶炼炉和化工厂继承 GTOLib `CoilCrossRecipeMultiblockMachine`，其 `getThread()` 才会被原生线程逻辑读取。
+GTOLib 26.7.4 has neither a no-energy or steam CrossRecipe controller nor a general `IThreadMachine`. The forge and steam furnace therefore use real fixed parallelism of 524288, not independent recipe threads. Forcing 524288 CrossRecipe threads would also risk a `524288 x 524288` scheduling and memory failure. The smelter and chemical factory inherit GTOLib's `CoilCrossRecipeMultiblockMachine`, whose `getThread()` is read by native threading logic.
 
-### 配方与验证
+## Recipes and verification
 
-工作台草稿 `one_stop_rare_earth_processing_plant` 在 GTO `Data.commonInit()` 的 `RecipeFilter.init()` 之后调用 `VanillaRecipeHelper.addShapedRecipe`，输出物品使用当前 ABI 的 `GTItems.ELECTRIC_MOTOR_EV.get()`。加载完成阶段校验注册状态并记录 `GTRecipes.RECIPE_MAP` 的诊断值；GTO 的资源重载随后会替换该 native map，因此不能把该时刻的缺 key 当成失败。GTO RecipeBuilder 配方仍必须使用现有 Coremod 内联字节码模板，不能混用工作台入口。
+The crafting-table draft `one_stop_rare_earth_processing_plant` calls `VanillaRecipeHelper.addShapedRecipe` after `RecipeFilter.init()` in GTO's `Data.commonInit()`, using the current ABI's `GTItems.ELECTRIC_MOTOR_EV.get()` as its output. The load-complete phase verifies registration state and records a diagnostic value from `GTRecipes.RECIPE_MAP`. GTO's subsequent resource reload replaces that native map, so a missing key at that moment must not be treated as failure. GTO RecipeBuilder recipes must continue to use the existing coremod inline-bytecode template and cannot reuse the crafting-table entry point.
 
-### fix49 验收
+## Fix49 acceptance
 
-1. 用 Java 21 与外部 Gradle 8.14.2 执行 `compileJava processResources jar reobfJar`。
-2. `node --check src/main/resources/coremods/gtohjs_machine_registration.js` 必须通过。
-3. 客户端日志应包含四个机器 `REGISTERED`、`patternBuilt=true`、四个 renderer 和 crafting map 校验；不能有 split-package、registry freeze 或 EMI 修改代码。
-4. EMI 结构预览由 GTO definition 的 `multiblockPreviewRenderer(true, true)` 提供，不添加 EMI 专用代码。
-
-## English
-
-Fix49 registers four GTO-native multiblocks from read-only GTOCore/GTOLib APIs. All patterns are 15 x 43 x 15 and use 39 projected hatch positions. The aisle order remains far-end to controller-end, while each aisle now emits rows from `minY` to `maxY`, which is the bottom-to-top order consumed by the default `RelativeDirection.UP` axis. The controller is at `aisle=14,row=1,col=7`; fix48's inverted `maxY -> minY` order has been corrected.
-
-The forge and steam furnace safely provide fixed 524288 parallel processing and one-tick results, but not independent CrossRecipe threads because GTOLib 26.7.4 has no no-energy or steam CrossRecipe controller. The coil smelter and chemical factory use the native coil CrossRecipe controller, so their `2 * floor(coilTemperature / 900)` thread formula is active. This distinction is intentional and documented rather than implemented with an unsafe fake `getThread()` method.
-
-The crafting draft is inserted with `VanillaRecipeHelper.addShapedRecipe` during GTO's native recipe window and verified in `GTRecipes.RECIPE_MAP`. EMI remains untouched; preview behavior comes from the registered GTO definitions and patterns.
+1. Use Java 21 and external Gradle 8.14.2 to run `compileJava processResources jar reobfJar`.
+2. `node --check src/main/resources/coremods/gtohjs_machine_registration.js` must pass.
+3. Client logs must include `REGISTERED` for all four machines, `patternBuilt=true`, all four renderers, and the crafting-map check. There must be no split-package or registry-freeze error and no EMI modification code.
+4. The GTO definition's `multiblockPreviewRenderer(true, true)` provides the EMI structure preview; add no EMI-specific code.

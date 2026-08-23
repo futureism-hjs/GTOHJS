@@ -1,76 +1,76 @@
-# GTL 碎片世界采集迁移研究 / GTL Fragment-World Collection Migration
+# GTL Fragment-World Collection Migration
 
 > [!WARNING]
-> 本文及对应实现包含 AI 辅助内容。所有数量、概率、命名空间和启用条件均应以列出的 GTL/GTO 源文件及客户端验证为准。
+> This document and the corresponding implementation contain AI-assisted content. Treat the listed GTL/GTO source files and client verification as authoritative for all quantities, probabilities, namespaces, and enablement conditions.
 
-## 1. 范围与事实基线
+## 1. Scope and Factual Baseline
 
-GTL 只作为机器和配方数据来源。GTOHJS 不复用 GTL 的注册代码，而是通过已验证的 GTOCore 注册窗口重新创建机器、配方页和配方。只在 GTO 中存在精确对应物时转换命名空间；世界碎片独立注册到 `gtohjs`。GTO 中不存在 `mining_crystal`、`treasures_crystal` 和 `miracle_crystal`，按用户明确决定仅排除这三种晶体条目，其余内容完整迁移。
+GTL is used only as a source of machine and recipe data. GTOHJS does not reuse GTL registration code; it recreates machines, recipe types, and recipes through verified GTOCore registration windows. Namespaces are converted only where GTO contains an exact counterpart, while World Fragments are registered independently under `gtohjs`. GTO has no `mining_crystal`, `treasures_crystal`, or `miracle_crystal`; by explicit user decision, only those three crystal entries are excluded and all other content is migrated.
 
-审计来源：
+Audit sources:
 
-- GTLCore `1.2.2.9-fix4`：`SkyTearsAndGregHeart.java`、`GTLMachines.java`、`GTLRecipeTypes.java`、`MultiBlockMachineB.java`
-- GTL KubeJS：`server_scripts/gtceu.js` 中的 `make_world_fragments_10..12`
-- 实际配置：`config/gtlcore.yaml`
-- GTO 映射：GTOCore `0.5.6-beta` 的物品、材料、方块和机器注册源码
+- GTLCore `1.2.2.9-fix4`: `SkyTearsAndGregHeart.java`, `GTLMachines.java`, `GTLRecipeTypes.java`, `MultiBlockMachineB.java`
+- GTL KubeJS: `make_world_fragments_10..12` in `server_scripts/gtceu.js`
+- Active configuration: `config/gtlcore.yaml`
+- GTO mapping: item, material, block, and machine registration source from GTOCore `0.5.6-beta`
 
-实际 GTL 配置为 `enableSkyBlokeMode: false`。因此上游当前启用 ULV 单方块机器和 15 条世界碎片生成配方；大型机器、101 条原矿、130 条流体、7 条特殊资源和 Damascus 钢粉配方只存在于关闭的空岛分支。
+The active GTL configuration is `enableSkyBlokeMode: false`. Upstream therefore enables the ULV single-block machine and 15 World Fragment generation recipes. The large machine, 101 raw-ore recipes, 130 fluid recipes, 7 special-resource recipes, and the Damascus Steel Dust recipe exist only in the disabled SkyBlock branch.
 
-| 配方页内容 | 数量 | GTL 当前配置 | GTOHJS 状态 |
+| Recipe-type content | Count | Current GTL configuration | GTOHJS status |
 | --- | ---: | --- | --- |
-| 世界碎片生成 | 15 | 启用 | 已注册；排除不存在的 `miracle_crystal` 概率输出 |
-| 原矿采集 | 101 | 关闭 | 已注册；排除不存在的 `mining_crystal` 概率输出 |
-| 流体采集 | 130 | 关闭 | 已注册；排除不存在的 `mining_crystal` 概率输出 |
-| 特殊资源采集 | 7 | 关闭 | 已注册；排除不存在的 `treasures_crystal` 概率输出 |
-| Damascus 钢粉 | 1 | 关闭 | 已完整注册 |
+| World Fragment generation | 15 | Enabled | Registered; unavailable `miracle_crystal` chance output excluded |
+| Raw-ore collection | 101 | Disabled | Registered; unavailable `mining_crystal` chance output excluded |
+| Fluid collection | 130 | Disabled | Registered; unavailable `mining_crystal` chance output excluded |
+| Special-resource collection | 7 | Disabled | Registered; unavailable `treasures_crystal` chance output excluded |
+| Damascus Steel Dust | 1 | Disabled | Registered in full |
 
-目标配方页总计 `254` 条：Java 源码定义 `251` 条，KubeJS 额外补充 3 条世界碎片生成配方以补齐 Java 中缺失的 `_10..12`；全部 `254` 条均属于 `fragment_world_collection`，现已全部注册。
+The target recipe type contains `254` recipes in total: Java source defines `251`, and KubeJS supplies three additional World Fragment recipes for `_10..12`, which are missing from Java. All `254` belong to `fragment_world_collection` and are now registered.
 
-## 2. 配方页
+## 2. Recipe Type
 
-GTOHJS 注册 `gtceu:fragment_world_collection`：
+GTOHJS registers `gtceu:fragment_world_collection`:
 
-| 属性 | 值 |
+| Property | Value |
 | --- | --- |
-| 父分组 | `GTRecipeTypes.MULTIBLOCK` |
-| EU 方向 | 输入 |
-| 物品输入/输出 | `3 / 12` |
-| 流体输入/输出 | `1 / 1` |
-| 最大提示行 | `1` |
-| 进度条 | Macerate |
-| 声音 | Miner |
+| Parent group | `GTRecipeTypes.MULTIBLOCK` |
+| EU direction | Input |
+| Item input/output | `3 / 12` |
+| Fluid input/output | `1 / 1` |
+| Maximum tooltip rows | `1` |
+| Progress bar | Macerate |
+| Sound | Miner |
 
-## 3. 机器
+## 3. Machines
 
-### 3.1 碎片世界采集器
+### 3.1 Fragment-World Collection Machine
 
-- ID：`gtocore:ulv_fragment_world_collection_machine`
-- 仅 ULV，`SimpleTieredMachine`
-- 非 Y 轴旋转、可编辑 UI
-- 容量函数：`GTMachineUtils.largeTankSizeFunction`
-- 当前 GTO/GTCEu 的 ULV 结果为 `32000 mB`；GTL 源码没有写死 `64000 mB`
-- 工作台配方：2 个 MAX 力场发生器、2 个 MAX 电路、2 个 MAX 传感器、1 个 MAX 机器外壳、2 个宇宙中子素单线缆
+- ID: `gtocore:ulv_fragment_world_collection_machine`
+- ULV only, implemented as `SimpleTieredMachine`
+- Non-Y-axis rotation and editable UI
+- Capacity function: `GTMachineUtils.largeTankSizeFunction`
+- The current GTO/GTCEu ULV result is `32000 mB`; GTL source does not hard-code `64000 mB`
+- Crafting recipe: 2 MAX Field Generators, 2 MAX circuits, 2 MAX Sensors, 1 MAX Machine Hull, and 2 single Cosmic Neutronium cables
 
-### 3.2 大型碎片世界采集器
+### 3.2 Large Fragment-World Collection Machine
 
-- ID：`gtocore:large_fragment_world_collection_machine`
-- 上游仅在空岛模式注册；GTOHJS 为迁移与后续配方映射直接注册 definition
-- 耗能倍率 `256`，耗时倍率 `0.25`
-- GTL 原型固定最大并行 `64`；GTOHJS 改为可在左侧标签页自由设定 `1..9,007,199,254,740,991` 并行
-- 控制器使用 `CustomParallelMultiblockMachine`，设定值和存档值均为 `long`，运行时由 `GTORecipeModifiers.PARALLEL` 应用
-- 稳定钛外壳 renderer，GCYM 大型提取机 overlay
-- 双预览开启
+- ID: `gtocore:large_fragment_world_collection_machine`
+- Upstream registers it only in SkyBlock mode; GTOHJS directly registers the definition for migration and subsequent recipe mapping
+- Energy multiplier `256` and duration multiplier `0.25`
+- The GTL prototype has a fixed maximum parallelism of `64`; GTOHJS exposes freely configurable `1..9,007,199,254,740,991` parallelism on a left-side tab
+- The controller uses `CustomParallelMultiblockMachine`; configured and saved values are both `long`, and `GTORecipeModifiers.PARALLEL` applies them at runtime
+- Stable Titanium casing renderer and GCYM Large Extractor overlay
+- Both previews enabled
 
-机器介绍使用 GTO 的标准“特殊并行”属性，并明确标注左侧配置入口。`9,007,199,254,740,991` 是 `IParallelMachine.MAX_PARALLEL` 的数据范围上限；单次实际并行仍会按输入、输出容量和可用电压自动取可执行的较小值。该机器只有单配方并行，不引入 CrossRecipe 线程，也不需要超维度化工厂的并行乘线程溢出保护。
+The machine description uses GTO's standard `special parallelism` attribute and explicitly identifies the left-side configuration entry. `9,007,199,254,740,991` is the data-range maximum from `IParallelMachine.MAX_PARALLEL`; actual parallel work for each operation still selects the lower executable value based on inputs, output capacity, and available voltage. This machine has only single-recipe parallelism, introduces no CrossRecipe threads, and does not need the Hyperdimensional Chemical Factory's parallel-times-thread overflow guard.
 
-### 3.3 工作台配方
+### 3.3 Crafting Recipes
 
-- 原有 `gtohjs:fragment_world_collection_machine` 高阶配方保留。
-- 新增 `gtohjs:large_fragment_world_collection_machine`；配方中的 IV 电路使用 `CustomTags.IV_CIRCUITS`，可用任意 IV 等级电路。
-- 新增 `gtohjs:ulv_fragment_world_collection_machine`；使用草稿中的橡木原木与泥土配方。
-- 两条新配方都在 `Data.commonInit()` 的已验证工作台注册窗口调用 `VanillaRecipeHelper.addShapedRecipe(...)`。
+- The existing high-tier `gtohjs:fragment_world_collection_machine` recipe remains.
+- Add `gtohjs:large_fragment_world_collection_machine`; its IV circuit input uses `CustomTags.IV_CIRCUITS` and accepts any IV-tier circuit.
+- Add `gtohjs:ulv_fragment_world_collection_machine`; it uses the draft's oak-log and dirt recipe.
+- Both new recipes call `VanillaRecipeHelper.addShapedRecipe(...)` in the verified crafting registration window of `Data.commonInit()`.
 
-结构为 `3 x 7 x 3`：
+The structure is `3 x 7 x 3`:
 
 ```text
 AAA  AOA  AAA
@@ -82,19 +82,19 @@ AXA  XXX  AXA
 AAA  AIA  AAA
 ```
 
-| 字符 | 约束 |
+| Symbol | Constraint |
 | --- | --- |
-| `S` | 控制器 |
-| `X` | `gtceu:stable_machine_casing`，其中恰好 1 个位置可换标准能源仓 |
-| `I` | 物品输入总线专用点位 |
-| `O` | 物品输出总线专用点位 |
-| `A` | 任意方块，且不会收集其中的仓室能力 |
+| `S` | Controller |
+| `X` | `gtceu:stable_machine_casing`; exactly one position can be replaced by a standard Energy Hatch |
+| `I` | Dedicated Item Import Bus position |
+| `O` | Dedicated Item Export Bus position |
+| `A` | Any block; hatch abilities at these positions are not collected |
 
-大型结构没有缺失方块：稳定钛机械外壳、能源仓、输入总线和输出总线都由当前 GTO/GTCEu 提供。上游结构没有流体输入或输出点位，所以即使配方页允许流体，该大型机仍不能运行带流体 I/O 的配方；迁移没有擅自改变该结构合同。
+The large structure has no missing blocks: current GTO/GTCEu provides the Stable Titanium Machine Casing, Energy Hatch, Item Import Bus, and Item Export Bus. The upstream structure has no fluid input or output position, so this large machine still cannot run recipes with fluid I/O even though its recipe type permits fluids. The migration does not alter that structure contract.
 
-## 4. 16 种世界碎片
+## 4. Sixteen World Fragments
 
-全部独立注册在 `gtohjs` 命名空间：
+All are registered independently under the `gtohjs` namespace:
 
 ```text
 world_fragments_overworld, world_fragments_nether, world_fragments_end,
@@ -105,45 +105,45 @@ world_fragments_enceladus, world_fragments_titan, world_fragments_glacio,
 world_fragments_barnarda
 ```
 
-材质复制自 GTLCore 并改用 `gtohjs:item/...` 模型命名空间；上游许可和来源记录在 `THIRD_PARTY_NOTICES.md`。
+Textures are copied from GTLCore and moved to the `gtohjs:item/...` model namespace. Upstream licenses and provenance are recorded in `THIRD_PARTY_NOTICES.md`.
 
-## 5. 当前启用的 15 条碎片生成配方
+## 5. Fifteen Currently Enabled Fragment-Generation Recipes
 
-共同参数：`8 EU/t`、`200t`。GTL 原配方还以 `1/10000 = 0.01%` 概率输出 1 个 `gtlcore:miracle_crystal`；GTO 中不存在同路径物品，按用户决定排除该输出，其余参数不变，以下 15 条均已注册。
+Common parameters are `8 EU/t` and `200t`. Each original GTL recipe also has a `1/10000 = 0.01%` chance to output one `gtlcore:miracle_crystal`. GTO has no item at that path, so this output is excluded by user decision while all other parameters remain unchanged. All 15 recipes below are registered.
 
-| ID | 输入碎片 | 不消耗输入 | 流体输入 | 电路 | 输出碎片 |
+| ID | Input fragment | Non-consumable input | Fluid input | Circuit | Output fragment |
 | --- | --- | --- | --- | ---: | --- |
-| `make_world_fragments_1` | Overworld | `gtocore:reactor_core`，另消耗 4 钢块 | - | - | Reactor；仅主世界 |
+| `make_world_fragments_1` | Overworld | `gtocore:reactor_core`; also consumes 4 Steel Blocks | - | - | Reactor; Overworld only |
 | `_2` | Overworld | `ad_astra:tier_1_rocket` | Rocket Fuel 16000 mB | 32 | Moon |
 | `_3` | Overworld | `ad_astra:tier_2_rocket` | GTO RocketFuelRp1 16000 mB | 32 | Mars |
 | `_4` | Overworld | `ad_astra:tier_3_rocket` | GTO DenseHydrazineFuelMixture 16000 mB | 32 | Venus |
 | `_5` | Overworld | `ad_astra:tier_3_rocket` | GTO DenseHydrazineFuelMixture 16000 mB | 31 | Mercury |
-| `_6` | Venus | 带下界数据的 `gtocore:dimension_data` | - | 32 | Nether |
+| `_6` | Venus | `gtocore:dimension_data` carrying Nether data | - | 32 | Nether |
 | `_7` | Overworld | `ad_astra:tier_4_rocket` | GTO RocketFuelCn3h7o3 16000 mB | 32 | Ceres |
 | `_8` | Overworld | `ad_astra_rocketed:tier_5_rocket` | GTO RocketFuelH8n4c2o4 16000 mB | 32 | Io |
 | `_9` | Overworld | `ad_astra_rocketed:tier_5_rocket` | GTO RocketFuelH8n4c2o4 16000 mB | 31 | Ganymede |
 | `_10` | Overworld | `ad_astra_rocketed:tier_6_rocket` | `ad_astra:cryo_fuel` 16000 mB | 32 | Pluto |
 | `_11` | Overworld | `ad_astra_rocketed:tier_6_rocket` | `ad_astra:cryo_fuel` 16000 mB | 31 | Enceladus |
 | `_12` | Overworld | `ad_astra_rocketed:tier_6_rocket` | `ad_astra:cryo_fuel` 16000 mB | 30 | Titan |
-| `_13` | Pluto | 16 个带末地数据的 `gtocore:dimension_data` | - | 32 | End |
+| `_13` | Pluto | 16 `gtocore:dimension_data` stacks carrying End data | - | 32 | End |
 | `_14` | Overworld | `ad_astra_rocketed:tier_7_rocket` | GTO StellarEnergyRocketFuel 16000 mB | 32 | Glacio |
 | `_15` | Overworld | `gtocore:space_elevator` | - | 32 | Barnarda |
 
-`kubejs:nether_data` 和 `kubejs:end_data` 不是简单改成 `gtocore:*` ID；GTO 使用同一个 `gtocore:dimension_data` 物品并通过数据内容区分维度，后续迁移必须构造正确堆栈。
+`kubejs:nether_data` and `kubejs:end_data` are not converted by simply changing them to a `gtocore:*` ID. GTO uses the same `gtocore:dimension_data` item and distinguishes dimensions through its data payload, so subsequent migrations must construct the correct stack.
 
-## 6. 空岛原矿配方
+## 6. SkyBlock Raw-Ore Recipes
 
-共同规则：不消耗对应世界碎片；输出 4 组原矿和对应维度岩石；世界碎片返还概率 `50/10000 = 0.50%`；`8 EU/t`；耗时使用 Java 整数除法 `24000 / speed`。GTL 原配方的 `mining_crystal` 概率输出（`5/10000`、等级增幅 5）因 GTO 不存在该物品而按用户决定排除，101 条原矿配方均已注册。
+Common rules: the corresponding World Fragment is not consumed; each recipe outputs four raw-ore groups and the matching dimensional rock; World Fragment return chance is `50/10000 = 0.50%`; power is `8 EU/t`; and duration uses Java integer division `24000 / speed`. The original GTL `mining_crystal` chance output (`5/10000`, tier boost 5) is excluded by user decision because GTO has no such item. All 101 raw-ore recipes are registered.
 
-ID 为 `sky_block_digging_<维度1..16>_<序号>`。Overworld 电路为序号 `+1`，其余维度电路等于序号。各维度配方数量为：
+IDs follow `sky_block_digging_<dimension1..16>_<sequence>`. Overworld circuit numbers are sequence `+1`; other dimensions use the sequence number directly. Recipe counts by dimension are:
 
 ```text
 22, 12, 6, 8, 4, 3, 3, 2, 4, 4, 5, 5, 3, 4, 9, 7
 ```
 
-50 个矿脉模板如下；`V` 编号用于后续维度映射表：
+The 50 ore-vein templates follow; `V` numbers are used by the later dimension-mapping table:
 
-| V | 原矿1 | 原矿2 | 原矿3 | 原矿4 | speed | duration |
+| V | Raw ore 1 | Raw ore 2 | Raw ore 3 | Raw ore 4 | speed | duration |
 | ---: | --- | --- | --- | --- | ---: | ---: |
 | 1 | Goethite x64 | YellowLimonite x24 | Hematite x24 | Malachite x16 | 800 | 30 |
 | 2 | Soapstone x48 | Talc x32 | GlauconiteSand x32 | Pentlandite x16 | 100 | 240 |
@@ -196,7 +196,7 @@ ID 为 `sky_block_digging_<维度1..16>_<序号>`。Overworld 电路为序号 `+
 | 49 | Trona x32 | Trona x32 | Cooperite x32 | GTO Celestine x32 | 200 | 120 |
 | 50 | GTO Zircon x48 | Grossular x32 | Pyrolusite x24 | Tantalite x24 | 100 | 240 |
 
-维度到矿脉模板的完整顺序：
+Complete dimension-to-vein-template order:
 
 ```text
 Overworld: V1..V22
@@ -217,23 +217,23 @@ Glacio: V24,V33,V27,V49,V23,V37,V35,V47,V48
 Barnarda: V42,V40,V28,V34,V35,V33,V44
 ```
 
-岩石附加输出依次为：主世界石头/深板岩、下界下界岩/玄武岩、末地末地石、Reactor 闪长岩、Moon/Mars/Venus/Mercury 的 Ad Astra 星球石、GTO 的 Ceres/Io/Ganymede/Pluto/Enceladus/Titan 星球石、Ad Astra Glacio 石、Barnarda 石头。
+Additional rock outputs are, in order: Overworld Stone/Deepslate; Nether Netherrack/Basalt; End End Stone; Reactor Diorite; Ad Astra planetary stone for Moon/Mars/Venus/Mercury; GTO planetary stone for Ceres/Io/Ganymede/Pluto/Enceladus/Titan; Ad Astra Glacio Stone; and Barnarda Stone.
 
-## 7. 空岛流体配方
+## 7. SkyBlock Fluid Recipes
 
-26 个基础流体配置按维度分配，每个配置生成 5 个钻头版本，共 `26 x 5 = 130` 条：
+Twenty-six base fluid configurations are distributed by dimension. Each generates five drill-head variants, for `26 x 5 = 130` recipes:
 
-| 版本 | 钻头 | 产量倍率 | 消耗概率 |
+| Version | Drill head | Output multiplier | Consumption chance |
 | ---: | --- | ---: | ---: |
 | 1 | `gtceu:steel_drill_head` | 1 | 1.00% |
 | 2 | `gtocore:titanium_ti64_drill_head` | 16 | 0.90% |
 | 3 | `gtceu:naquadah_alloy_drill_head` | 128 | 0.80% |
 | 4 | `gtceu:neutronium_drill_head` | 1024 | 0.70% |
-| 5 | `gtocore:machine_casing_grinding_head` | 固定 `2147483647 mB` | 0.60% |
+| 5 | `gtocore:machine_casing_grinding_head` | Fixed `2147483647 mB` | 0.60% |
 
-GTO 0.5.6-beta 的实际 Forge 注册表没有 `gtceu:titanium_drill_head`，因此第二档使用现有的钛系 `gtocore:titanium_ti64_drill_head`；产量倍率和消耗概率不变。第四档必须按明确 ID 取得 `gtceu:neutronium_drill_head`，不能使用 `GTMaterials.Neutronium`，因为 GTOCore 会把该字段重定向到 `gtocore:amprosium`。以上五个 ID 均已由当前世界注册表快照和客户端运行时验证。
+The active Forge registry in GTO 0.5.6-beta has no `gtceu:titanium_drill_head`, so tier two uses the existing titanium-family `gtocore:titanium_ti64_drill_head`; its multiplier and consumption chance are unchanged. Tier four must resolve `gtceu:neutronium_drill_head` by explicit ID rather than `GTMaterials.Neutronium`, because GTOCore redirects that field to `gtocore:amprosium`. The current world registry snapshot and client runtime have validated all five IDs.
 
-全部流体配方为 `8 EU/t`、`200t`，并含世界碎片 `0.50%` 返还。GTL 原有的 `mining_crystal` `0.05%` 输出按上述决定排除；130 条流体配方均已注册。基础流体和电路分配：
+Every fluid recipe uses `8 EU/t`, lasts `200t`, and has a `0.50%` World Fragment return chance. The original GTL `mining_crystal` `0.05%` output is excluded as described above. All 130 fluid recipes are registered. Base-fluid and circuit assignments are:
 
 ```text
 Overworld C24..29: SaltWater 1000, OilHeavy 2000, RawOil 3000,
@@ -243,7 +243,7 @@ Moon C5..6: Helium3 1800, Helium 3000
 Mars C4: Radon 800
 Venus C4: SulfuricAcid 2500
 Mercury C3: Deuterium 3000
-Ceres C5..8: Neon/Krypton/Radon/Xenon 各 2500
+Ceres C5..8: Neon/Krypton/Radon/Xenon, 2500 each
 Io C5: CoalGas 3000
 Ganymede C6: HydrochloricAcid 3500
 Pluto C6: NitricAcid 3000
@@ -252,41 +252,41 @@ Titan C5..7: Benzene 1600, Methane 2500, CharcoalByproducts 2600
 Barnarda C8: GTO UnknowWater 600
 ```
 
-## 8. 空岛特殊配方
+## 8. SkyBlock Special Recipes
 
-共同内容：不消耗对应碎片，碎片返还 `0.50%`，`8 EU/t`、`200t`。GTL 原有的 `treasures_crystal` `0.05%` 输出因 GTO 不存在该物品而按用户决定排除；7 条特殊配方均已注册。
+Common behavior: the corresponding fragment is not consumed, its return chance is `0.50%`, and each recipe uses `8 EU/t` for `200t`. The original GTL `treasures_crystal` `0.05%` output is excluded by user decision because GTO has no such item. All seven special recipes are registered.
 
-| ID / 碎片 | 其他概率输出 |
+| ID / fragment | Other chance outputs |
 | --- | --- |
-| `special_1` / Overworld | Dirt16 60%、Gravel16 40%、Sand16 30%、Clay Ball64 20%；Oak/Birch/Spruce/Jungle/Cherry/Mangrove 树苗各8且20%；Lava 1000 mB 5% |
-| `special_2` / Overworld | Sugar Cane8 20%、Rubber Sapling4 10%、Leather4 5%、String8 5%、Honeycomb1 20%、Kelp1 20%、Sculk Shrieker2 1%、Sculk Sensor2 1%、Soul Sand4 0.05%、Totem1 0.10%；Raw Oil 1000 mB 20% |
-| `special_3` / Reactor | Dirt/Diorite/Andesite/Granite/GT Red Granite/GT Marble/Suspicious Sand/Suspicious Gravel 各16且60%；AE2 Mysterious Cube1 1%、Sky Stone16 5% |
-| `special_4` / Nether | Soul Sand16 60%、Soul Soil16 30%、Ancient Debris4 5%、Nether Wart12 2%、Crimson/Warped Fungus各8且20%、Blaze Rod8 5%；Lava 8000 mB 50% |
-| `special_5` / End | Dragon Egg1 0.05%、Dragon Head1 0.05%、Dragon Breath1 5%、Shulker Shell8 20%、Chorus Fruit16 40%、Chorus Flower1 5% |
-| `special_6` / Glacio | `gtocore:glacio_spirit` 1个 5%、Ad Astra Ice Shard 1个 95% |
-| `special_7` / Barnarda | `gtocore:barnarda_c_log` 1个 5%、`gtocore:barnarda_c_leaves` 1个 95%；GTO BarnardaAir 16000 mB 20% |
+| `special_1` / Overworld | Dirt16 60%, Gravel16 40%, Sand16 30%, Clay Ball64 20%; Oak/Birch/Spruce/Jungle/Cherry/Mangrove Saplings, 8 each at 20%; Lava 1000 mB 5% |
+| `special_2` / Overworld | Sugar Cane8 20%, Rubber Sapling4 10%, Leather4 5%, String8 5%, Honeycomb1 20%, Kelp1 20%, Sculk Shrieker2 1%, Sculk Sensor2 1%, Soul Sand4 0.05%, Totem1 0.10%; Raw Oil 1000 mB 20% |
+| `special_3` / Reactor | Dirt/Diorite/Andesite/Granite/GT Red Granite/GT Marble/Suspicious Sand/Suspicious Gravel, 16 each at 60%; AE2 Mysterious Cube1 1%, Sky Stone16 5% |
+| `special_4` / Nether | Soul Sand16 60%, Soul Soil16 30%, Ancient Debris4 5%, Nether Wart12 2%, Crimson/Warped Fungus, 8 each at 20%, Blaze Rod8 5%; Lava 8000 mB 50% |
+| `special_5` / End | Dragon Egg1 0.05%, Dragon Head1 0.05%, Dragon Breath1 5%, Shulker Shell8 20%, Chorus Fruit16 40%, Chorus Flower1 5% |
+| `special_6` / Glacio | 1 `gtocore:glacio_spirit` at 5%, 1 Ad Astra Ice Shard at 95% |
+| `special_7` / Barnarda | 1 `gtocore:barnarda_c_log` at 5%, 1 `gtocore:barnarda_c_leaves` at 95%; GTO BarnardaAir 16000 mB 20% |
 
-## 9. 已迁移的 Damascus 配方
+## 9. Migrated Damascus Recipe
 
-该配方来自 GTL 当前关闭的空岛分支，但所有依赖都有精确 GTO 对应，因此完整迁移：
+This recipe comes from GTL's currently disabled SkyBlock branch, but every dependency has an exact GTO counterpart, so it is migrated in full:
 
 ```text
-不消耗: gtohjs:world_fragments_reactor x1
-输入: gtceu:steel_dust x1, gtceu:lubricant 100 mB
-输出: gtceu:damascus_steel_dust x1
-电路: 9
-功率: 8 EU/t
-耗时: 200t
+not consumed: gtohjs:world_fragments_reactor x1
+input: gtceu:steel_dust x1, gtceu:lubricant 100 mB
+output: gtceu:damascus_steel_dust x1
+circuit: 9
+power: 8 EU/t
+duration: 200t
 ```
 
-## 10. 精确映射与明确排除项
+## 10. Exact Mappings and Explicit Exclusions
 
-已确认的对象映射：
+Confirmed object mappings:
 
 ```text
 kubejs:machine_casing_grinding_head -> gtocore:machine_casing_grinding_head
-gtceu:titanium_drill_head (GTO 中未注册) -> gtocore:titanium_ti64_drill_head
-GTL 原中子素钻头 -> gtceu:neutronium_drill_head（绕过 GTO 的 Neutronium 字段重映射）
+gtceu:titanium_drill_head (not registered in GTO) -> gtocore:titanium_ti64_drill_head
+original GTL neutronium drill head -> gtceu:neutronium_drill_head (bypasses GTO's Neutronium field remapping)
 kubejs:ceresstone -> gtocore:ceres_stone
 kubejs:iostone -> gtocore:io_stone
 kubejs:ganymedestone -> gtocore:ganymede_stone
@@ -300,9 +300,9 @@ kubejs:reactor_core -> gtocore:reactor_core
 GTL space elevator -> gtocore:space_elevator
 ```
 
-GTO 还存在精确材料对应：Desh、Calorite、Ostrum、Celestine、Zircon、UnknowWater、BarnardaAir、RocketFuelRp1、DenseHydrazineFuelMixture、RocketFuelCn3h7o3、RocketFuelH8n4c2o4、StellarEnergyRocketFuel。
+GTO also provides exact material counterparts for Desh, Calorite, Ostrum, Celestine, Zircon, UnknowWater, BarnardaAir, RocketFuelRp1, DenseHydrazineFuelMixture, RocketFuelCn3h7o3, RocketFuelH8n4c2o4, and StellarEnergyRocketFuel.
 
-已确认 GTOCore 源码和 0.5.6-beta 资源中不存在同路径对象：
+The GTOCore source and 0.5.6-beta resources have been confirmed to contain no objects at these paths:
 
 ```text
 gtlcore:mining_crystal
@@ -310,7 +310,7 @@ gtlcore:treasures_crystal
 gtlcore:miracle_crystal
 ```
 
-按用户明确决定，迁移时仅排除上述三种晶体的概率输出，不注册近似替代物；其余 254 条配方内容通过同一数据表批量生成，并按 `15 + 101 + 130 + 7 + 1` 分类核验。
+By explicit user decision, migration excludes only chance outputs for the three crystals above and registers no approximate substitutes. All other content in the 254 recipes is generated in bulk from the same data table and verified in groups of `15 + 101 + 130 + 7 + 1`.
 
 ## English Summary
 

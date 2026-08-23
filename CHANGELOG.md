@@ -1,5 +1,59 @@
 # GTO HJS 更新日志 / Changelog
 
+## 2.3-alpha-for-gtocore-0.5.6-beta - 2026-08-22
+
+### 中文
+
+与上一份清洁构建 `2.2-alpha-for-gtocore-0.5.6-beta` 相比：
+
+修复：
+
+- 修复热力仓模式标签、独立机器的模式/目标温度标签以及热量输出侧栏标题，统一使用 GTOCore 的客户端 `Component.translatable(...).setClientSideWidget()` 方法。现有中英文翻译会显示为文本，不再显示原始翻译键。
+- 删除两个热力形态中新增加的当前模式行，使热力仓复用独立机器的共享目标温度 UI；两种形态都不再依赖已删除的模式翻译键。
+
+新增：
+
+- 电磁热力控制仓拥有两种 MV 形态：多方块热量输入仓和独立的零能耗热力机器。两种形态共用主界面的目标温度 UI；机器默认 `300 K`，范围为 `0..3600 K`，并将热量条件精确锁定到选择的目标温度。
+- 玩家可见的热力设置保持使用 K。控制器本地的 `HeatHandler` 将环境温度校准为 `0 K`，并使用每 K 两个原始热量单位，使 `0..3600 K` 范围内的实际温度与设定值完全一致。
+- 通用蒸汽厂现在有十七种模式，新增 Mixer 和原生 `gtceu:centrifuge`；所有模式继续保留 MV 配方等级限制和最终 `1t` 时长锁定。
+- 进阶和终极无限进气仓：分别为 MV/IV 流体输入仓，可选择空气、氧气或气态氮，支持外部流体仓双向能力、左侧下方标准工作开关、可配置输出和正面阻挡处理。
+- 新增真空覆盖 `gtohjs:vacuum_cover`，可为受支持的单方块机器和多方块维护仓提供真空等级 1-3。
+
+更改：
+
+- 普通螺丝刀右键现在只在热力仓与无能源机器之间切换。Shift+螺丝刀不会转换任一形态。切换提示只显示目标形态；仓室切换到机器时仍会中断关联配方并销毁仓内全部物品和流体。
+- 热力渲染器使用 MV `gtceu:mv_machine_casing` 外壳和用户提供的八帧 `overlay_front.png`，排除旧的蓝色发光前面层，同时保留 GTOCore 侧面的温度计。热力提示保留黄色的仓室/机器模式行以及已验证的白色 K 温度/切换说明。
+- 热力配方仅保留居中的 `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch` 工作台配方，不再存在热力形态转换配方。
+- 进阶和终极进气仓在多方块匹配中仍使用 `IO.IN`，外部能力仍使用 `IO.BOTH`；Shift+螺丝刀不再将输入仓转换为输出仓。
+- 进阶发电阵列的发电量固定为 `2x`，无线电网传输损耗固定为 `0%`，普通发电阵列配置不受影响。
+- 英文开发文档、公开 README、翻译和验证索引已与最终双形态热力行为及十七模式通用蒸汽厂契约同步。
+
+### English
+
+Compared with the previous clean build `2.2-alpha-for-gtocore-0.5.6-beta`:
+
+Fixed:
+
+- Fixed the thermal hatch's mode label, the standalone machine's mode/target labels, and the heat-output sidebar heading to use GTOCore's client-side `Component.translatable(...).setClientSideWidget()` pattern. The existing Chinese and English entries now render as text instead of raw translation keys.
+- Removed the newly added current-mode rows from both thermal forms and made the hatch reuse the standalone machine's shared target-temperature UI, so neither form depends on the removed mode translation keys.
+
+Added:
+
+- Electromagnetic Thermal Control Hatch has two MV forms: a multiblock heat-input hatch and a standalone, zero-energy thermal machine. Both forms share the same primary target-temperature UI; the machine defaults to `300 K`, configures `0..3600 K`, and locks its heat condition exactly to the selected target.
+- Player-facing thermal settings remain K. The controller-local `HeatHandler` calibration fixes ambient temperature to `0 K` and uses two raw heat units per K, so actual temperature exactly matches the configured value from `0..3600 K`.
+- The Universal Steam Factory has seventeen modes, adding both Mixer and native `gtceu:centrifuge`; all modes retain the MV recipe limit and final `1t` duration lock.
+- Advanced and Ultimate Infinite Intake Hatches: MV/IV fluid-input parts with selectable air, oxygen, or gaseous nitrogen, bidirectional external tank capability, standard lower-left work toggles, configurable output, and front-obstruction handling.
+- Vacuum Cover `gtohjs:vacuum_cover`, supplying vacuum tiers 1-3 to supported single-block machines and multiblock Maintenance Hatches.
+
+Changed:
+
+- Normal screwdriver right-click now switches only between the thermal hatch and the unpowered machine. Shift+screwdriver does not convert either form. Switch messages report only the destination form; hatch-to-machine conversion still interrupts attached recipes and destroys all hatch items and fluids.
+- The thermal renderer uses the MV `gtceu:mv_machine_casing` hull with the user-supplied eight-frame `overlay_front.png`, excludes the old emissive blue front layer, and retains the GTOCore side thermometers. The thermal tooltip retains the yellow hatch/machine line plus the verified white K-temperature/switch instruction.
+- The thermal recipe is solely the centered `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch` crafting recipe; no thermal-form conversion recipe exists.
+- Advanced and Ultimate Intake Hatches retain `IO.IN` for multiblock matching while their external capability remains `IO.BOTH`; Shift+screwdriver can no longer change either input hatch into an output hatch.
+- Advanced Generator Array generation is fixed at `2x` and its wireless-grid transfer loss is `0%`, without changing the stock array configuration.
+- English development documentation, public READMEs, localization, and validation indexes were synchronized with the final two-form thermal behavior and seventeen-mode factory contract.
+
 ## 2.2-alpha-for-gtocore-0.5.6-beta - 2026-08-17
 
 ### 中文
@@ -50,12 +104,6 @@ Build:
 - GTCEu 在服务端按设计使用 `IRenderer.EMPTY`；GTOHJS 现在只在客户端检查 `ArrayMachineRenderer`，服务端继续验证机器注册表、配方类型、结构供应器和最终注册状态。
 - 服务端现在可以完成 GTOHJS 的 `FMLLoadCompleteEvent`，不再因阵列机器的客户端渲染器校验抛出致命加载错误。
 
-验证：
-
-- 使用 Java 21 完成清洁构建。
-- 在指定 GTO 服务端启动并到达 `Done`，随后通过 `stop` 正常退出，退出码为 0。
-- 固定 GTO 客户端已完成双端兼容验证；未修改 EMI 或任何只读参考资源。
-
 ### English
 
 Compared with the previous clean build `2.0-alpha-for-gtocore-0.5.6-beta`:
@@ -65,12 +113,6 @@ Fixed:
 - Fixed dedicated-server registration for `gtocore:advanced_generator_array`, `gtocore:steam_array`, and `gtocore:advanced_steam_array`.
 - GTCEu intentionally uses `IRenderer.EMPTY` on a dedicated server. GTOHJS now checks the concrete `ArrayMachineRenderer` type only on the client while continuing to validate the machine registry, recipe type, pattern supplier, and finalized registration state on both sides.
 - GTOHJS no longer aborts `FMLLoadCompleteEvent` because of a client-only renderer assertion, allowing the dedicated server to finish loading.
-
-Verification:
-
-- Clean-built with Java 21.
-- Started the specified GTO server to `Done`, then stopped it through the console with exit code 0.
-- The fixed GTO client passed the dual-side compatibility check. EMI and all read-only reference resources were left untouched.
 
 ## 2.0-alpha-for-gtocore-0.5.6-beta - 2026-08-02
 
@@ -89,11 +131,6 @@ Verification:
 - 新建基础 AE 元件包恢复为 123 类，不再包含外部放置工具物品；已有版本 2/3 元件包的 backing UUID、数量、电量、内容版本及旧外置存储不被主动重写或删除。
 - 完整重写中英文 README，列出当前全部物品、方块、机器、仓室、配方类型、配方和主要机制；本次清洁源码按用户要求包含全部开发文档、注册模板、项目规则与索引。
 
-验证：
-
-- 使用 Java 21 完成构建；固定 GTO 0.5.6-beta 客户端在未安装 `ME Placement Tool for gto` 时完成 GTOHJS 注册并到达标题界面。
-- 恢复独立工具 JAR 后，两个 Mod 同时加载并再次到达标题界面；未修改 EMI 源文件。
-
 ### English
 
 Compared with the previous clean build `2.0-per3-for-gtocore-0.5.6-beta`:
@@ -108,11 +145,6 @@ Changed:
 - Made `ME Placement Tool for gto` a fully independent Mod. GTOHJS no longer declares a mandatory `meplacementtool` dependency or references any of its runtime item IDs; either Mod can be installed alone.
 - New Basic AE Component Packs contain 123 types and no external placement-tool items. Existing version 2/3 packs keep their backing UUID, quantities, charge, content version and old external storage without active rewriting or deletion.
 - Rewrote the English and Chinese READMEs to enumerate all current items, blocks, machines, parts, recipe types, recipes and major mechanics. At the user's request, this clean source release includes all development documents, registration templates, project rules and indexes.
-
-Verification:
-
-- Built with Java 21. The fixed GTO 0.5.6-beta client completed GTOHJS registration and reached the title screen without `ME Placement Tool for gto` installed.
-- After restoring the standalone tool JAR, both Mods loaded together and reached the title screen again. No EMI source file was modified.
 
 ## 2.0-per3-for-gtocore-0.5.6-beta - 2026-07-31
 
@@ -439,3 +471,4 @@ Changed:
 Removed:
 
 - Custom Lathe, Large Custom Cutter, their dedicated recipe, and the old native/JVMTI loading code.
+

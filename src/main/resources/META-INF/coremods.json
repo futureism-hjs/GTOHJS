@@ -1,3 +1,4 @@
 {
-  "gtohjs_machine_registration": "coremods/gtohjs_machine_registration.js"
+  "gtohjs_machine_registration": "coremods/gtohjs_machine_registration.js",
+  "gtohjs_vacuum_cover": "coremods/gtohjs_vacuum_cover.js"
 }

@@ -65,7 +65,10 @@ public final class AdvancedGeneratorArrayRegistration {
                     .nonYAxisRotation()
                     .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
                     .generator()
-                    .addTooltipsFromClass(GeneratorArrayMachine.class, "multiply", "loss")
+                    .tooltips(Component.translatable(
+                            "gtohjs.machine.advanced_generator_array.generation_multiplier"))
+                    .tooltips(Component.translatable(
+                            "gtohjs.machine.advanced_generator_array.wireless_loss"))
                     .tooltips(Component.translatable(
                             "gtohjs.machine.advanced_generator_array.limit",
                             AdvancedGeneratorArraySupport.INTERNAL_GENERATOR_LIMIT))
@@ -108,8 +111,10 @@ public final class AdvancedGeneratorArrayRegistration {
             }
             validate(definition, false);
             state = State.REGISTERED;
-            ModLog.info("Registered {}; internalGeneratorLimit={}, pattern=3x3x3, renderer={}",
+            ModLog.info("Registered {}; internalGeneratorLimit={}, generationMultiplier={}, wirelessLoss={}, pattern=3x3x3, renderer={}",
                     MACHINE_ID, AdvancedGeneratorArraySupport.INTERNAL_GENERATOR_LIMIT,
+                    AdvancedGeneratorArraySupport.GENERATION_MULTIPLIER,
+                    AdvancedGeneratorArraySupport.WIRELESS_LOSS,
                     definition.getRenderer());
         } catch (Throwable error) {
             state = State.FAILED;
@@ -140,8 +145,10 @@ public final class AdvancedGeneratorArrayRegistration {
         }
         try {
             validate(definition, true);
-            ModLog.info("Validated loaded {}; patternBuilt=true, internalGeneratorLimit={}",
-                    MACHINE_ID, AdvancedGeneratorArraySupport.INTERNAL_GENERATOR_LIMIT);
+            ModLog.info("Validated loaded {}; patternBuilt=true, internalGeneratorLimit={}, generationMultiplier={}, wirelessLoss={}",
+                    MACHINE_ID, AdvancedGeneratorArraySupport.INTERNAL_GENERATOR_LIMIT,
+                    AdvancedGeneratorArraySupport.GENERATION_MULTIPLIER,
+                    AdvancedGeneratorArraySupport.WIRELESS_LOSS);
         } catch (Throwable error) {
             state = State.FAILED;
             ModLog.error("Loaded advanced generator array validation failed", error);

@@ -1,36 +1,34 @@
-# GTOHJS fix61 最终版超维度冶炼炉 / Final Hyperdimensional Smelter
+# GTOHJS fix61 Final Hyperdimensional Smelter
 
-## 中文
+## Structure Source and Orientation
 
-### 结构来源与方向
-
-fix61 只替换超维度冶炼炉的结构、结构方块 predicate、仓位布局和控制器外壳外观。只读模型源为：
+Fix61 replaces only the Hyperdimensional Smelter's structure, structure-block predicates, hatch layout, and controller-casing appearance. The read-only model source is:
 
 ```text
-外部开发素材 `超维度冶炼炉最终版.litematic`
+External development asset `超维度冶炼炉最终版.litematic`
 ```
 
-模型是单 region `Unnamed`，position `(48,0,0)`，signed size `(-49,34,39)`，正式尺寸为 `49 x 34 x 39`。控制器 local 坐标是 `(24,2,0)`，导入后的 pattern 坐标是 `(aisle=38,row=2,column=24)`。
+The model has one region named `Unnamed`, position `(48,0,0)`, signed size `(-49,34,39)`, and final dimensions `49 x 34 x 39`. The controller's local coordinate is `(24,2,0)`, which maps to pattern coordinate `(aisle=38,row=2,column=24)`.
 
-序列化继续使用已经过客户端验证的方向：aisle 按 local Z 从最大到最小，row 按 local Y 从最小到最大，negative signed X 的 column 按 local X 从最大到最小。模型空气仍映射 `Predicates.any()`，空气位置可放任意方块，也不进入结构监听。
+Serialization retains the client-validated orientation: aisles traverse local Z from maximum to minimum, rows traverse local Y from minimum to maximum, and columns for the negative signed X axis traverse local X from maximum to minimum. Model air still maps to `Predicates.any()`, allowing arbitrary blocks in air positions without adding them to structure listeners.
 
-### 外壳与仓位
+## Casings and Hatch Positions
 
-控制器 appearance block、27 个仓位的基础外壳和工作状态 renderer 均改为 `gtocore:naquadah_alloy_casing` 对应的 `gtocore:block/casings/hyper_mechanical_casing`。模型中原有的高温冶炼外壳仍是结构材料，不被批量替换。
+The controller appearance block, base casing for all 27 hatch positions, and active-state renderer now use the `gtocore:naquadah_alloy_casing` block and its canonical `gtocore:block/casings/hyper_mechanical_casing` texture. High-temperature smelting casings already present in the source model remain distinct structure materials and are not replaced in bulk.
 
-仓位严格复用超维度化工厂的控制器正面服务面：
+The hatch positions exactly reuse the front service face of the Hyperdimensional Chemical Factory:
 
 ```text
 aisle = 38
 row = 1..4
 column = 21..27
-排除控制器 (38,2,24)
-总计 27 个 H
+exclude controller (38,2,24)
+total = 27 H positions
 ```
 
-`H` 只允许硅岩合金机械外壳、普通能源输入、激光输入、物品/流体输入输出和恰好一个维护仓。并行仓、加速仓、线程仓和超频仓仍不允许。
+`H` accepts only the naquadah-alloy mechanical casing, normal energy input, laser input, item/fluid input and output, and exactly one Maintenance Hatch. Parallel, Accelerate, Thread, and Overclock Hatches remain prohibited.
 
-模型顶部的 5 个 `gtocore:me_muffler_hatch` 是消声仓候选点：
+The five `gtocore:me_muffler_hatch` blocks at the top of the model are Muffler Hatch candidates:
 
 ```text
 (23,33,24)
@@ -40,35 +38,35 @@ column = 21..27
 (25,33,24)
 ```
 
-这 5 点使用 `naquadah_alloy_casing OR MUFFLER` predicate，并由全局 `setExactLimit(1)` 要求恰好安装一个消声仓；其余四点使用硅岩合金机械外壳。
+These five positions use a `naquadah_alloy_casing OR MUFFLER` predicate, while a global `setExactLimit(1)` requires exactly one Muffler Hatch. The other four candidates are filled with naquadah-alloy mechanical casing.
 
-### 精确结构基线
+## Exact Structure Baseline
 
-正式 pattern 的精确符号数量为：
+The final pattern has these exact symbol counts:
 
-| 内容 | 数量 |
+| Content | Count |
 | --- | ---: |
-| 忽略空气 | 50,370 |
-| 高温冶炼外壳 | 9,297 |
-| 硅岩合金机械外壳（非仓位） | 2,124 |
-| PTFE 管道外壳 | 770 |
-| 可替换线圈 | 825 |
-| 硅岩框架 | 750 |
-| 钨钢管道外壳 | 247 |
-| 极限引擎进气外壳 | 241 |
-| 散热片 | 205 |
-| 引擎进气外壳 | 112 |
-| 仓位 `H` | 27 |
-| 消声候选点 `M` | 5 |
-| 控制器 `S` | 1 |
+| Ignored air | 50,370 |
+| High-temperature smelting casing | 9,297 |
+| Naquadah-alloy mechanical casing outside hatch positions | 2,124 |
+| PTFE pipe casing | 770 |
+| Replaceable coils | 825 |
+| Naquadah frame | 750 |
+| Tungsten-steel pipe casing | 247 |
+| Extreme engine intake casing | 241 |
+| Heat sink | 205 |
+| Engine intake casing | 112 |
+| Hatch position `H` | 27 |
+| Muffler candidate `M` | 5 |
+| Controller `S` | 1 |
 
-受检位置总数为 14,604，构成一个六向连通体；最大封闭空间为 3,200 格。任意区块对齐下的最坏占地仍为 `4 x 4` 区块。
+The pattern monitors 14,604 positions and forms one six-neighbor-connected component. Its largest enclosed volume is 3,200 cells. Under any chunk alignment, the worst-case footprint remains `4 x 4` chunks.
 
-### 不变运行机制
+## Unchanged Runtime Behavior
 
-以下行为不变：电力高炉与合金冶炼炉两个配方模式、永恒线圈温度驱动的并行/线程上限、玩家左侧并行/线程配置页、两项采用相同上限、所有配方 1t、激光供能以及无增幅仓/无超频仓限制。GTOCore、GTOLib 和 EMI 文件均未修改。
+The following behavior is unchanged: Electric Blast Furnace and Alloy Blast Smelter recipe modes; eternal-coil-temperature-derived parallel/thread limits; player-facing left-side parallel and thread configurators; the same limit for both settings; one-tick processing for every recipe; laser power; and the prohibition on Amplification and Overclock Hatches. GTOCore, GTOLib, and EMI files remain unmodified.
 
-### 生成与验证
+## Generation and Verification
 
 ```powershell
 python -m py_compile import_fix61_hyperdimensional_smelter.py
@@ -76,20 +74,4 @@ python -X utf8 import_fix61_hyperdimensional_smelter.py --apply
 node validate_hyperdimensional_patterns.js
 ```
 
-以上命令依赖不随公开源码发布的历史外部工具。导入器硬校验源文件、region metadata、完整 palette、控制器、27 个服务仓位、5 个 ME 消声标记、精确符号数量、六向连通性和最大封闭空间。`--apply` 只覆盖正式冶炼炉 pattern。
-
-## English
-
-Fix61 replaces only the Hyperdimensional Smelter structure, block predicates, hatch layout and controller casing appearance. Its read-only external source was `超维度冶炼炉最终版.litematic`.
-
-The single region has position `(48,0,0)`, signed size `(-49,34,39)` and final dimensions `49 x 34 x 39`. The controller maps from local `(24,2,0)` to pattern `(aisle=38,row=2,column=24)`. Aisles remain far-end-to-controller, rows remain bottom-to-top, and spaces remain `Predicates.any()`.
-
-The controller appearance, service-face base casing and casing renderer now use `gtocore:naquadah_alloy_casing` and its canonical `gtocore:block/casings/hyper_mechanical_casing` texture. High-temperature smelting casings present in the source model remain distinct required structure materials.
-
-The exact 27-position service face matches the Hyperdimensional Chemical Factory: aisle 38, rows 1 through 4, columns 21 through 27, excluding the controller. These positions accept normal energy or laser input, item/fluid I/O and exactly one maintenance hatch. Parallel, accelerate, thread and overclock hatches remain excluded.
-
-Five ME muffler markers form a cross on the top crown. Each candidate accepts either naquadah-alloy casing or a muffler ability, while the global exact limit requires one muffler in total. The other four candidates are filled with casing.
-
-The final pattern contains 14,604 monitored positions, 825 replaceable coils, 27 service hatches and five muffler candidates. It is one six-neighbor component, its largest enclosed space is 3,200 cells, and its worst-case footprint remains within four by four chunks.
-
-Recipe modes, coil-derived parallel/thread limits, left-side configurators, one-tick processing, laser support and the ban on amplification/overclock hatches are unchanged. GTOCore, GTOLib and EMI files are read-only and unmodified.
+These commands depend on historical external tools that are not distributed with the public source. The importer strictly validates the source file, region metadata, complete palette, controller, 27 service-hatch positions, five ME Muffler Hatch markers, exact symbol counts, six-neighbor connectivity, and largest enclosed volume. `--apply` overwrites only the production Smelter pattern.

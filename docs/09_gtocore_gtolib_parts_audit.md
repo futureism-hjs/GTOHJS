@@ -1,12 +1,10 @@
-# GTOCore / GTOLib 内部与仓室参考 / GTOCore, GTOLib and Part Audit
+# GTOCore, GTOLib, and Part Audit
 
-## 中文
+## Versions and boundaries
 
-### 版本和边界
+This reference targets GTOCore 0.5.6-beta, GTOLib 26.7.4, and GTCEu 26.7.3. Original GTOCore/GTOLib JARs and resources are read-only. Part of GTOLib 26.7.4 is implemented as a native/encrypted payload. The community `gtolib_3` source is useful only for understanding an older API and cannot directly replace the current dependency.
 
-本参考针对 GTOCore 0.5.6-beta、GTOLib 26.7.4、GTCEu 26.7.3。GTOCore/GTOLib 原始 JAR 和资源只读；GTOLib 26.7.4 的一部分实现是 native/加密 payload，社区 `gtolib_3` 只能用于理解旧版 API，不能直接替换当前依赖。
-
-### 关键调用链
+## Key call chain
 
 ```text
 Forge @Mod
@@ -17,50 +15,40 @@ Forge @Mod
  -> definition.init() / pattern cache / EMI integration
 ```
 
-GTOHJS coremod 的职责是把已验证的 `register()` 调用插入原生窗口，以及把 GTOlib builder/save 内联到 `Data.commonInit()`。patcher/JVMTI 不是通用解密器，也不是解冻所有 registry 的工具；不要用它绕过正常 definition、Registrate 或配方生命周期。
+The GTOHJS coremod is responsible for inserting verified `register()` calls into native windows and inlining the GTOLib builder/save sequence into `Data.commonInit()`. The patcher/JVMTI package is not a universal decryptor or a tool for unfreezing every registry. Do not use it to bypass the normal definition, Registrate, or recipe lifecycle.
 
-### GTO 自定义能力完整索引
+## Complete GTO custom-ability index
 
-| 常量 | 中文 | English | 备注 |
+| Constant | English | Notes |
 | --- | --- | --- | --- |
-| `NEUTRON_ACCELERATOR` | 中子加速器 | Neutron Accelerator | 特定核/中子机器 |
-| `THREAD_HATCH` | 线程仓 | Thread Hatch | 由目标 modifier 读取 |
-| `OVERCLOCK_HATCH` | 超频仓 | Overclock Hatch | 由目标 controller 读取 |
-| `ACCELERATE_HATCH` | 加速仓 | Accelerate Hatch | 通常最多一个 |
-| `DRONE_HATCH` | 无人机仓 | Drone Hatch | 无人机工艺 |
-| `DUAL_INPUT` / `DUAL_OUTPUT` | 输入总成/输出总成 | Dual Input/Output | 双向或组合部件 |
-| `ITEMS_INPUT_BUS` / `ITEMS_OUTPUT_BUS` | 物品输入/输出能力集合 | Items Input/Output | 多 tier 能力集合，不是单一仓 |
-| `STEAM_IMPORT_FLUIDS` / `STEAM_EXPORT_FLUIDS` | 蒸汽流体输入/输出 | Steam Import/Export Fluids | GTO 蒸汽流体仓 |
-| `EXTRA_ENERGY_HATCH` | 额外能源仓 | Extra Energy Hatch | 常用于模块 tooltip/附属模块 |
-| `INPUT_MANA` / `OUTPUT_MANA` / `EXTRACT_MANA` | 魔力输入/输出/抽取 | Mana Input/Output/Extract | 需要魔力 controller |
-| `COMPUTING_COMPONENT` | 计算组件 | Computing Component | 算力机器 |
-| `CATALYST_HATCH` | 催化剂仓 | Catalyst Hatch | 催化剂 trait |
-| `MANA_AMPLIFIER_HATCH` | 魔力增幅仓 | Mana Amplifier Hatch | 魔力 modifier |
+| `NEUTRON_ACCELERATOR` | Neutron Accelerator | Specific nuclear/neutron machines |
+| `THREAD_HATCH` | Thread Hatch | Read by the target modifier |
+| `OVERCLOCK_HATCH` | Overclock Hatch | Read by the target controller |
+| `ACCELERATE_HATCH` | Acceleration Hatch | Normally at most one |
+| `DRONE_HATCH` | Drone Hatch | Drone processing |
+| `DUAL_INPUT` / `DUAL_OUTPUT` | Dual Input/Output | Bidirectional or combined parts |
+| `ITEMS_INPUT_BUS` / `ITEMS_OUTPUT_BUS` | Items Input/Output ability collections | Multi-tier ability collections, not individual hatches |
+| `STEAM_IMPORT_FLUIDS` / `STEAM_EXPORT_FLUIDS` | Steam Import/Export Fluids | GTO steam-fluid hatches |
+| `EXTRA_ENERGY_HATCH` | Extra Energy Hatch | Often used in module tooltips or auxiliary modules |
+| `INPUT_MANA` / `OUTPUT_MANA` / `EXTRACT_MANA` | Mana Input/Output/Extract | Requires a mana-aware controller |
+| `COMPUTING_COMPONENT` | Computing Component | Computation machines |
+| `CATALYST_HATCH` | Catalyst Hatch | Catalyst trait |
+| `MANA_AMPLIFIER_HATCH` | Mana Amplifier Hatch | Mana modifier |
 
-GTO 还向 `PartAbility` 注册/补充 `IMPORT_ITEMS`、`EXPORT_ITEMS`、`IMPORT_FLUIDS`、`EXPORT_FLUIDS`、`INPUT_ENERGY`、`OUTPUT_ENERGY`、`STEAM`、`STEAM_IMPORT_ITEMS`、`STEAM_EXPORT_ITEMS`、`MAINTENANCE`、`MUFFLER`、`PARALLEL_HATCH`、`INPUT_LASER`、`OUTPUT_LASER` 等。代码中必须使用实际能力常量，不要用翻译 key 代替。
+GTO also registers or supplements `IMPORT_ITEMS`, `EXPORT_ITEMS`, `IMPORT_FLUIDS`, `EXPORT_FLUIDS`, `INPUT_ENERGY`, `OUTPUT_ENERGY`, `STEAM`, `STEAM_IMPORT_ITEMS`, `STEAM_EXPORT_ITEMS`, `MAINTENANCE`, `MUFFLER`, `PARALLEL_HATCH`, `INPUT_LASER`, `OUTPUT_LASER`, and other abilities on `PartAbility`. Code must use the real ability constants, not localization keys.
 
-### 数量和预览语义
+## Count and preview semantics
 
-- `setExactLimit(n)`：必须恰好 n 个。
-- `setMinGlobalLimited(n)`：至少 n 个。
-- `setMaxGlobalLimited(n)`：最多 n 个。
-- `setPreviewCount(n)`：只改变预览显示数量。
-- `Predicates.any()`：忽略该位置；不是空气 predicate。
+- `setExactLimit(n)`: exactly n are required.
+- `setMinGlobalLimited(n)`: at least n are required.
+- `setMaxGlobalLimited(n)`: at most n are allowed.
+- `setPreviewCount(n)`: changes only the displayed preview count.
+- `Predicates.any()`: ignores the position; it is not an air predicate.
 
-### 六类代表机器
+## Six representative machine families
 
-`steam_pressor` 代表低级蒸汽；`large_steam_macerator` 代表大型蒸汽和普通高级 I/O；`vacuum_freezer` 代表无消声仓的普通电力多方块；`electric_blast_furnace` 代表线圈、消声和维护；`large_circuit_assembler` 代表 GCYM 高级模块、并行/加速/线程和等级框架；`nano_forge` 代表激光能源仓。每一类都必须同时研究 controller、pattern、recipe modifier、part trait、UI 和 tooltip，不能只复制结构文字。
+`steam_pressor` represents low-level steam. `large_steam_macerator` represents large steam and ordinary advanced I/O. `vacuum_freezer` represents an ordinary electric multiblock without a muffler hatch. `electric_blast_furnace` represents coils, mufflers, and maintenance. `large_circuit_assembler` represents GCYM advanced modules, parallelism, acceleration, threads, and tier frames. `nano_forge` represents laser energy hatches. For each family, study the controller, pattern, recipe modifier, part trait, UI, and tooltip together; copying only the structure text is insufficient.
 
-### 当前 fix47 的内部验证结果
+## Current fix47 internal verification result
 
-fix47 的客户端日志证明：coremod 已注入显示/点击模式和滚动模式页适配器，配方页、机器和锻造锤生成均到达预期注册窗口；通用蒸汽厂 pattern 缓存为 1，15 个 recipe type 注册，批量锻造锤 408 条最终表保留。滚动条和模式点击仍应在游戏内手动复核。Java 21 下不再出现 `com.gtocore` 拆分包或提前解冻 recipe registry。
-
-## English
-
-This audit targets GTOCore 0.5.6-beta, GTOLib 26.7.4 and GTCEu 26.7.3. Original jars are read-only. Part of GTOLib 26.7.4 is native/encrypted; the community `gtolib_3` source is a compatibility reference, not a drop-in dependency.
-
-The important lifecycle is Forge mod construction, GTO machine/recipe-type static initialization, GTORegistration/Registrate builders, Forge registration, definition initialization, pattern caching and EMI integration. The GTOHJS coremod only injects verified calls into those windows and inlines recipe builder bytecode in `Data.commonInit()`. The patcher/JVMTI package is not a universal decryptor or a license to unfreeze registries.
-
-The table above lists the custom GTO abilities. Remember that `ITEMS_INPUT_BUS` and `ITEMS_OUTPUT_BUS` are tiered ability collections, while `STEAM_IMPORT_ITEMS` is a distinct steam bus. `setExactLimit`, `setMinGlobalLimited`, `setMaxGlobalLimited` and `setPreviewCount` have different meanings. `Predicates.any()` ignores a position; it does not require air.
-
-The six representative machines map to low-level steam, large steam, ordinary electric, coil electric, GCYM modular and laser-powered contracts. Copy the controller, pattern, modifier, part trait, UI and tooltip as a unit. Fix47 validated the machine, 15 recipe types, the scrollable five-row mode-page adapter and 408 generated forge-hammer recipes on Java 21 without split-package or premature registry-freeze errors; manual in-game scrollbar interaction remains a final check.
+Fix47 client logs prove that the coremod injected the display/click mode hooks and scrolling mode-page adapter, while recipe-page, machine, and forge-hammer generation all reached their expected registration windows. The universal steam factory has one cached pattern, 15 registered recipe types, and 408 retained final-table forge-hammer recipes. The scrollbar and mode clicks still require manual in-game confirmation. Java 21 no longer reports a `com.gtocore` split package or premature recipe-registry unfreezing.

@@ -26,6 +26,8 @@ import com.gtohjs.bootstrap.OneStopRareEarthRecipeTypeRegistration;
 import com.gtohjs.bootstrap.PlatinumGroupSludgeRecipeRegistration;
 import com.gtohjs.bootstrap.UniversalSteamFactoryRegistration;
 import com.gtohjs.bootstrap.SteamArrayRegistration;
+import com.gtohjs.bootstrap.ThermalAndIntakeHatchRegistration;
+import com.gtohjs.bootstrap.VacuumCoverRegistration;
 import com.gtohjs.block.GTOHJSBlocks;
 import com.gtohjs.item.GTOHJSItems;
 import com.gtohjs.item.GTOHJSItemTooltipHandler;
@@ -83,6 +85,8 @@ public final class GTOHJS {
         SteamArrayRegistration.validateLoaded();
         AdvancedSteamArrayRegistration.validateLoaded();
         LargePetalApothecaryRegistration.validateLoaded();
+        ThermalAndIntakeHatchRegistration.validateLoaded();
+        VacuumCoverRegistration.validateLoaded();
         FragmentWorldCollectionMachineRegistration.validateLoaded();
         FragmentWorldCollectionRecipeRegistration.validateLoaded();
         ModLog.info("Fragment-world load complete; recipeType={}, recipeTypeState={}, single={}, large={}, " +
@@ -112,7 +116,8 @@ public final class GTOHJS {
                         "advancedGeneratorArray={}, advancedGeneratorArrayState={}, " +
                         "advancedAlchemyCauldron={}, advancedAlchemyCauldronState={}, " +
                         "largePetalRecipeType={}, largePetalRecipeTypeState={}, " +
-                        "largePetalApothecary={}, largePetalApothecaryState={}",
+                        "largePetalApothecary={}, largePetalApothecaryState={}, " +
+                        "thermalHatch={}, intakeHatch={}, hatchState={}",
                 MEInputAssemblyRegistration.inputDefinition(),
                 MEInputAssemblyRegistration.stockingInputDefinition(),
                 MEInputAssemblyRegistration.state(),
@@ -152,7 +157,10 @@ public final class GTOHJS {
                 LargePetalApothecaryRecipeTypeRegistration.definition(),
                 LargePetalApothecaryRecipeTypeRegistration.state(),
                 LargePetalApothecaryRegistration.definition(),
-                LargePetalApothecaryRegistration.state());
+                LargePetalApothecaryRegistration.state(),
+                ThermalAndIntakeHatchRegistration.thermalDefinition(),
+                ThermalAndIntakeHatchRegistration.intakeDefinition(),
+                ThermalAndIntakeHatchRegistration.state());
     }
 
     private void onServerStarted(ServerStartedEvent event) {

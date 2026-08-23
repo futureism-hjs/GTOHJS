@@ -37,6 +37,7 @@ public final class UniversalSteamFactoryRegistration {
     private static final int EXPECTED_CONTROLLER_POSITIONS = 1;
     private static final int MAX_RECIPE_EUT = (int) GTValues.V[GTValues.MV];
     private static final int LOCKED_RECIPE_DURATION = 1;
+    private static final int EXPECTED_RECIPE_TYPE_COUNT = 17;
 
     public enum State {
         NOT_STARTED,
@@ -62,7 +63,9 @@ public final class UniversalSteamFactoryRegistration {
             GTORecipeTypes.CLUSTER_RECIPES,
             GTORecipeTypes.FORGE_HAMMER_RECIPES,
             GTORecipeTypes.CHEMICAL_BATH_RECIPES,
-            GTORecipeTypes.CIRCUIT_ASSEMBLER_RECIPES
+            GTORecipeTypes.CIRCUIT_ASSEMBLER_RECIPES,
+            GTORecipeTypes.MIXER_RECIPES,
+            GTORecipeTypes.CENTRIFUGE_RECIPES
     };
     private static volatile State state = State.NOT_STARTED;
     private static volatile MultiblockMachineDefinition definition;
@@ -171,6 +174,10 @@ public final class UniversalSteamFactoryRegistration {
 
     private static void validate(MultiblockMachineDefinition candidate, boolean buildPattern) {
         validatePatternSymbols();
+        if (EXPECTED_RECIPE_TYPES.length != EXPECTED_RECIPE_TYPE_COUNT) {
+            throw new IllegalStateException("Unexpected universal steam factory mode count: " +
+                    EXPECTED_RECIPE_TYPES.length + "; expected " + EXPECTED_RECIPE_TYPE_COUNT);
+        }
         if (candidate.getRecipeTypes() == null ||
                 !Arrays.equals(candidate.getRecipeTypes(), EXPECTED_RECIPE_TYPES)) {
             throw new IllegalStateException("Unexpected universal steam factory recipe types: " +

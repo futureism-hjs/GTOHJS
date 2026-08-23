@@ -1,25 +1,23 @@
-# 电力多方块高级仓室 / Electric Multiblocks with Advanced Hatches
+# Electric Multiblocks with Advanced Hatches
 
-## 中文
+## Ability table
 
-### 能力表
-
-| 能力 | 常量 | 典型作用 | 结构限制示例 |
+| Ability | Constant | Typical role | Example structure limit |
 | --- | --- | --- | --- |
-| 物品输入/输出 | `GTOPartAbility.IMPORT_ITEMS` / `EXPORT_ITEMS` 或 `PartAbility.*` | 总线输入输出 | `setMaxGlobalLimited(1/4)` |
-| 流体输入/输出 | `GTOPartAbility.IMPORT_FLUIDS` / `EXPORT_FLUIDS` | 普通流体仓 | 按配方页槽位限制 |
-| 能源 | `PartAbility.INPUT_ENERGY` | 电力供应 | 通常至少一个、最多若干 |
-| 维护 | `PartAbility.MAINTENANCE` | 故障维护 | `setExactLimit(1)` 或可选 |
-| 消声 | `PartAbility.MUFFLER` | 排气/噪声要求 | 原机要求时必须存在 |
-| 并行 | `PartAbility.PARALLEL_HATCH` | 增加并行数 | 需要并行 controller/trait |
-| 加速 | `GTOPartAbility.ACCELERATE_HATCH` | 缩短时间或提供额外加成 | 通常最多 1 |
-| 线程 | `GTOPartAbility.THREAD_HATCH` | 线程/并行相关加成 | 由目标 modifier 读取 |
-| 超频 | `GTOPartAbility.OVERCLOCK_HATCH` | 额外超频档位 | 由目标 controller 读取 |
-| 激光 | `PartAbility.INPUT_LASER` / `OUTPUT_LASER` | 激光能源 | 必须使用激光型 controller/trait |
+| Item input/output | `GTOPartAbility.IMPORT_ITEMS` / `EXPORT_ITEMS` or `PartAbility.*` | Bus input and output | `setMaxGlobalLimited(1/4)` |
+| Fluid input/output | `GTOPartAbility.IMPORT_FLUIDS` / `EXPORT_FLUIDS` | Ordinary fluid hatches | Limit according to recipe-page slots |
+| Energy | `PartAbility.INPUT_ENERGY` | Electric power supply | Normally at least one and at most a defined count |
+| Maintenance | `PartAbility.MAINTENANCE` | Fault maintenance | `setExactLimit(1)` or optional |
+| Muffler | `PartAbility.MUFFLER` | Exhaust or noise requirement | Required when the original machine requires it |
+| Parallel | `PartAbility.PARALLEL_HATCH` | Increases parallelism | Requires a parallel-aware controller or trait |
+| Acceleration | `GTOPartAbility.ACCELERATE_HATCH` | Shortens duration or supplies an additional bonus | Normally at most one |
+| Thread | `GTOPartAbility.THREAD_HATCH` | Thread or parallel-related bonus | Read by the target modifier |
+| Overclock | `GTOPartAbility.OVERCLOCK_HATCH` | Additional overclock levels | Read by the target controller |
+| Laser | `PartAbility.INPUT_LASER` / `OUTPUT_LASER` | Laser energy | Requires a laser-aware controller or trait |
 
-GTO 的 `GTOPartAbility` 还包括蒸汽流体、双输入/双输出、魔力、计算组件、催化剂等能力。完整能力名和中文翻译以 GTOCore `GTOPartAbility.java` 为准；不要凭仓室物品名称猜测常量。
+GTO's `GTOPartAbility` also includes steam-fluid, dual-input/output, mana, computation-component, catalyst, and other abilities. Use GTOCore's `GTOPartAbility.java` as the authority for complete ability names and their localization; do not guess a constant from a hatch item's name.
 
-### 自动 predicate 与显式 predicate
+## Automatic and explicit predicates
 
 ```java
 .where('X', Predicates.blocks(CASING.get())
@@ -32,20 +30,14 @@ GTO 的 `GTOPartAbility` 还包括蒸汽流体、双输入/双输出、魔力、
         .setExactLimit(1)))
 ```
 
-`Predicates.autoAbilities(...)` 的布尔参数不是通用“打开全部仓室”开关。必须对照目标原机，确认是否包含维护、消声、输入输出、能源等能力。`GTOPredicates.autoAccelerateAbilities`、`autoGCYMAbilities` 和 `autoLaserAbilities` 针对不同 controller/runtime 组合，不能互换。
+The Boolean arguments to `Predicates.autoAbilities(...)` are not a general-purpose "enable every hatch" switch. Compare them with the target machine and confirm whether maintenance, muffler, input/output, energy, and other abilities are included. `GTOPredicates.autoAccelerateAbilities`, `autoGCYMAbilities`, and `autoLaserAbilities` target different controller/runtime combinations and are not interchangeable.
 
-### 运行时加成不是结构加成
+## Runtime bonuses are not structure bonuses
 
-结构 predicate 只决定方块能否成型；并行、加速、线程、超频、等级框架和仓室倍率由 controller、`RecipeModifier`、`IMultiPart`/trait 和 `modifyRecipe` 共同决定。添加一个 `PARALLEL_HATCH` predicate 而没有 `ParallelLogic` 或目标 controller 支持，不会产生并行。
+The structure predicate only determines whether a block can form the structure. Parallelism, acceleration, threads, overclocking, tier frames, and hatch multipliers are jointly governed by the controller, `RecipeModifier`, `IMultiPart` or trait, and `modifyRecipe`. Adding a `PARALLEL_HATCH` predicate without `ParallelLogic` or target-controller support does not create parallelism.
 
-维护仓和加速仓通常可以不放置时结构仍成型，但必须明确 `setExactLimit`、`setMinGlobalLimited` 或 `setMaxGlobalLimited` 的语义。`setPreviewCount` 仅影响 EMI/XEI/世界预览。
+Structures can normally form without an optional maintenance or acceleration hatch, but the semantics of `setExactLimit`, `setMinGlobalLimited`, and `setMaxGlobalLimited` must be explicit. `setPreviewCount` affects only EMI/XEI and world previews.
 
-### 激光机器
+## Laser machines
 
-仿造 `gtocore:nano_forge` 时，应同时核对：`PartAbility.INPUT_LASER`、激光仓的 tier/能量接口、controller 的 recipe tier 计算、线程/超频仓和等级框架。不能把普通 `INPUT_ENERGY` 替换成 `INPUT_LASER` 后继续使用电力 controller。
-
-## English
-
-Advanced electric hatches are capabilities, not labels. Use explicit `IMPORT_ITEMS`, `EXPORT_ITEMS`, fluid, energy, maintenance, muffler, parallel, accelerate, thread, overclock and laser predicates only when the controller and recipe modifier implement the corresponding runtime behavior. `setExactLimit` means exactly the specified count; `setMaxGlobalLimited` means at most that count; `setPreviewCount` changes previews only.
-
-`Predicates.autoAbilities(...)`, `GTOPredicates.autoAccelerateAbilities(...)`, `autoGCYMAbilities(...)` and `autoLaserAbilities(...)` represent different GTO controller contracts. Inspect the target machine before reusing one. A parallel or acceleration hatch accepted by a pattern does not create parallelism or speed-up by itself. Laser machines such as `nano_forge` require a laser-aware controller, energy calculation and tier logic.
+When modeling a machine on `gtocore:nano_forge`, check `PartAbility.INPUT_LASER`, the laser hatch's tier and energy interface, the controller's recipe-tier calculation, thread and overclock hatches, and tier frames together. You cannot replace ordinary `INPUT_ENERGY` with `INPUT_LASER` and continue to use a regular electric controller.

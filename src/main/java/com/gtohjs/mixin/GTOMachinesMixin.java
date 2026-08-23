@@ -7,6 +7,7 @@ import com.gtohjs.bootstrap.HyperdimensionalSteamFurnaceRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthProcessingPlantRegistration;
 import com.gtohjs.bootstrap.UniversalSteamFactoryRegistration;
+import com.gtohjs.bootstrap.ThermalAndIntakeHatchRegistration;
 import com.gtohjs.util.ModLog;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,5 +26,6 @@ public abstract class GTOMachinesMixin {
         HyperdimensionalSmelterRegistration.register();
         HyperdimensionalChemicalFactoryRegistration.register();
         LargePetalApothecaryRegistration.register();
+        ThermalAndIntakeHatchRegistration.register();
     }
 }

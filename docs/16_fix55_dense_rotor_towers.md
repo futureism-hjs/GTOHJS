@@ -1,91 +1,46 @@
-# GTOHJS fix55 密实旋转高塔 / Dense Rotor Towers
+# GTOHJS fix55 Dense Rotor Towers
 
-## 中文
+## Design baseline
 
-### 设计基线
+Fix55 removes fix54's low-cost material restriction and replaces the open frames with four tall, sealed, dense, rounded towers. The design directly references the measured MBS of `gtocore:super_blast_smelter`: an effective `23 x 43 x 23` bounding box, 6,908 structure blocks, 888 `heatingCoils()`, and 48 frames. The reference machine's rounded form comes from a strictly symmetric discrete octagon, staged radial contraction, horizontal functional bands, and a final top contraction. Frames account for only about 0.69%.
 
-fix55 取消 fix54 的低成本材料限制，并用四座高耸、封闭、密实的圆角塔替换开放骨架。设计直接参考
-`gtocore:super_blast_smelter` 的实际 MBS：有效包围盒 `23 x 43 x 23`、6908 个结构块、888 个
-`heatingCoils()`、48 个框架。参考机的圆润感来自严格对称的离散八边形、逐层收径、水平功能带和顶部再收束，
-框架仅占约 0.69%。
+Every fix55 tower follows these rules:
 
-所有 fix55 塔体都采用以下规则：
+- An odd-width, X/Z-symmetric discrete-octagonal body with at least two solid base layers.
+- A continuous sealed shell, solid central core, and one solid partition every four or five layers, eliminating through-going hollow towers.
+- Staged radial contraction ending in a crown with a low frame share.
+- The 39 `H` hatch points continue to use the exact controller-relative projection from `leap_forward_one_blast_furnace`.
+- Every tower spans `3 x 3` chunks at the worst chunk offset and remains within the established `4 x 4` limit.
 
-- 奇数宽、X/Z 对称的离散八边形主体，双层以上实心底座。
-- 连续封闭外壳、实体中央核心和每 4–5 层一张实心隔板，不再出现贯通式空心塔。
-- 外形逐层收径，顶部形成低框架占比的顶冠。
-- 39 个 `H` 仓室点仍严格使用 `leap_forward_one_blast_furnace` 相对控制器投影。
-- 最坏区块偏移下均为 `3 x 3` 区块，不超过既定 `4 x 4` 上限。
+## Rotating blocks
 
-### 旋转方块
+Outer yellow nodes use `gtocore:spacetime_compression_field_generator`. It is an ordinary placeable block whose texture is a 32-frame circular rotor animation with `frametime=1`. It does not depend on machine working state, so it continues rotating while idle, between one-tick recipes, and in EMI's default structure preview. GTOCore native multiblocks already use it through ordinary `blocks(...)` predicates; it needs no new BlockEntity or renderer.
 
-外周黄色节点使用 `gtocore:spacetime_compression_field_generator`。它是普通可放置方块，纹理为 32 帧、
-`frametime=1` 的圆形转子动画；不依赖机器工作状态，因此停机、1t 配方间隙和 EMI 默认结构预览中都能持续旋转。
-它已经被 GTOCore 原生多方块通过普通 `blocks(...)` 谓词使用，不需要新 BlockEntity 或 renderer。
+`gtocore:rotating_transparent_surface` is only an item and cannot enter a pattern. `quantum_force_transformer_coil` plays its flowing texture only while its ActiveBlock is working, so it is used only as a fixed internal coil in the forge and steam furnace and does not provide the continuously rotating outer effect.
 
-`gtocore:rotating_transparent_surface` 只是物品，不能进入 pattern。`quantum_force_transformer_coil` 只在
-ActiveBlock 运行态播放流动纹理，因此只作为锻炉和蒸汽炉的内部固定线圈，不承担外周持续旋转效果。
+## Four structures
 
-### 四台结构
-
-| 机器 | 尺寸 W x H x D | 结构块 | 线圈 | 转子 | 框架 | 最大封闭空腔 |
+| Machine | Dimensions W x H x D | Structure blocks | Coils | Rotors | Frames | Largest enclosed cavity |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 超维度锻炉 | 29 x 35 x 29 | 11387 | 756 个固定量子线圈 | 80 | 0 | 524 |
-| 超维度蒸汽熔炉 | 27 x 37 x 27 | 11077 | 756 个固定量子线圈 | 80 | 0 | 324 |
-| 超维度冶炼炉 | 29 x 47 x 29 | 15175 | 1512 个可替换线圈 | 120 | 32，0.21% | 680 |
-| 超维度化工厂 | 31 x 43 x 31 | 16087 | 1508 个可替换线圈 | 120 | 0 | 748 |
+| Hyperdimensional forge | 29 x 35 x 29 | 11387 | 756 fixed quantum coils | 80 | 0 | 524 |
+| Hyperdimensional steam furnace | 27 x 37 x 27 | 11077 | 756 fixed quantum coils | 80 | 0 | 324 |
+| Hyperdimensional smelter | 29 x 47 x 29 | 15175 | 1512 replaceable coils | 120 | 32, 0.21% | 680 |
+| Hyperdimensional chemical factory | 31 x 43 x 31 | 16087 | 1508 replaceable coils | 120 | 0 | 748 |
 
-锻炉使用超维度外壳、维度稳定外壳、维度桥接方块、硅岩合金外壳、铼强化聚能玻璃和量子操纵者线圈。
-蒸汽炉保留青铜/蒸汽主体和火箱、管道、齿轮视觉，同时加入量子线圈与铼强化聚能玻璃。冶炼炉复用高温冶炼
-外壳、热风口、极限进气、硅岩合金外壳、铼玻璃和 `heatingCoils()`。化工厂使用惰性外壳、强化基座、
-维度桥接/超维度外壳、化学级玻璃、PTFE 管道和 `heatingCoils()`。材料成本不再作为结构生成器约束。
+The forge uses dimensionally transcendent casing, dimensionally stable casing, dimension-connection blocks, Naquadah-alloy casing, rhenium-reinforced energy glass, and Quantum Force Transformer coils. The steam furnace retains bronze/steam bodies, fireboxes, pipes, and gear visuals while adding quantum coils and rhenium-reinforced energy glass. The smelter reuses high-temperature smelting casing, heat vents, extreme intakes, Naquadah-alloy casing, rhenium glass, and `heatingCoils()`. The chemical factory uses inert casing, reinforced base, dimension-connection/dimensionally transcendent casings, chemical-grade glass, PTFE pipes, and `heatingCoils()`. Material cost is no longer a structure-generator constraint.
 
-### 不变的运行契约
+## Unchanged runtime contracts
 
-- 锻炉仍只运行土高炉配方，无能源，固定 524288 并行，结果为 1t。
-- 蒸汽熔炉仍只运行熔炉配方，使用既有蒸汽仓能力，固定 524288 并行，结果为 1t。
-- 冶炼炉仍运行电力高炉/合金冶炼炉配方，必须安装维护仓和唯一专用消声仓；消声仓现在位于顶冠
-  `aisle=14,row=46,column=14`。
-- 化工厂仍运行化学反应釜/大型化学反应釜/聚合反应配方，必须安装维护仓，真空等级保持 4。
-- 冶炼炉和化工厂继续使用 fix53 的 GTO 化工复合体指数线圈容量、左侧并行/线程页、客户端上限同步和服务端限幅。
-- 四台机器仍禁止超频、并行、加速和线程仓；既有能源、激光、I/O、催化剂及蒸汽仓边界没有扩大。
-- 空格仍映射为 `Predicates.any()`；配方页、配方修饰器、controller、工作面 renderer、coremod 生命周期和 EMI
-  集成均未改变。
+- The forge still runs only primitive blast furnace recipes, uses no energy, has fixed 524288 parallelism, and produces one-tick results.
+- The steam furnace still runs only furnace recipes, uses the established steam hatch abilities, has fixed 524288 parallelism, and produces one-tick results.
+- The smelter still runs electric blast furnace/alloy blast smelter recipes and requires both maintenance and one dedicated muffler. The muffler is now in the top crown at `aisle=14,row=46,column=14`.
+- The chemical factory still runs chemical reactor/large chemical reactor/polymerization recipes, requires maintenance, and retains vacuum tier 4.
+- The smelter and chemical factory continue to use fix53's GTO Chemical Complex exponential coil capacity, left parallel/thread pages, client limit synchronization, and server-side clamping.
+- All four machines still forbid overclock, parallel, acceleration, and thread hatches. Established energy, laser, I/O, catalyst, and steam hatch boundaries are not expanded.
+- Spaces still map to `Predicates.any()`. Recipe pages, recipe modifiers, controllers, working-face renderers, coremod lifecycle, and EMI integration are unchanged.
 
-### 生成和验证
+## Generation and verification
 
-历史外部开发脚本 `generate_hyperdimensional_redesign.js` 是四份 pattern 的设计源。它强制检查：尺寸、4 x 4 区块
-上限、控制器、39 个仓位、单一六向连通体、最低高度/结构密度/线圈/转子数量、最大 1% 框架占比、逐层最低
-方块数和最大封闭空腔。外部验证脚本 `validate_hyperdimensional_patterns.js` 独立重复这些数据约束；两份脚本均不随公开源码发布。
+The historical external development script `generate_hyperdimensional_redesign.js` is the design source for the four patterns. It enforces dimensions, the 4 x 4 chunk limit, controller position, 39 hatch positions, one six-neighbor connected component, minimum height/structure density/coil/rotor counts, a maximum 1% frame share, minimum per-layer occupancy, and maximum enclosed cavity size. The external `validate_hyperdimensional_patterns.js` script independently repeats these data constraints. Neither script is included in the public source.
 
-资源加载器还验证所有方块实际 registry key，避免错误 ID 被静默解析为空气。修改后必须完整重启客户端，
-因为 `HyperdimensionalPatternResources` 会缓存 pattern。
-
-## English
-
-Fix55 removes the fix54 material-cost restriction and replaces all four open-frame structures with tall, sealed,
-dense octagonal towers. The geometry follows the measured `gtocore:super_blast_smelter`: discrete 45-degree corner
-cuts, staged radial contraction, horizontal process bands, a compact crown, many coils and very few frames.
-
-The outer rotor nodes use `gtocore:spacetime_compression_field_generator`. Its 32-frame, one-tick interpolated
-texture depicts a circular rotor and runs independently of machine state, so it remains visible while idle and in
-the default EMI structure preview. It is an ordinary placeable block already used by GTOCore patterns and needs no
-custom block entity or renderer. `rotating_transparent_surface` is only an item and is not usable in a pattern.
-
-The forge is `29 x 35 x 29` with 11,387 blocks, 756 fixed quantum coils and 80 rotor nodes. The steam furnace is
-`27 x 37 x 27` with 11,077 blocks, 756 fixed quantum coils and 80 rotors. The smelter is `29 x 47 x 29` with 15,175
-blocks, 1,512 replaceable heating coils, 120 rotors and only 32 frames (0.21%). The chemical factory is
-`31 x 43 x 31` with 16,087 blocks, 1,508 replaceable coils, 120 rotors and no frames. Every structure remains within
-a worst-case `3 x 3` chunk span.
-
-Runtime behavior is unchanged. Each controller retains the exact 39-position Leap Forward One hatch projection.
-The smelter keeps mandatory maintenance and one dedicated top-crown muffler; the chemical factory keeps mandatory
-maintenance and vacuum tier 4. Fix53 coil limits, left-side parallel/thread configurators and server authority remain
-intact. No overclock, parallel, accelerate or thread hatch has been enabled. Pattern spaces still use
-`Predicates.any()`, and recipe types, modifiers, controllers, renderers, coremod lifecycle and EMI integration are not
-modified.
-
-The canonical generator and the independent validator enforce minimum height, block density, coil and rotor counts,
-maximum frame share, per-layer occupancy, one six-neighbor component and bounded enclosed cavities. The Java resource
-loader also checks the resolved registry key for every referenced block. A full client restart is required after any
-pattern update because pattern resources are cached.
+The resource loader also validates every block's actual registry key so that an invalid ID cannot silently resolve to air. A full client restart is required after a change because `HyperdimensionalPatternResources` caches patterns.

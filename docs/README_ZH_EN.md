@@ -1,69 +1,70 @@
-# GTOHJS 文档索引 / Documentation Index
+# GTOHJS Documentation Index
 
 > [!WARNING]
-> 本项目包含 AI 生成或 AI 辅助的代码、文档、材质与任务内容，使用前必须自行审查和测试。 This project contains AI-generated or AI-assisted code, documentation, textures and quest content. Review and test it before use.
+> This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**当前清洁构建基线 / Current clean-build baseline:** `gtohjs-2.1-alpha-for-gtocore-0.5.6-beta.jar`
+**Target clean release version:** `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar`
 
-**运行基线 / Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
+**Current source version:** `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar` (the corrected Java 21 clean build is deployed to the fixed closed client; user client verification follows)
 
-## 中文阅读顺序
+**Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
-1. `01_single_block_steam_electric.md`：单方块和蒸汽/电力分流。
-2. `02_low_level_steam_multiblock.md`：低级蒸汽仓和排气仓。
-3. `03_advanced_steam_multiblock.md`：大型蒸汽、普通高级输入仓和通用蒸汽厂。
-4. `04_electric_multiblock_basic.md`：普通电力多方块模板。
-5. `05_electric_multiblock_advanced_hatches.md`：并行、加速、线程、超频、维护、消声和激光仓。
-6. `06_machine_modules_and_preview.md`：六类代表机器、模块加成和预览链。
-7. `07_recipe_type_page_registration.md`：新配方页/RecipeType。
-8. `08_recipe_registration.md`：GTO 配方和锻造锤批量配方。
-9. `10_hyperdimensional_multiblock_fix49.md`：四台超维度多方块、仓室边界、线圈公式、线程能力边界和 Y 轴方向修复。
-10. `11_hyperdimensional_multiblock_fix50.md`：平方线圈公式、新冶炼炉/化工厂模型、专用消声点、强制维护仓与来源提示。
-11. `12_fix51_parallel_pattern_and_ignored_spaces.md`：化工复合体指数公式、并行/线程统一上限、忽略空格和通用蒸汽厂 `5 x 5 x 5` 模型。
-12. `13_fix52_coil_capacity_configurators.md`：并行/线程 ABI 分离、线圈动态限幅、左侧配置页和乘积溢出保护。
-13. `14_fix53_client_coil_limits_and_mv_steam.md`：修复客户端线圈上限恒为 1，并把通用蒸汽厂配方等级提高到 MV 及以下。
-14. `15_fix54_hyperdimensional_visual_redesign.md`：六台 GTO 参考机的结构/材质审计、四台超维度机器新外观和统一生成验证流程。
-15. `16_fix55_dense_rotor_towers.md`：fix55 三台保留高塔与历史化工厂旋转节点基线。
-16. `17_fix56_imported_chemical_factory_and_mana_machines.md`：参考图化工厂 3 内饰、进阶发电阵列和高级炼金锅。
-17. `18_fix57_sealed_rear_open_signal_array.md`：fix57 化工厂封闭后墙、开放信号阵列和管道/齿轮箱历史基线。
-18. `19_fix58_imported_three_structures.md`：当前锻炉、蒸汽熔炉和最终版化工厂用户模型、坐标方向与精确导入验证。
-19. `20_fix59_explicit_diamond_hatches.md`：化工厂完全体与钻石仓位覆盖层、27 个显式仓位和不变能力合同。
-20. `21_fix60_recipe_mode_and_duration.md`：化工厂去重后的两种配方模式与通用蒸汽厂最终 1t 耗时锁。
-21. `22_fix61_final_hyperdimensional_smelter.md`：最终版超维度冶炼炉模型、硅岩合金外壳、化工厂同款 27 仓位和 5 个消声候选点。
-22. `23_fix62_crafting_and_large_petal_apothecary.md`：三条工作台配方、LV 电路标签、大型花药台结构、Botania 花药台代理与无魔力输出合同。
-23. `24_fix64_unbounded_custom_parallel_threads.md`：超维度冶炼炉与化工厂取消线圈容量上限、完全自定义并行/线程及乘积溢出保护。
-24. `25_fix65_me_input_assemblies.md`：ME 输入总成、ME 库存输入总成、Pattern Buffer 材质、库存直连语义与旧机床功能删除。
-25. `26_fix66_deferred_me_ability_validation.md`：将 ME ability 成员校验延后到 Registrate 绑定完成后的加载完成阶段。
-26. `27_fix67_me_assembly_recipes.md`：两条 GTO 原生 ME 总成装配机配方、LV/MV 机器外壳工作台配方及最终表校验合同。
-27. `28_preloaded_ae_component_packs.md`：三个预载 AE 元件包的外置存储格式、16M 数量、满电初始化、超容量直写与服务端验证合同。
-28. `29_pre3_recipe_directory_and_cauldron_constraints.md`：五条配方草稿、两处 ZPM 电路 Tag、高级炼金锅导热仓过滤与提示文本。
-29. `30_per4_universal_steam_factory_crafting.md`：通用蒸汽厂工作台配方与 per4 无客户端构建验收。
-30. `31_gtl_fragment_world_collection_research.md`：GTL 碎片世界采集器、254 条上游配方数据、精确 GTO 映射、未映射晶体阻塞项和已迁移内容。
-31. `32_per7_custom_parallel_and_steam_arrays.md`：大型碎片采集器自定义并行与两种蒸汽锅炉阵列。
-32. `33_development_resource_reindex.md`：开发资源重新索引后的路径事实基线。
-33. `34_me_placement_tool_gto_port.md`：ME Placement Tool 的 GTO AE2 适配与独立 Mod 拆分边界。
-34. `35_alpha_shaped_recipe_id_validation.md`：工作台有序配方 raw/final ID 验证规则。
-35. `36_me_super_pattern_buffer_config.md`：ME超级样板总成配置入口、字段命名、容量迁移和缩容警告。
-36. `37_me_super_wildcard_pattern_buffer.md`：ME 超级通配符样板总成的槽位、配置和隔离行为。
-37. `38_fix1_dedicated_server_renderer_validation.md`：专用服务端渲染器校验与双端注册边界。
-38. `39_fixed_parallel_runtime_and_coremod_architecture.md`：固定并行真实执行链、可填充忽略位、Coremod/Java 职责边界和文档优先维护规则。
+## Reading order
 
-## English reading order
+1. `01_single_block_steam_electric.md`: single-block registration and steam/electric branching.
+2. `02_low_level_steam_multiblock.md`: low-level steam hatches and vent hatches.
+3. `03_advanced_steam_multiblock.md`: large steam, ordinary advanced input hatches, and the universal steam factory.
+4. `04_electric_multiblock_basic.md`: ordinary electric multiblock template.
+5. `05_electric_multiblock_advanced_hatches.md`: parallel, acceleration, thread, overclock, maintenance, muffler, and laser hatches.
+6. `06_machine_modules_and_preview.md`: six representative machine families, module bonuses, and the preview chain.
+7. `07_recipe_type_page_registration.md`: new recipe pages and RecipeType registration.
+8. `08_recipe_registration.md`: GTO recipes and batch forge-hammer recipes.
+9. `10_hyperdimensional_multiblock_fix49.md`: four hyperdimensional multiblocks, hatch boundaries, coil formula, threading boundary, and Y-axis correction.
+10. `11_hyperdimensional_multiblock_fix50.md`: squared coil formula, new smelter/chemical-factory models, dedicated muffler point, mandatory maintenance hatch, and source tooltip.
+11. `12_fix51_parallel_pattern_and_ignored_spaces.md`: Chemical Complex exponential formula, unified parallel/thread cap, ignored spaces, and the universal steam factory's `5 x 5 x 5` model.
+12. `13_fix52_coil_capacity_configurators.md`: separate parallel/thread ABI limits, dynamic coil clamping, left configurator pages, and product overflow protection.
+13. `14_fix53_client_coil_limits_and_mv_steam.md`: client coil-limit correction and universal steam factory support through MV recipes.
+14. `15_fix54_hyperdimensional_visual_redesign.md`: structure/material audit of six GTO reference machines, four new hyperdimensional appearances, and a unified generation/validation workflow.
+15. `16_fix55_dense_rotor_towers.md`: fix55's three retained towers and the historical chemical-factory rotating-node baseline.
+16. `17_fix56_imported_chemical_factory_and_mana_machines.md`: reference-image Chemical Factory 3 interior, Advanced Generator Array, and Advanced Alchemy Cauldron.
+17. `18_fix57_sealed_rear_open_signal_array.md`: historical fix57 baseline for the chemical factory's sealed rear, open signal array, and pipe/gearbox design.
+18. `19_fix58_imported_three_structures.md`: current user models, coordinate orientation, and exact import validation for the forge, steam furnace, and final chemical factory.
+19. `20_fix59_explicit_diamond_hatches.md`: complete chemical factory and diamond hatch overlay, 27 explicit hatch positions, and unchanged ability contract.
+20. `21_fix60_recipe_mode_and_duration.md`: two deduplicated chemical-factory recipe modes and the universal steam factory's final one-tick duration lock.
+21. `22_fix61_final_hyperdimensional_smelter.md`: final hyperdimensional smelter model, Naquadah-alloy casing, the same 27-position service face as the chemical factory, and five candidate muffler positions.
+22. `23_fix62_crafting_and_large_petal_apothecary.md`: three crafting recipes, LV circuit tag, Large Petal Apothecary structure, Botania Petal Apothecary proxy, and no-mana-output contract.
+23. `24_fix64_unbounded_custom_parallel_threads.md`: removal of coil-derived limits from the hyperdimensional smelter and chemical factory, fully custom parallel/thread values, and product overflow protection.
+24. `25_fix65_me_input_assemblies.md`: ME Input Assembly, ME Stocking Input Assembly, Pattern Buffer texture, direct-inventory semantics, and removal of the old custom lathe feature.
+25. `26_fix66_deferred_me_ability_validation.md`: delay ME ability member validation until the load-complete phase after Registrate binding.
+26. `27_fix67_me_assembly_recipes.md`: two native GTO assembler recipes for ME assemblies, LV/MV machine-casing crafting recipes, and final-table validation contract.
+27. `28_preloaded_ae_component_packs.md`: external storage format, 16M count, full-charge initialization, over-capacity direct write, and server validation contracts for three preloaded AE component packs.
+28. `29_pre3_recipe_directory_and_cauldron_constraints.md`: five recipe drafts, two ZPM circuit tags, Advanced Alchemy Cauldron heat-hatch filtering, and tooltip text.
+29. `30_per4_universal_steam_factory_crafting.md`: universal steam factory crafting recipe and per4 no-client build acceptance.
+30. `31_gtl_fragment_world_collection_research.md`: GTL Fragment World Collector, 254 upstream recipes, exact GTO mappings, unmapped-crystal blockers, and migrated content.
+31. `32_per7_custom_parallel_and_steam_arrays.md`: custom parallelism for the Large Fragment World Collector and two steam boiler arrays.
+32. `33_development_resource_reindex.md`: path fact baseline after reindexing development resources.
+33. `34_me_placement_tool_gto_port.md`: ME Placement Tool's GTO AE2 adaptation and independent-mod separation boundary.
+34. `35_alpha_shaped_recipe_id_validation.md`: raw/final ID validation rules for shaped crafting recipes.
+35. `36_me_super_pattern_buffer_config.md`: ME Super Pattern Buffer configuration entry point, field names, capacity migration, and shrink warnings.
+36. `37_me_super_wildcard_pattern_buffer.md`: slots, configuration, and isolation behavior of the ME Super Wildcard Pattern Buffer.
+37. `38_fix1_dedicated_server_renderer_validation.md`: dedicated-server renderer validation and dual-distribution registration boundary.
+38. `39_fixed_parallel_runtime_and_coremod_architecture.md`: real fixed-parallel runtime chain, fillable ignored positions, Coremod/Java responsibility boundary, and documentation-first maintenance rules.
+39. `40_configurable_thermal_and_infinite_intake_hatches.md`: two electromagnetic thermal-control forms; MV hull plus user front texture; player-facing `0..3600 K` with a controller-local zero-ambient, two-raw-units-per-K calibration that returns the exact selected K; a `300 K` default, exact zero-energy machine temperature lock, client-localized current-mode and target-temperature labels, and direct primary-UI control; ordinary screwdriver right-click switching between hatch and machine, no Shift conversion, destination-only switch messages, and destructive hatch-content clearing on conversion; the sole centered crafting recipe `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch`; plus Advanced/Ultimate Infinite Intake Hatch reuse of GTOCore's intake front, input processing, bidirectional external-fluid ability, lower-left standard working toggle, complete grids, and vacuum-cover registration validation.
 
-The same files contain an English section after the Chinese section. Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 for electric and modular machines, 07/08 for recipe types and native recipe injection, and 28 for the preloaded AE component-pack storage contract.
+Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 for electric and modular machines, 07/08 for recipe types and native recipe injection, and 28 for the preloaded AE component-pack storage contract.
 
-## 固定规则 / Fixed rules
+## Fixed rules
 
-- 不修改 GTOCore、GTOLib、EMI 原始文件；/ Do not modify GTOCore, GTOLib or EMI sources.
-- 默认 Java 21、命令行启动客户端；/ Use Java 21 and command-line client launch by default.
-- 大功能变更前重新审计 GTOCore/GTOLib；/ Re-audit GTOCore/GTOLib before large behavior changes.
-- 优先复用已验证模板；/ Prefer the verified registration templates.
-- 除非用户要求，不做哈希对比；/ Skip hash comparisons unless requested.
-- 网络下载失败时停止并等待用户；/ Stop and wait for the user on network download failure.
-- GTOLib 只读参考已恢复；/ GTOLib is available for read-only ABI audits again.
-- 后续修改优先查阅本目录文档；仅在文档缺失、ABI 变化、行为冲突或验证失败时定向复查上游源码。 / Consult these documents first; re-audit upstream sources only for missing coverage, ABI changes, behavioral conflicts, or failed verification.
+- Do not modify GTOCore, GTOLib, or EMI sources.
+- Use Java 21. After every build, deploy the JAR to the fixed client and wait for the user to launch it.
+- Re-audit GTOCore/GTOLib before large behavior changes.
+- Prefer the verified registration templates.
+- Skip hash comparisons unless requested.
+- Stop and wait for the user on network download failure.
+- GTOLib is available for read-only ABI audits again.
+- Consult these documents first; re-audit upstream sources only for missing coverage, ABI changes, behavioral conflicts, or failed verification.
 
-## 当前源码摘要 / Current source summary
+## Current source summary
 
 ```text
 me_input_assembly: EV, 16 item + 16 fluid configurations, IMPORT_ITEMS + IMPORT_FLUIDS + DUAL_INPUT
@@ -71,19 +72,24 @@ me_stocking_input_assembly: LuV, network-backed item/fluid consumption, four scr
 ME renderer: shared gtceu:block/machine/part/me_pattern_buffer overlay; no copied GTO/GTCEu texture
 removed: gtocore:custom_lathe, gtocore:large_custom_cutter, and the dedicated casing recipe/condition
 universal_steam_factory: REGISTERED, 5 x 5 x 5 patternBuilt=true, cachedPatterns=1
-universal steam recipes: 15 modes, MV-and-below only, final duration locked to 1t
+universal steam recipes: 17 modes including Mixer and Centrifuge, MV-and-below only, final duration locked to 1t
+electromagnetic thermal control: separate MV hatch and unpowered machine definitions, tiered hull equivalent to gtceu:mv_machine_casing plus only the user's ordinary front overlay (legacy blue emissive front excluded, side thermometers retained), player-facing 0..3600 K with a controller-local zero-ambient, two-raw-units-per-K calibration that returns the exact selected K, a 300 K default and exact temperature lock, client-localized current-mode and target-temperature labels with direct primary-UI temperature control, a heat-output-and-covers sidebar only, normal screwdriver switching between hatch and machine, no Shift conversion, destination-only switch messages, destructive hatch-content clearing on conversion, one centered heater-to-hatch crafting recipe, and the eight-frame front animation
+advanced_infinite_intake_hatch: MV fluid-input part, 1,024,000 mB, IO.IN recipe handling with IO.BOTH external tank capability, selected air/oxygen/nitrogen generation, configurable external output, standard lower-left working toggle, and no Shift+screwdriver IO conversion
+ultimate_infinite_intake_hatch: IV fluid-input part, 2,147,483,647 mB, IO.IN recipe handling with IO.BOTH external tank capability, selected gas refilled to full every tick
+intake front: shared GTOCore infinite_intake_hatch front overlay on Advanced and Ultimate hatches; only the tiered hull changes (MV/IV)
+vacuum_cover: passive vacuum tiers 1-3 on ordinary single-block machines and multiblock maintenance hatches
 hyperdimensional machines: forge, steam furnace, smelter, imported chemical factory 3
 patterns: 15x43x15, 15x43x15, 49x34x39, 49x34x39
 forge/steam structures: user-authored tall models; forge uses explicit runtime parallel expansion, steam delegates it to BaseSteamMultiblockMachine
 chemical design: user-authored final model with base, pipes, starmetal coils and two frame materials
 chemical topology: 14511 positions, 922 coils, zero forbidden rotors, one component
 chemical modes: large chemical reactor + polymerization; large chemical proxies ordinary chemical recipes
-advanced generator array: stock behavior and structure, isolated fixed internal limit=16
+advanced generator array: stock behavior and structure, isolated fixed internal limit=16, fixed 2x generation multiplier and 0% wireless-grid transmission loss; stock array configuration remains isolated
 advanced alchemy cauldron: 5x3x5, 14 ignored/fillable interior positions, non-consumable chanced inputs, guaranteed chanced outputs, both heat hatches excluded
 pattern topology: one six-neighbor component per machine; smelter and chemical factory each use the same 27-position controller service face
 footprint: at most 4 x 4 chunks under arbitrary chunk alignment
 smelter: final user-authored model, naquadah-alloy controller casing, 825 coils and five top-crown muffler candidates with exactly one required muffler
-crafting recipes: integral bronze framework + one-stop rare-earth plant + advanced alchemy cauldron + advanced generator array + fluix mana pool + LV machine hull + MV machine hull + hyperdimensional forge + hyperdimensional steam furnace
+crafting recipes: 22 established shaped recipes, including the sole electromagnetic thermal-control `heater -> hatch` recipe; the four retained new final IDs are validated through RecipeManager
 recipe-directory imports: large petal apothecary assembler + hyperdimensional chemical factory assembly line + hyperdimensional smelter assembly line; both fixed ZPM circuits use CustomTags.ZPM_CIRCUITS
 native assembler recipes: me_input_assembly at 480 EU/t for 300t + me_stocking_input_assembly at 30720 EU/t for 300t
 large petal apothecary: 5x3x5 livingrock model, stock mana-garden UI/hatches plus item export buses

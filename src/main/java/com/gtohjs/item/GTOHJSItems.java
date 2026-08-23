@@ -1,8 +1,10 @@
 package com.gtohjs.item;
 
 import com.gregtechceu.gtceu.api.item.ComponentItem;
+import com.gregtechceu.gtceu.common.item.CoverPlaceBehavior;
 import com.gtohjs.GTOHJS;
 import com.gtohjs.block.GTOHJSBlocks;
+import com.gtohjs.bootstrap.VacuumCoverRegistration;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -30,6 +32,12 @@ public final class GTOHJSItems {
                 item.attachComponents(MultiblockStructureGeneratorBehavior.INSTANCE);
                 return item;
             });
+
+    public static final RegistryObject<ComponentItem> VACUUM_COVER = ITEMS.register("vacuum_cover", () -> {
+        ComponentItem item = ComponentItem.create(new Item.Properties());
+        item.attachComponents(new CoverPlaceBehavior(VacuumCoverRegistration.definition()));
+        return item;
+    });
 
     /** A fresh, server-initialized portable cell containing the basic AE item set. */
     public static final RegistryObject<PreloadedPortableCellItem> BASIC_AE_COMPONENT_PACK = ITEMS.register(
@@ -118,6 +126,7 @@ public final class GTOHJSItems {
         if (CreativeModeTabs.TOOLS_AND_UTILITIES.equals(event.getTabKey())) {
             event.accept(RECIPE_EDITOR.get());
             event.accept(MULTIBLOCK_STRUCTURE_GENERATOR.get());
+            event.accept(VACUUM_COVER.get());
             event.accept(BASIC_AE_COMPONENT_PACK.get().getDefaultInstance());
             event.accept(AE_MACHINE_COMPONENT_PACK.get().getDefaultInstance());
             event.accept(ADVANCED_AE_HATCH_COMPONENT_PACK.get().getDefaultInstance());
@@ -129,8 +138,8 @@ public final class GTOHJSItems {
 
     public static void validateLoaded() {
         if (!BASIC_AE_COMPONENT_PACK.isPresent() || !AE_MACHINE_COMPONENT_PACK.isPresent()
-                || !ADVANCED_AE_HATCH_COMPONENT_PACK.isPresent()) {
-            throw new IllegalStateException("AE component-pack items were not registered");
+                || !ADVANCED_AE_HATCH_COMPONENT_PACK.isPresent() || !VACUUM_COVER.isPresent()) {
+            throw new IllegalStateException("GTOHJS utility items were not all registered");
         }
         if (WORLD_FRAGMENTS.size() != 16 || WORLD_FRAGMENTS.stream().anyMatch(fragment -> !fragment.isPresent())) {
             throw new IllegalStateException("World-fragment items were not all registered");

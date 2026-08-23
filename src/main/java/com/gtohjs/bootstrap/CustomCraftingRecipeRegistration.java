@@ -1,15 +1,18 @@
 package com.gtohjs.bootstrap;
 
+import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialEntry;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
+import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 import com.gregtechceu.gtceu.data.recipe.builder.ShapedRecipeBuilder;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.data.GTOMachines;
 import com.gtolib.utils.RegistriesUtils;
 import com.gtohjs.GTOHJS;
 import com.gtohjs.util.ModLog;
@@ -70,6 +73,13 @@ public final class CustomCraftingRecipeRegistration {
             GTOHJS.id("me_super_pattern_buffer_proxy");
     public static final ResourceLocation ME_SUPER_WILDCARD_PATTERN_BUFFER_RECIPE_ID =
             GTOHJS.id("me_super_wildcard_pattern_buffer");
+    public static final ResourceLocation ELECTROMAGNETIC_THERMAL_CONTROL_HATCH_RECIPE_ID =
+            GTOHJS.id("electromagnetic_thermal_control_hatch");
+    public static final ResourceLocation ADVANCED_INFINITE_INTAKE_HATCH_RECIPE_ID =
+            GTOHJS.id("advanced_infinite_intake_hatch");
+    public static final ResourceLocation ULTIMATE_INFINITE_INTAKE_HATCH_RECIPE_ID =
+            GTOHJS.id("ultimate_infinite_intake_hatch");
+    public static final ResourceLocation VACUUM_COVER_RECIPE_ID = GTOHJS.id("vacuum_cover");
     private static final List<ResourceLocation> ALL_RAW_RECIPE_IDS = List.of(
             INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
             ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID,
@@ -88,7 +98,11 @@ public final class CustomCraftingRecipeRegistration {
             ULV_FRAGMENT_WORLD_COLLECTION_MACHINE_RECIPE_ID,
             ME_SUPER_PATTERN_BUFFER_RECIPE_ID,
             ME_SUPER_PATTERN_BUFFER_PROXY_RECIPE_ID,
-            ME_SUPER_WILDCARD_PATTERN_BUFFER_RECIPE_ID);
+            ME_SUPER_WILDCARD_PATTERN_BUFFER_RECIPE_ID,
+            ELECTROMAGNETIC_THERMAL_CONTROL_HATCH_RECIPE_ID,
+            ADVANCED_INFINITE_INTAKE_HATCH_RECIPE_ID,
+            ULTIMATE_INFINITE_INTAKE_HATCH_RECIPE_ID,
+            VACUUM_COVER_RECIPE_ID);
     private static final List<ResourceLocation> ALL_RECIPE_IDS = ALL_RAW_RECIPE_IDS.stream()
             .map(CustomCraftingRecipeRegistration::resolveShapedRecipeId)
             .toList();
@@ -111,6 +125,10 @@ public final class CustomCraftingRecipeRegistration {
     private static volatile Item meSuperPatternBufferOutput;
     private static volatile Item meSuperPatternBufferProxyOutput;
     private static volatile Item meSuperWildcardPatternBufferOutput;
+    private static volatile Item electromagneticThermalControlHatchOutput;
+    private static volatile Item advancedInfiniteIntakeHatchOutput;
+    private static volatile Item ultimateInfiniteIntakeHatchOutput;
+    private static volatile Item vacuumCoverOutput;
 
     private CustomCraftingRecipeRegistration() {
     }
@@ -156,6 +174,13 @@ public final class CustomCraftingRecipeRegistration {
             Item meSuperWildcardPatternBuffer = requiredItem("gtocore:me_super_wildcard_pattern_buffer");
             Item meExtendPatternBufferUltra = requiredItem("gtocore:me_extend_pattern_buffer_ultra");
             Item meWildcardPatternBuffer = requiredItem("gtocore:me_wildcard_pattern_buffer");
+            Item electromagneticThermalControlHatch =
+                    requiredItem("gtocore:electromagnetic_thermal_control_hatch");
+            Item advancedInfiniteIntakeHatch =
+                    requiredItem("gtocore:advanced_infinite_intake_hatch");
+            Item ultimateInfiniteIntakeHatch =
+                    requiredItem("gtocore:ultimate_infinite_intake_hatch");
+            Item vacuumCover = requiredItem("gtohjs:vacuum_cover");
 
             VanillaRecipeHelper.addShapedRecipe(
                     INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
@@ -343,6 +368,48 @@ public final class CustomCraftingRecipeRegistration {
                     'A', meWildcardPatternBuffer,
                     'B', meSuperPatternBuffer);
 
+            VanillaRecipeHelper.addShapedRecipe(
+                    ELECTROMAGNETIC_THERMAL_CONTROL_HATCH_RECIPE_ID,
+                    electromagneticThermalControlHatch,
+                    "   ",
+                    " A ",
+                    "   ",
+                    'A', GTOMachines.HEATER.asItem());
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    ADVANCED_INFINITE_INTAKE_HATCH_RECIPE_ID,
+                    advancedInfiniteIntakeHatch,
+                    "ABA",
+                    "CDC",
+                    "AEA",
+                    'A', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.Aluminium),
+                    'B', GTOMachines.INFINITE_INTAKE_HATCH.asItem(),
+                    'C', GTOItems.AIR_VENT.get(),
+                    'D', GTMachines.FLUID_IMPORT_HATCH[GTValues.MV].asItem(),
+                    'E', new MaterialEntry(TagPrefix.rotor, GTMaterials.Steel));
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    ULTIMATE_INFINITE_INTAKE_HATCH_RECIPE_ID,
+                    ultimateInfiniteIntakeHatch,
+                    "ABA",
+                    "CDC",
+                    "AEA",
+                    'A', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.TungstenSteel),
+                    'B', advancedInfiniteIntakeHatch,
+                    'C', GTOItems.AIR_VENT.get(),
+                    'D', GTMachines.FLUID_IMPORT_HATCH[GTValues.IV].asItem(),
+                    'E', new MaterialEntry(TagPrefix.rotor, GTMaterials.TungstenSteel));
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    VACUUM_COVER_RECIPE_ID,
+                    vacuumCover,
+                    "ABA",
+                    "BCB",
+                    "ABA",
+                    'A', new MaterialEntry(TagPrefix.pipeLargeFluid, GTMaterials.Steel),
+                    'B', new MaterialEntry(TagPrefix.plate, GTMaterials.Iron),
+                    'C', requiredItem("gtocore:hp_steam_vacuum_pump"));
+
             integralBronzeFrameworkOutput = integralBronzeFramework;
             oneStopPlantOutput = oneStopPlant;
             universalSteamFactoryOutput = universalSteamFactory;
@@ -361,46 +428,13 @@ public final class CustomCraftingRecipeRegistration {
             meSuperPatternBufferOutput = meSuperPatternBuffer;
             meSuperPatternBufferProxyOutput = meSuperPatternBufferProxy;
             meSuperWildcardPatternBufferOutput = meSuperWildcardPatternBuffer;
+            electromagneticThermalControlHatchOutput = electromagneticThermalControlHatch;
+            advancedInfiniteIntakeHatchOutput = advancedInfiniteIntakeHatch;
+            ultimateInfiniteIntakeHatchOutput = ultimateInfiniteIntakeHatch;
+            vacuumCoverOutput = vacuumCover;
             state = State.REGISTERED;
-            ModLog.info("Registered 18 GTOHJS crafting recipes; finalIds={}", ALL_RECIPE_IDS);
-            ModLog.info("Registered crafting recipes: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}; " +
-                            "outputs={}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
-                    INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
-                    ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID,
-                    UNIVERSAL_STEAM_FACTORY_RECIPE_ID,
-                    ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID,
-                    ADVANCED_GENERATOR_ARRAY_RECIPE_ID,
-                    STEAM_ARRAY_RECIPE_ID,
-                    ADVANCED_STEAM_ARRAY_RECIPE_ID,
-                    FLUIX_MANA_POOL_RECIPE_ID,
-                    LV_MACHINE_HULL_RECIPE_ID,
-                    MV_MACHINE_HULL_RECIPE_ID,
-                    HYPERDIMENSIONAL_FORGE_RECIPE_ID,
-                    HYPERDIMENSIONAL_STEAM_FURNACE_RECIPE_ID,
-                    FRAGMENT_WORLD_COLLECTION_MACHINE_RECIPE_ID,
-                    LARGE_FRAGMENT_WORLD_COLLECTION_MACHINE_RECIPE_ID,
-                    ULV_FRAGMENT_WORLD_COLLECTION_MACHINE_RECIPE_ID,
-                    ME_SUPER_PATTERN_BUFFER_RECIPE_ID,
-                    ME_SUPER_PATTERN_BUFFER_PROXY_RECIPE_ID,
-                    ME_SUPER_WILDCARD_PATTERN_BUFFER_RECIPE_ID,
-                    integralBronzeFramework,
-                    oneStopPlant,
-                    universalSteamFactory,
-                    advancedAlchemyCauldron,
-                    advancedGeneratorArray,
-                    steamArray,
-                    advancedSteamArray,
-                    fluixManaPool,
-                    lvMachineHull,
-                    mvMachineHull,
-                    hyperdimensionalForge,
-                    hyperdimensionalSteamFurnace,
-                    fragmentWorldCollectionMachine,
-                    largeFragmentWorldCollectionMachine,
-                    fragmentWorldCollectionMachine,
-                    meSuperPatternBuffer,
-                    meSuperPatternBufferProxy,
-                    meSuperWildcardPatternBuffer);
+            ModLog.info("Registered {} GTOHJS crafting recipes; rawIds={}, finalIds={}, outputs={}",
+                    ALL_RECIPE_IDS.size(), ALL_RAW_RECIPE_IDS, ALL_RECIPE_IDS, expectedOutputs());
         } catch (Throwable error) {
             state = State.FAILED;
             clearOutputs();
@@ -445,6 +479,10 @@ public final class CustomCraftingRecipeRegistration {
         meSuperPatternBufferOutput = null;
         meSuperPatternBufferProxyOutput = null;
         meSuperWildcardPatternBufferOutput = null;
+        electromagneticThermalControlHatchOutput = null;
+        advancedInfiniteIntakeHatchOutput = null;
+        ultimateInfiniteIntakeHatchOutput = null;
+        vacuumCoverOutput = null;
     }
 
     /** Verifies registration state before the final RecipeManager is available. */
@@ -471,7 +509,12 @@ public final class CustomCraftingRecipeRegistration {
                 meSuperPatternBufferOutput == null || meSuperPatternBufferOutput == Items.AIR ||
                 meSuperPatternBufferProxyOutput == null || meSuperPatternBufferProxyOutput == Items.AIR ||
                 meSuperWildcardPatternBufferOutput == null ||
-                meSuperWildcardPatternBufferOutput == Items.AIR) {
+                meSuperWildcardPatternBufferOutput == Items.AIR ||
+                electromagneticThermalControlHatchOutput == null ||
+                electromagneticThermalControlHatchOutput == Items.AIR ||
+                advancedInfiniteIntakeHatchOutput == null || advancedInfiniteIntakeHatchOutput == Items.AIR ||
+                ultimateInfiniteIntakeHatchOutput == null || ultimateInfiniteIntakeHatchOutput == Items.AIR ||
+                vacuumCoverOutput == null || vacuumCoverOutput == Items.AIR) {
             throw new IllegalStateException("Custom crafting recipes were not registered; state=" + state);
         }
         ModLog.info("Validated crafting registration {}; rawIds={}, finalIds={}",
@@ -531,6 +574,13 @@ public final class CustomCraftingRecipeRegistration {
                 meSuperPatternBufferProxyOutput);
         outputs.put(resolveShapedRecipeId(ME_SUPER_WILDCARD_PATTERN_BUFFER_RECIPE_ID),
                 meSuperWildcardPatternBufferOutput);
+        outputs.put(resolveShapedRecipeId(ELECTROMAGNETIC_THERMAL_CONTROL_HATCH_RECIPE_ID),
+                electromagneticThermalControlHatchOutput);
+        outputs.put(resolveShapedRecipeId(ADVANCED_INFINITE_INTAKE_HATCH_RECIPE_ID),
+                advancedInfiniteIntakeHatchOutput);
+        outputs.put(resolveShapedRecipeId(ULTIMATE_INFINITE_INTAKE_HATCH_RECIPE_ID),
+                ultimateInfiniteIntakeHatchOutput);
+        outputs.put(resolveShapedRecipeId(VACUUM_COVER_RECIPE_ID), vacuumCoverOutput);
         return outputs;
     }
 

@@ -1,8 +1,6 @@
-# 普通电力多方块机器注册模板 / Basic Electric Multiblock Template
+# Basic Electric Multiblock Registration Template
 
-## 中文
-
-### Java 模板
+## Java template
 
 ```java
 public final class ExampleElectricMultiblockRegistration {
@@ -21,7 +19,7 @@ public final class ExampleElectricMultiblockRegistration {
         }
 
         definition = MachineRegisterUtils.multiblock(
-                PATH, "示例电力多方块", ElectricMultiblockMachine::new)
+                PATH, "Example Electric Multiblock", ElectricMultiblockMachine::new)
             .langValue("Example Electric Multiblock")
             .nonYAxisRotation()
             .recipeTypes(GTRecipeTypes.VACUUM_RECIPES)
@@ -51,18 +49,12 @@ public final class ExampleElectricMultiblockRegistration {
 }
 ```
 
-请把 `recipeTypes`、控制器类、外壳、renderer 和仓室 predicate 替换成目标原机的真实值。普通电力机器不应自动获得线圈温度、激光输入、维护、并行或加速效果；这些是独立功能，需要相应 controller/runtime trait 和 modifier。
+Replace `recipeTypes`, the controller class, casing, renderer, and hatch predicates with the real values from the target machine. An ordinary electric machine must not automatically gain coil-temperature, laser-input, maintenance, parallel, or acceleration behavior. These are independent features and require the corresponding controller or runtime trait and modifier.
 
-### 结构和预览
+## Structure and preview
 
-第一个 `aisle` 是最后面；在默认 `FactoryBlockPattern.start(machine)` 中，行必须按 `minY -> maxY` 从下到上排列，第 0 行是底层。`Predicates.controller(machine)` 是正式控制器；临时替代方块只适合导出器预览，不能代替正式 controller predicate。`setPreviewCount` 只影响结构预览，不改变实际可安装数量；`setExactLimit`/`setMaxGlobalLimited` 才是结构数量约束。
+The first aisle is the back. With the default `FactoryBlockPattern.start(machine)`, rows must be ordered bottom-to-top (`minY -> maxY`), with row 0 at the bottom. `Predicates.controller(machine)` is the real controller. A temporary substitute block is suitable only for exporter previews and cannot replace the real controller predicate. `setPreviewCount` affects only the structure preview and does not change the number that can actually be installed; `setExactLimit` and `setMaxGlobalLimited` impose structure count constraints.
 
-### 注入与检查
+## Injection and checks
 
-在目标机器分组 `<clinit>` 的每个 `RETURN` 前注入 `ExampleElectricMultiblockRegistration.register()`。注册后检查 `patternFactory.length == 1`、renderer 非空、recipe type 数组顺序正确，并在客户端进入 load complete 后调用 `validateLoaded()`。
-
-## English
-
-Use `MachineRegisterUtils.multiblock(...)` with the actual electric controller, casing, recipe types, predicates and renderer from the target machine. Inject `register()` before the `RETURN` of the owning machine-group `<clinit>()V`. The first aisle is the back; with the default `FactoryBlockPattern.start(machine)`, rows are bottom-to-top (`minY -> maxY`). Use `Predicates.controller(machine)` for the controller character.
-
-`setPreviewCount` affects only previews, while `setExactLimit` and `setMaxGlobalLimited` enforce structure limits. Do not add coil, laser, maintenance, parallel or acceleration behavior merely by accepting a hatch: the controller, runtime traits and recipe modifiers must implement it. Verify registry identity, pattern factory, renderer and load-complete state in the client.
+Inject `ExampleElectricMultiblockRegistration.register()` before every `RETURN` in the target machine-group `<clinit>`. After registration, verify `patternFactory.length == 1`, a non-null renderer, and the correct recipe-type array order, then invoke `validateLoaded()` after the client reaches load complete.

@@ -1,14 +1,12 @@
-# 低级蒸汽多方块机器注册 / Low-level Steam Multiblocks
+# Low-level Steam Multiblock Registration
 
-## 中文
+This applies to machines such as `gtocore:steam_pressor` that can use only low-level steam hatches. A low-level steam machine must use GTO's `SteamMultiblockMachine` registration chain. Do not directly reuse a large-steam controller or an electric multiblock template.
 
-适用对象是 `gtocore:steam_pressor` 一类只能使用低级蒸汽仓的机器。低级蒸汽机应使用 GTO 的 `SteamMultiblockMachine` 注册链，不要把大型蒸汽控制器或电力多方块模板直接套过来。
-
-### 推荐注册骨架
+## Recommended registration skeleton
 
 ```java
 definition = MachineRegisterUtils.multiblock(
-        "example_steam_multiblock", "示例低级蒸汽机", SteamMultiblockMachine::new)
+        "example_steam_multiblock", "Example Low-Level Steam Machine", SteamMultiblockMachine::new)
     .langValue("Example Low-level Steam Machine")
     .nonYAxisRotation()
     .recipeTypes(GTRecipeTypes.COMPRESSOR_RECIPES)
@@ -36,15 +34,15 @@ definition = MachineRegisterUtils.multiblock(
     .register();
 ```
 
-具体仓室能力以目标原机源码为准。`STEAM` 的 `setExactLimit(1)` 表示必须恰好一个蒸汽能源仓；`STEAM_IMPORT_ITEMS` 和 `STEAM_EXPORT_ITEMS` 只接受 GTO 注册的低级蒸汽物品仓。排气仓通常使用 `GTOMachines.STEAM_VENT_HATCH` 的精确方块 predicate。
+Use the original target machine's source as the authority for exact hatch abilities. `setExactLimit(1)` on `STEAM` requires exactly one steam energy hatch. `STEAM_IMPORT_ITEMS` and `STEAM_EXPORT_ITEMS` accept only the low-level steam item hatches registered by GTO. A vent hatch normally uses an exact-block predicate for `GTOMachines.STEAM_VENT_HATCH`.
 
-### 不要默认开放的能力
+## Abilities that must not be enabled by default
 
-低级蒸汽模式默认不开放 `GTOPartAbility.IMPORT_ITEMS`（普通高级输入总线）、维护仓、并行控制仓、加速仓、线程仓或超频仓。除非控制器类明确实现这些能力，否则把它们加入 pattern 只会产生“能放但机器不工作”的结构。
+Low-level steam mode does not enable `GTOPartAbility.IMPORT_ITEMS` (the ordinary advanced input bus), maintenance hatches, parallel-control hatches, acceleration hatches, thread hatches, or overclock hatches by default. Unless the controller class explicitly implements these abilities, adding them to the pattern only creates a structure in which the part can be placed but has no effect.
 
-### 结构方向
+## Structure orientation
 
-`FactoryBlockPattern.aisle(...)` 的第一个 aisle 是结构最后面；在默认 `FactoryBlockPattern.start(machine)` 下，字符串按 `minY -> maxY` 从下到上排列，第 0 行是该层底面。生成器导出的三层若写成：
+The first aisle in `FactoryBlockPattern.aisle(...)` is the back of the structure. With the default `FactoryBlockPattern.start(machine)`, strings are ordered bottom-to-top (`minY -> maxY`), and row 0 is the bottom of that layer. If the three rows exported by the generator are:
 
 ```text
 AAA
@@ -52,16 +50,8 @@ ASA
 AAA
 ```
 
-实际结构按下到上的三行解释；不要在导入时再次翻转。控制器字符必须映射到 `Predicates.controller(machine)`。
+the real structure interprets those three rows from bottom to top. Do not reverse them again during import. The controller character must map to `Predicates.controller(machine)`.
 
-### 预览和验证
+## Preview and verification
 
-启用 `.multiblockPreviewRenderer(true, true)`，并保证 `patternFactory`、renderer 和 controller predicate 都非空。低级蒸汽机器的 EMI 预览由 GTO definition 生成，不能通过修改 EMI 代码修复。客户端验收应确认：结构可成型、低级蒸汽仓可识别、超频/并行参数符合原机、缺少排气仓时结构不能误成型。
-
-## English
-
-Use this pattern for machines comparable to `gtocore:steam_pressor`, which accept only low-level steam parts. Register them with GTO's `SteamMultiblockMachine` path, `.steamOverclock()`, a bronze casing and an explicit steam energy hatch, steam item input/output and vent predicate. Do not copy the large-steam controller or an electric multiblock template.
-
-`STEAM` with `setExactLimit(1)` means exactly one steam energy hatch. `STEAM_IMPORT_ITEMS` and `STEAM_EXPORT_ITEMS` are the low-level steam item buses registered by GTO. Keep ordinary higher-tier `GTOPartAbility.IMPORT_ITEMS`, maintenance, parallel, accelerate, thread and overclock hatches closed unless the controller implements them.
-
-The first `aisle` is the back of the structure. With the default `FactoryBlockPattern.start(machine)`, rows are bottom-to-top (`minY -> maxY`). Use `Predicates.controller(machine)` for the controller character. Enable both world and EMI/XEI previews on the definition and validate the actual formed structure in the client.
+Enable `.multiblockPreviewRenderer(true, true)`, and ensure the `patternFactory`, renderer, and controller predicate are all non-null. GTO's definition generates the EMI preview for a low-level steam machine; editing EMI code cannot repair it. Client acceptance must confirm that the structure forms, low-level steam hatches are recognized, overclock and parallel parameters match the original machine, and the structure does not form when the vent hatch is missing.

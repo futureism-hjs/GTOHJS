@@ -1,67 +1,52 @@
-# GTOHJS fix58 三个用户模型导入 / Three User-authored Structure Imports
+# GTOHJS fix58 Three User-authored Structure Imports
 
-> fix59 已替换本文中的超维度化工厂结构与仓位段；锻炉和蒸汽熔炉基线仍然有效。当前化工厂事实见 `20_fix59_explicit_diamond_hatches.md`。
 > Fix59 supersedes the chemical-factory structure and hatch sections below. The forge and steam-furnace baselines remain valid; see `20_fix59_explicit_diamond_hatches.md` for the current chemical factory.
 
-## 中文
+## Change boundary
 
-### 变更边界
+Fix58 replaces only the structure resources and corresponding block predicates of these three multiblocks:
 
-fix58 只替换以下三个多方块的结构资源和对应方块 predicate：
-
-| 机器 | 只读模型源 | 正式尺寸 | 最坏区块跨度 |
+| Machine | Read-only model source | Formal dimensions | Worst-case chunk span |
 | --- | --- | ---: | ---: |
-| 超维度锻炉 | 外部开发素材 `超维度锻炉.litematic` | `15 x 43 x 15` | `2 x 2` |
-| 超维度蒸汽熔炉 | 外部开发素材 `超维度蒸汽熔炉.litematic` | `15 x 43 x 15` | `2 x 2` |
-| 超维度化工厂 | 外部开发素材 `超维度化工厂最终版1.litematic` | `49 x 34 x 39` | `4 x 4` |
+| Hyperdimensional forge | External development asset `超维度锻炉.litematic` | `15 x 43 x 15` | `2 x 2` |
+| Hyperdimensional steam furnace | External development asset `超维度蒸汽熔炉.litematic` | `15 x 43 x 15` | `2 x 2` |
+| Hyperdimensional chemical factory | External development asset `超维度化工厂最终版1.litematic` | `49 x 34 x 39` | `4 x 4` |
 
-配方类型、控制器、1t 修饰器、蒸汽消耗、线圈并行/线程公式、左侧配置页、真空等级、仓室能力、renderer 和 EMI 注册链均不改变。超维度冶炼炉也不在本次修改范围内。
+Recipe types, controllers, one-tick modifiers, steam consumption, coil parallel/thread formula, left configurator pages, vacuum tier, hatch abilities, renderers, and the EMI registration chain are unchanged. The hyperdimensional smelter is also outside this change.
 
-### 坐标方向
+## Coordinate orientation
 
-三个 region 的 signed X 都为负，控制器都在 local 最小 Z 端和底部工作面。导入器使用与 fix56/fix57 已验证化工厂相同的序列化规则：
+All three regions have negative signed X, and every controller is at the minimum local-Z end on the bottom working face. The importer uses the same serialization rules verified for the fix56/fix57 chemical factory:
 
-- aisle：local Z 从最大到最小，远端先、控制器端最后；
-- row：local Y 从最小到最大，严格底到顶，禁止 Y 翻转；
-- column：negative signed X 使用 local X 从最大到最小；
-- 锻炉和蒸汽炉控制器为 `(column=7,row=1,aisle=14)`；
-- 化工厂控制器为 `(column=24,row=2,aisle=38)`。
+- Aisles: local Z from maximum to minimum, far end first and controller end last.
+- Rows: local Y from minimum to maximum, strictly bottom-to-top; Y reversal is forbidden.
+- Columns: for negative signed X, local X from maximum to minimum.
+- Forge and steam-furnace controller: `(column=7,row=1,aisle=14)`.
+- Chemical-factory controller: `(column=24,row=2,aisle=38)`.
 
-pattern 空格继续映射 `Predicates.any()`。这些视觉空气位不要求为空，也不会被加入结构监听。
+Pattern spaces continue to map to `Predicates.any()`. These visual air positions need not remain empty and are not added to structure monitoring.
 
-### 仓位规范化
+## Hatch-position normalization
 
-三台机器继续使用 `gtocore:leap_forward_one_blast_furnace` 的 39 点仓位投影。锻炉和蒸汽炉的 39 点在源模型中全部已经是对应机器外壳。化工厂的 39 点来自 9 个惰性机壳、13 个 PTFE 管道、4 个强化基座和 13 个空气位；导入时统一覆盖为 `H`，实际搭建时必须使用惰性机壳或原有合同允许的仓室。
+All three machines continue to use the 39-position hatch projection from `gtocore:leap_forward_one_blast_furnace`. Every one of the forge and steam-furnace source model's 39 positions is already the corresponding machine casing. The chemical factory's 39 positions originate from nine inert casings, 13 PTFE pipes, four reinforced base blocks, and 13 air positions. The importer normalizes all of them to `H`; the real structure must use inert casing or a hatch allowed by the existing contract.
 
-该规范化只服务于既有能力合同，不会开放超频、并行、加速或线程仓。化工厂仍强制一个维护仓，并保留普通能源/激光、物品/流体 I/O 和催化剂仓边界。
+This normalization serves only the existing ability contract and does not enable overclock, parallel, acceleration, or thread hatches. The chemical factory still requires one maintenance hatch and retains its ordinary energy/laser, item/fluid I/O, and catalyst-hatch boundaries.
 
-### 材质与精确结构
+## Materials and exact structure
 
-超维度锻炉使用钢制机器外壳、固体钢机壳、钢火箱和钢框架；超维度蒸汽熔炉使用青铜机器外壳、蒸汽机器外壳、青铜火箱和青铜框架。两者覆盖 `H/S` 后均为 1,957 个非空位置、7,718 个忽略空格和一个六向连通体。
+The hyperdimensional forge uses steel machine casing, solid steel casing, steel fireboxes, and steel frames. The hyperdimensional steam furnace uses bronze machine casing, steam machine casing, bronze fireboxes, and bronze frames. After `H/S` normalization, each has 1,957 non-air positions, 7,718 ignored spaces, and one six-neighbor connected component.
 
-化工厂使用强化基座、惰性机壳、PTFE/钨钢管道、星金线圈、钠泉框架、不锈钢框架、强化厂房外壳、化学玻璃、承压外壳和 HV 机壳。新增字符 `T` 精确映射 `gtceu:naquadah_frame`。覆盖 `H/S` 后为 14,469 个非空位置、50,505 个忽略空格、922 个可替换线圈和一个六向连通体；禁用的 `gtocore:spacetime_compression_field_generator` 仍为 0。
+The chemical factory uses reinforced base, inert casing, PTFE/tungstensteel pipes, starmetal coils, Naquadah frames, stainless-steel frames, reinforced plant casing, chemical glass, pressure-containment casing, and HV machine casing. New symbol `T` maps exactly to `gtceu:naquadah_frame`. After `H/S` normalization, it has 14,469 non-air positions, 50,505 ignored spaces, 922 replaceable coils, and one six-neighbor connected component. The forbidden `gtocore:spacetime_compression_field_generator` count remains 0.
 
-### 生成与验证
+## Generation and verification
 
-历史正式导入入口使用不随公开源码发布的外部工具：
+The historical formal import entry point used external tools that are not distributed with the public source:
 
 ```powershell
 python -X utf8 import_fix58_multiblock_structures.py --apply
 node validate_hyperdimensional_patterns.js
 ```
 
-导入器硬校验源文件、region position、signed size、完整 palette/state 计数、控制器坐标、39 个仓位来源、最终字符计数、六向连通性和封闭空间拓扑。它先输出外部审计副本，只有 `--apply` 才替换正式资源。
+The importer strictly validates source files, region position, signed size, complete palette/state counts, controller coordinates, sources of all 39 hatch positions, final character counts, six-neighbor connectivity, and enclosed-space topology. It first writes an external audit copy; only `--apply` replaces formal resources.
 
-历史外部脚本 `generate_hyperdimensional_redesign.js` 从 fix58 起只允许生成未变化的超维度冶炼炉，不能再覆盖这三个用户模型。修改 pattern 后必须完整重启客户端，因为 `HyperdimensionalPatternResources` 会缓存结构。
-
-## English
-
-Fix58 replaces only the structure resources and block predicates of the Hyperdimensional Forge, Hyperdimensional Steam Furnace and Hyperdimensional Chemical Factory. Their source Litematics remain read-only. Runtime controllers, recipe types, one-tick modifiers, steam behavior, coil parallel/thread limits, configurators, vacuum tier, hatch capabilities, renderers and EMI lifecycle are unchanged. The Hyperdimensional Smelter is outside this change.
-
-The forge and steam furnace are both `15 x 43 x 15`; the final chemical factory is `49 x 34 x 39`. Aisles are emitted from the far end to the controller, rows remain bottom-to-top, and negative signed X follows the verified fix56/fix57 column orientation. Pattern spaces remain `Predicates.any()`.
-
-All three structures retain the exact 39-position Leap Forward One hatch projection. Every projected position in the forge and steam source is already its base casing. The chemical source has nine inert casings, thirteen PTFE pipes, four reinforced base blocks and thirteen air cells at those coordinates; the importer normalizes all 39 to `H`. This preserves the established hatch contract and does not enable overclock, parallel, accelerate or thread hatches.
-
-After normalization, each forge/steam pattern has 1,957 monitored positions and one six-neighbor component. The chemical factory has 14,469 monitored positions, 922 replaceable coils and one component. Its `T` symbol maps to `gtceu:naquadah_frame`; forbidden spacetime compression field generators remain absent.
-
-The historical external importer was `import_fix58_multiblock_structures.py --apply`. It validated the source metadata, dimensions, full state counts, controller, hatch sources, exact pattern counts and topology before writing resources. The independent JavaScript validator then checked dimensions, symbols, controller/hatch coordinates, counts and connectivity. Those tools are not included in the public source tree. A full client restart is mandatory after applying a pattern change.
+Beginning with fix58, the historical external `generate_hyperdimensional_redesign.js` script may generate only the unchanged hyperdimensional smelter and must not overwrite these three user models. A full client restart is mandatory after a pattern change because `HyperdimensionalPatternResources` caches structures.

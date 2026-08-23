@@ -1,194 +1,258 @@
 # GTO HJS
 
 > [!WARNING]
-> 本项目包含由 AI 生成或在 AI 辅助下完成的代码、文档、材质与任务内容，可能存在错误、安全问题或与上游接口及许可不一致的情况。使用、修改或分发前请自行审查并充分测试；项目不保证这些内容的准确性、完整性或适用性。
+> This project contains code, documentation, textures and quest content generated or produced with AI assistance. They may contain errors, security issues, or incompatibilities with upstream APIs and licenses. Review and test them before use, modification, or redistribution; no accuracy, completeness, or fitness is guaranteed.
 
-[English](README_EN.md) | [完整历史更新日志](CHANGELOG.md) | [2.0-per1 至 2.0-alpha 更新日志](CHANGELOG_2.0_PER1_TO_2.0_ALPHA.md)
+[Legacy README path, now English](README_ZH.md) | [Development documentation](docs/README_ZH_EN.md) | [中英文变更记录](CHANGELOG.md)
 
-GTO HJS 是面向 Minecraft 1.20.1 Forge 版 GregTech Odyssey 0.5.6-beta 的兼容扩展，用于为 GTO 扩展更多机器和配方。项目通过 GTOCore 的原生注册窗口增加物品、方块、机器、仓室、配方类型与配方，不修改 GTOCore 或 EMI 的原始文件。
+GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-当前正式版本为 `2.0-alpha-for-gtocore-0.5.6-beta`。当前源码实际注册 22 个 `gtohjs` 物品、1 个独立方块、18 个 `gtocore` 机器或仓室定义和 3 个新配方类型。GTO 适配版 ME Placement Tool 已分离为完全独立的 Mod `ME Placement Tool for gto`；它不是 GTOHJS 的依赖，GTOHJS 不再注册或引用其工具、物品 ID、UI、网络频道和配方，两个 Mod 均可单独安装。
+The current source version `2.3-alpha-for-gtocore-0.5.6-beta` completed a network-enabled Java 21 clean build and was deployed for user client verification; the preceding clean-build baseline is `2.2-alpha-for-gtocore-0.5.6-beta`. The source registers 23 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other. The 2.3-alpha line does not require an additional API Mod.
 
-## 运行与开发依赖
+## Runtime and development dependencies
 
-| 组件 | 版本或范围 |
+| Component | Version or range |
 | --- | --- |
 | Minecraft | 1.20.1 |
-| Forge | 47.4.20；清单范围 `[47.4.20,48)`，Mod Loader 范围 `[47,)` |
-| Java | 默认使用 JDK 21；编译目标为 Java 17 字节码 |
-| GTCEu | 26.7.3；清单范围 `[26.7.3,26.8)` |
-| GTOCore | 0.5.6-beta；清单范围 `[0.5.6-beta,0.5.7)` |
-| AE2 | 目标整合包使用 15.267.4；清单范围 `[15.267.4,15.268)` |
-| Configuration | 3.1.0；提供游戏内模组配置页 |
+| Forge | 47.4.20; manifest range `[47.4.20,48)`, mod-loader range `[47,)` |
+| Java | JDK 21 by default; Java 17 bytecode target |
+| GTCEu | 26.7.3; manifest range `[26.7.3,26.8)` |
+| GTOCore | 0.5.6-beta; manifest range `[0.5.6-beta,0.5.7)` |
+| AE2 | The target pack uses 15.267.4; manifest range `[15.267.4,15.268)` |
+| Configuration | 3.1.0; supplies the in-game mod configuration screen |
 
-大型花药台还依赖目标整合包已经提供的 Botania、AppBot 及相关 GTO 集成。第三方 Mod JAR 不随源码包公开分发；本地构建依赖的放置方法见 [libs/README.md](libs/README.md)。
+The Large Petal Apothecary also relies on the Botania, AppBot and related GTO integrations already supplied by the target modpack. Third-party mod JARs are not redistributed in the public source package. See [libs/README.md](libs/README.md) for local build dependency placement.
 
-## 安装与构建
+## Install and build
 
-关闭客户端后，将 GTOHJS JAR 放入 Minecraft 1.20.1 Forge 版 GTO 0.5.6-beta 实例的 `mods` 目录，并删除旧版 GTOHJS JAR。`ME Placement Tool for gto` 可按需单独安装，不影响 GTOHJS 加载。
+After closing the client, place the GTOHJS JAR in the `mods` directory of a Minecraft 1.20.1 Forge GTO 0.5.6-beta instance and remove older GTOHJS JARs. `ME Placement Tool for gto` may be installed separately when wanted and does not affect GTOHJS loading.
 
-默认使用 Java 21 和联网 Gradle 构建：
+Use Java 21 and an online Gradle build by default:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
-.\gradlew.bat clean build --stacktrace
+$env:JAVA_HOME = '<JDK 21 path>'
+.\gradlew.bat build --stacktrace
 ```
 
-正式 JAR 输出到：
+The release artifact is written to:
 
 ```text
-build\libs\gtohjs-2.0-alpha-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar
 ```
 
-网络依赖下载失败时应停止构建并等待人工处理，不在未知或不完整的依赖状态下继续打包。
+Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.
 
-## 独立物品与方块
+## Standalone items and block
 
-以下是 GTOHJS 自身命名空间中实际注册的全部非机器内容。
+These are all non-machine entries currently registered in the GTOHJS namespace.
 
-| 中文名 | 注册 ID | 功能 |
+| Name | Registry ID | Function |
 | --- | --- | --- |
-| GTOHJS 配方编辑器 | `gtohjs:recipe_editor` | 对 GT 配方机器或原版工作台生成 Java 配方初稿。 |
-| 自定义多方块结构导出工具 | `gtohjs:multiblock_structure_generator` | 两点框选结构并导出 GTO 多方块 Java 初稿。 |
-| 基础 AE 元件包 | `gtohjs:basic_ae_component_pack` | 预装 123 种基础 AE 物品。 |
-| AE 机器元件包 | `gtohjs:ae_machine_component_pack` | 预装 42 种 AE/GTO 机器元件。 |
-| 高级 AE 仓室元件包 | `gtohjs:advanced_ae_hatch_component_pack` | 预装 21 种高级 AE 仓室与部件。 |
-| 整体青铜框架 | `gtohjs:integral_bronze_framework` | 独立注册的结构方块及方块物品，带模型、材质、掉落表和工作台配方。 |
+| GTOHJS Recipe Editor | `gtohjs:recipe_editor` | Generates Java recipe drafts from GT recipe machines or a vanilla crafting table. |
+| Custom Multiblock Structure Exporter | `gtohjs:multiblock_structure_generator` | Selects a cuboid and exports a GTO multiblock Java draft. |
+| Vacuum Cover | `gtohjs:vacuum_cover` | Passively satisfies vacuum tiers 1-3 when installed on a single-block machine or a multiblock maintenance hatch. |
+| Basic AE Component Pack | `gtohjs:basic_ae_component_pack` | Preloads 123 basic AE item types. |
+| AE Machine Component Pack | `gtohjs:ae_machine_component_pack` | Preloads 42 AE/GTO machine component types. |
+| Advanced AE Hatch Component Pack | `gtohjs:advanced_ae_hatch_component_pack` | Preloads 21 advanced AE hatches and parts. |
+| Integral Bronze Framework | `gtohjs:integral_bronze_framework` | A standalone structure block and block item with its own model, texture, loot table and crafting recipe. |
 
-### 世界碎片
+### World fragments
 
-| 中文名 | 注册 ID | 中文名 | 注册 ID |
+| Name | Registry ID | Name | Registry ID |
 | --- | --- | --- | --- |
-| 主世界碎片 | `gtohjs:world_fragments_overworld` | 下界碎片 | `gtohjs:world_fragments_nether` |
-| 末地碎片 | `gtohjs:world_fragments_end` | 远古世界碎片 | `gtohjs:world_fragments_reactor` |
-| 月球碎片 | `gtohjs:world_fragments_moon` | 火星碎片 | `gtohjs:world_fragments_mars` |
-| 金星碎片 | `gtohjs:world_fragments_venus` | 水星碎片 | `gtohjs:world_fragments_mercury` |
-| 谷神星碎片 | `gtohjs:world_fragments_ceres` | 木卫一碎片 | `gtohjs:world_fragments_io` |
-| 木卫三碎片 | `gtohjs:world_fragments_ganymede` | 冥王星碎片 | `gtohjs:world_fragments_pluto` |
-| 土卫二碎片 | `gtohjs:world_fragments_enceladus` | 土卫六碎片 | `gtohjs:world_fragments_titan` |
-| 霜原星碎片 | `gtohjs:world_fragments_glacio` | 巴纳德 C 碎片 | `gtohjs:world_fragments_barnarda` |
+| Overworld Fragment | `gtohjs:world_fragments_overworld` | Nether Fragment | `gtohjs:world_fragments_nether` |
+| End Fragment | `gtohjs:world_fragments_end` | Ancient World Fragment | `gtohjs:world_fragments_reactor` |
+| Moon Fragment | `gtohjs:world_fragments_moon` | Mars Fragment | `gtohjs:world_fragments_mars` |
+| Venus Fragment | `gtohjs:world_fragments_venus` | Mercury Fragment | `gtohjs:world_fragments_mercury` |
+| Ceres Fragment | `gtohjs:world_fragments_ceres` | Io Fragment | `gtohjs:world_fragments_io` |
+| Ganymede Fragment | `gtohjs:world_fragments_ganymede` | Pluto Fragment | `gtohjs:world_fragments_pluto` |
+| Enceladus Fragment | `gtohjs:world_fragments_enceladus` | Titan Fragment | `gtohjs:world_fragments_titan` |
+| Glacio Fragment | `gtohjs:world_fragments_glacio` | Barnarda C Fragment | `gtohjs:world_fragments_barnarda` |
 
-### AE 元件包机制
+### AE component pack behavior
 
-- 三个元件包使用 AE2 256K 便携物品元件外观，默认电量与最大电量均为 `20,000`。
-- 包内每一种物品固定为 `16,777,216` 个，不受普通 256K 交互式写入容量限制。
-- 每个新包生成独立的 GTO 外置存储 UUID，并禁止反向拆解。
-- 基础包含 123 种物品，不包含也不引用 `ME Placement Tool for gto` 的工具或元件。
-- AE 机器包含 42 种物品；高级 AE 仓室包含 21 种物品，其中包括 `gtocore:me_wireless_connection_machine`。
-- 旧包按内容版本保留 UUID、已有数量与当前电量；本版本不会主动删除旧外置存储中已经存在的第三方物品键。
-- 所有 `gtohjs:*` 新增物品使用统一的彩色“由 GTO HJS 添加”来源提示；注入到 `gtocore` 命名空间的机器物品通过受控列表加入同类提示。
+- All three packs use the appearance of an AE2 256K portable item cell and start with both current and maximum power set to `20,000`.
+- Every listed item type is stored at exactly `16,777,216`, bypassing the ordinary interactive 256K insertion capacity.
+- Every new pack receives an independent GTO external-storage UUID and cannot be disassembled back into components.
+- The Basic pack contains 123 item types and neither contains nor references tools or components from `ME Placement Tool for gto`.
+- The AE Machine pack contains 42 types. The Advanced AE Hatch pack contains 21 types, including `gtocore:me_wireless_connection_machine`.
+- Existing packs retain their UUID, existing quantities and charge across content versions. This build does not actively delete third-party item keys already present in an older external store.
+- New `gtohjs:*` items use the shared colored "Added by GTO HJS" attribution line. Injected `gtocore` machine items join the same behavior through a controlled list.
 
-## 全部机器与仓室
+## All machines and multiblock parts
 
-以下 18 个定义均由 GTOHJS 注册到 `gtocore` 命名空间。
+All 22 definitions below are registered by GTOHJS in the `gtocore` namespace.
 
-| 中文名 | 注册 ID | 核心功能 |
+| Name | Registry ID | Core behavior |
 | --- | --- | --- |
-| 碎片世界采集器 | `gtocore:ulv_fragment_world_collection_machine` | ULV 单方块采集器，运行碎片世界采集配方并使用升级超频。 |
-| 大型碎片世界采集器 | `gtocore:large_fragment_world_collection_machine` | 仅物品 I/O；耗能 256 倍、耗时 0.25 倍，可在左侧标签设置 `1..9,007,199,254,740,991` 并行。 |
-| 通用蒸汽厂 | `gtocore:universal_steam_factory` | 蒸汽驱动 15 模式工厂，只接受 MV 及以下配方，最终耗时锁定为 1t。 |
-| 一站式稀土处理厂 | `gtocore:one_stop_rare_earth_processing_plant` | 运行独立稀土配方页；6 物品/9 流体输入、18 物品/3 流体输出，支持并行与加速仓并要求维护。 |
-| 超维度锻炉 | `gtocore:hyperdimensional_forge` | 无需能源，只运行土高炉配方，固定 524,288 并行并强制 1t。 |
-| 超维度蒸汽熔炉 | `gtocore:hyperdimensional_steam_furnace` | 蒸汽驱动，只运行熔炉配方，固定 524,288 并行并强制 1t，不需要蒸汽排气仓。 |
-| 超维度冶炼炉 | `gtocore:hyperdimensional_smelter` | 在线圈温度满足配方要求后运行电力高炉或合金冶炼炉配方；并行、线程可独立自定义，配方强制 1t。 |
-| 超维度化工厂 | `gtocore:hyperdimensional_chemical_factory` | 运行大型化学反应釜或聚合反应配方；不要求外部热源，真空等级为 4，并行、线程可独立自定义，配方强制 1t。 |
-| 进阶发电阵列 | `gtocore:advanced_generator_array` | 最多放置 16 台受支持发电机，包括蒸汽轮机、燃烧/燃气/半流质发电机、火箭引擎和硅岩反应堆系列。 |
-| 蒸汽阵列 | `gtocore:steam_array` | 最多放置 16 台低压固体或液体锅炉；无预热，输出为额定蒸汽量的 1.5 倍。 |
-| 进阶蒸汽阵列 | `gtocore:advanced_steam_array` | 最多放置 64 台低压/高压固体、液体或太阳能锅炉；太阳能模式要求有效日照，输出倍率为 1.5 倍。 |
-| 高级炼金锅 | `gtocore:advanced_alchemy_cauldron` | 概率输入只需存在且不消耗，概率输出稳定产出；必须维护、禁止导热仓，也不能拿来泡澡。 |
-| 大型花药台 | `gtocore:large_petal_apothecary` | 支持魔力花园、魔力花园燃料和大型花药台模式；代理 Botania 花药台配方。 |
-| ME 输入总成 | `gtocore:me_input_assembly` | 合并 ME 物品输入总线与流体输入仓，提供 16 个物品和 16 个流体配置位。 |
-| ME 库存输入总成 | `gtocore:me_stocking_input_assembly` | 从 ME 网络库存物品与流体；螺丝刀可切换关闭、双库存、仅物品、仅流体四种模式。 |
-| ME 超级样板总成 | `gtocore:me_super_pattern_buffer` | 默认 `9×6×6=324` 格，可配置至 `18×10×10=1800` 格，支持双向 I/O 与每槽隔离。 |
-| ME 超级样板总成镜像 | `gtocore:me_super_pattern_buffer_proxy` | 代理超级样板总成的样板槽和双向 I/O，只有正确绑定自定义超级总成时才转发输出。 |
-| ME 超级通配符样板总成 | `gtocore:me_super_wildcard_pattern_buffer` | 默认单页 `3×3`，可配置至 `8×8`，保留通配符搜索/黑名单并按源槽精确路由。 |
+| Fragment World Collection Machine | `gtocore:ulv_fragment_world_collection_machine` | ULV single-block collector that runs Fragment World Collection recipes with tiered overclocking. |
+| Large Fragment World Collection Machine | `gtocore:large_fragment_world_collection_machine` | Item I/O only; uses 256x energy and 0.25x duration, with left-tab parallelism from `1..9,007,199,254,740,991`. |
+| Universal Steam Factory | `gtocore:universal_steam_factory` | Steam-powered 17-mode factory accepting MV-and-below recipes and locking final duration to 1t. |
+| One-Stop Rare Earth Processing Plant | `gtocore:one_stop_rare_earth_processing_plant` | Runs its dedicated recipe type with 6 item/9 fluid inputs, 18 item/3 fluid outputs, parallel and acceleration support, and required maintenance. |
+| Hyperdimensional Forge | `gtocore:hyperdimensional_forge` | Requires no energy, runs only primitive blast-furnace recipes, uses fixed 524,288 parallelism and forces 1t. |
+| Hyperdimensional Steam Furnace | `gtocore:hyperdimensional_steam_furnace` | Steam-powered furnace recipes with fixed 524,288 parallelism and 1t duration; no steam vent hatch is required. |
+| Hyperdimensional Smelter | `gtocore:hyperdimensional_smelter` | Runs electric blast-furnace or alloy-smelter recipes after meeting recipe temperature; parallelism and threads are independently configurable and recipes are forced to 1t. |
+| Hyperdimensional Chemical Factory | `gtocore:hyperdimensional_chemical_factory` | Runs large chemical-reactor or polymerization recipes, needs no external heat source, uses vacuum tier 4, exposes custom parallelism/threads and forces 1t. |
+| Advanced Generator Array | `gtocore:advanced_generator_array` | Holds up to 16 supported generators, including steam turbine, combustion/gas/semi-fluid, rocket-engine and naquadah-reactor families; its generation multiplier is fixed at 2x and wireless-grid transmission loss is 0. |
+| Steam Array | `gtocore:steam_array` | Holds up to 16 LP solid or liquid boilers, has no warmup and produces 1.5x nominal steam. |
+| Advanced Steam Array | `gtocore:advanced_steam_array` | Holds up to 64 LP/HP solid, liquid or solar boilers; solar mode requires valid sunlight and steam output remains 1.5x. |
+| Advanced Alchemy Cauldron | `gtocore:advanced_alchemy_cauldron` | Chanced inputs are present but not consumed, and chanced outputs always succeed; maintenance is required, thermal hatches are forbidden, and it cannot be used for bathing. |
+| Large Petal Apothecary | `gtocore:large_petal_apothecary` | Supports Mana Garden, Mana Garden Fuel and Large Petal Apothecary modes and proxies Botania petal-apothecary recipes. |
+| ME Input Assembly | `gtocore:me_input_assembly` | Combines an ME item input bus and fluid input hatch with 16 item and 16 fluid configuration slots. |
+| ME Stocking Input Assembly | `gtocore:me_stocking_input_assembly` | Stocks items and fluids from ME; a screwdriver cycles disabled, both, item-only and fluid-only modes. |
+| ME Super Pattern Buffer | `gtocore:me_super_pattern_buffer` | Defaults to `9x6x6=324` slots, configures up to `18x10x10=1800`, and supports bidirectional I/O with per-slot isolation. |
+| ME Super Pattern Buffer Proxy | `gtocore:me_super_pattern_buffer_proxy` | Proxies the Super Pattern Buffer's pattern slots and bidirectional I/O; output forwarding is enabled only when correctly bound to the custom super buffer. |
+| ME Super Wildcard Pattern Buffer | `gtocore:me_super_wildcard_pattern_buffer` | Defaults to one `3x3` page, configures up to `8x8`, retains wildcard search/blacklisting and routes execution to the exact source slot. |
+| Electromagnetic Thermal Control Hatch (part form) | `gtocore:electromagnetic_thermal_control_hatch` | MV multiblock heat part configurable from `0..3600 K`; a normal screwdriver right-click changes it into the standalone machine form. |
+| Electromagnetic Thermal Control Hatch (machine form) | `gtocore:electromagnetic_thermal_control_machine` | MV standalone zero-energy heat source, defaulting to `300 K`, with primary-UI target-temperature control and a configurable heat-output side; a normal screwdriver right-click changes it back into the part form. |
+| Advanced Infinite Intake Hatch | `gtocore:advanced_infinite_intake_hatch` | MV tiered hull plus the GTOCore intake front; `IO.IN` recipe handling with bidirectional external fluid capability, `1,024,000 mB` capacity, selectable air/oxygen/gaseous nitrogen and configurable output. |
+| Ultimate Infinite Intake Hatch | `gtocore:ultimate_infinite_intake_hatch` | IV tiered hull plus the same GTOCore intake front; `IO.IN` recipe handling with bidirectional external fluid capability, `2,147,483,647 mB` capacity and per-tick refill of the selected gas. |
 
-### 模式与多方块机制
+### Modes and multiblock behavior
 
-- 通用蒸汽厂的 15 种模式为：卷弯机、辊压机、线材轧机、织布机、流体固化机、车床、提取机、打包机、解包机、压模器、冲压机床、多辊式轧机、锻造锤、化学浸洗（橡胶泡澡机）和电路组装机。模式页一次最多显示 5 行并支持滚轮。
-- 超维度冶炼炉提供电力高炉和合金冶炼炉两种模式。超维度化工厂只提供大型化学反应釜和聚合反应两种模式，不再单列普通化学反应釜。
-- 超维度冶炼炉与化工厂的并行上限为 `9,007,199,254,740,991`，线程上限为 `2,147,483,647`；两者独立设置并带 `long` 乘积溢出保护，不受线圈容量公式限制。
-- 超维度冶炼炉最多使用 2 个能源或激光输入，必须 1 个维护仓和 1 个消声仓；化工厂最多使用 2 个能源或激光输入、2 个催化剂仓并必须 1 个维护仓。
-- 超维度系列禁止并行仓、加速仓、线程仓和超频仓。结构中的空气/空格位置使用忽略谓词，因此放置普通方块不会触发结构重新检测。
-- 两种蒸汽阵列只接受输入/输出类仓室，已取消预热与冷却；进阶阵列会单独校验太阳能锅炉的集热位置是否可见太阳。
-- 大型花药台的 Botania 代理配方固定为 `16 EU/t`、`100t`，既不消耗也不输出魔力。
+- The Universal Steam Factory has 17 modes: Bender, Rolling, Wiremill, Loom, Fluid Solidification, Lathe, Extractor, Packer, Unpacker, Extruder, Forming Press, Cluster Mill, Forge Hammer, Chemical Bath, Circuit Assembler, Mixer and Centrifuge. Its mode page shows at most five rows and supports scrolling.
+- Electromagnetic thermal control uses two definitions because workable single-block machines and multiblock parts have incompatible inheritance contracts. A normal screwdriver right-click switches hatch and machine forms; Shift+screwdriver does not convert either form. Hatch-to-machine conversion interrupts attached recipes and deliberately destroys hatch items and fluids.
+- The machine form consumes no fuel or electricity and has no alternate supply mode. Both forms share the same primary UI with a translated target-temperature label and a `0..3600 K` input; no current-mode row is added. The machine defaults to `300 K`, and its temperature lock restores the selected condition every server tick. The sidebar provides only heat-output direction and covers.
+- Player input, persisted settings and form transfers use K. The controller-local `HeatHandler` calibration fixes its ambient term to `0 K` and retains a `2.0` heat capacity, so `0 K`, `300 K`, `1800 K`, and `3600 K` write raw values `0`, `600`, `3600`, and `7200` respectively and return the same actual temperatures in K.
+- Normal screwdriver switching reports only the destination form in its action-bar message. Hatch-to-machine conversion still interrupts attached recipes and clears hatch items and fluids.
+- Both definitions reuse the verified white temperature line, `Set the temperature in Kelvin from the UI. Use a screwdriver right-click to switch forms.` The yellow form lines remain unchanged: the part shows `-> Hatch Mode` and the standalone form shows `-> Machine Mode`.
+- Both forms share the user-supplied eight-frame ordinary front overlay and its `.mcmeta` animation definition. The renderer explicitly ignores the co-located legacy `overlay_front_emissive.png`, so the front no longer gains a blue layer while both side thermometers remain visible. The sole thermal crafting recipe is centered `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch`; machine form selection requires a screwdriver after placement.
+- The Advanced Intake generates one second of the selected gas every 20 ticks and requires its old gas to be drained before switching. The Ultimate Intake refills to `2,147,483,647 mB` every tick; changing its filter drains the old gas and immediately fills the new gas when its front is clear. Recipe handling remains `IO.IN`, while the external fluid capability is `IO.BOTH`, so the tank can export without becoming a recipe-output hatch; Shift+screwdriver cannot convert either hatch into a normal export hatch.
+- The start/stop control is the standard lower-left button in the left configurator panel; the filter page contains only air, oxygen and gaseous-nitrogen choices. Generation stops while obstructed or disabled.
+- Both hatches directly reuse the GTOCore `infinite_intake_hatch` front model/overlay with complete upper and lower intake grilles; only the MV/IV tiered hull changes.
+- The standalone `gtohjs:vacuum_cover` cover can be installed directly on an ordinary single-block machine or on a multiblock maintenance hatch. It satisfies vacuum requirements from tier 1 through tier 3, never tier 4, and does not attach to other multiblock controllers or parts. Attaching or removing it refreshes the relevant recipe logic.
+- The Hyperdimensional Smelter exposes Electric Blast Furnace and Alloy Smelter modes. The Hyperdimensional Chemical Factory exposes only Large Chemical Reactor and Polymerization; the redundant normal Chemical Reactor mode was removed.
+- Smelter and Chemical Factory parallelism is capped at `9,007,199,254,740,991`, while threads are capped at `2,147,483,647`. Both are set independently with `long` product-overflow protection and are not limited by a coil-capacity formula.
+- The Smelter accepts up to two energy or laser inputs and requires one maintenance and one muffler hatch. The Chemical Factory accepts up to two energy or laser inputs, up to two catalyst hatches and exactly one maintenance hatch.
+- Hyperdimensional machines forbid parallel, acceleration, thread and overclock hatches. Air/space coordinates use ignored predicates, so ordinary blocks placed there do not retrigger structure validation.
+- Both Steam Arrays accept only input/output hatch families and have no warmup or cooldown. The Advanced Array separately validates that a solar boiler's collector position can see the sun.
+- Botania proxy recipes in the Large Petal Apothecary use `16 EU/t` for `100t` and neither consume nor output mana.
 
-## ME 样板与输出机制
+## ME pattern and output behavior
 
-- ME 输入总成和 ME 库存输入总成同时提供物品、流体和双输入能力；库存总成直接从已连接的 ME 网络提取配方输入。
-- 三个超级样板部件同时提供物品/流体输入、物品/流体输出、双输入和双输出能力。
-- 产物按完整 AE Key 和 `long` 数量直接进入 ME 网络；网络断开或空间不足时持久化保存，并每 20t 自动重试。
-- 每个样板槽只能访问本槽私有电路、物品与流体催化剂，同时允许访问总成级共享催化剂，不能读取其他样板槽的私有催化剂。
-- 超级通配符样板按对象身份和等价样板映射回唯一源槽。来源不唯一或无法确认时拒绝执行，不再回退到 0 号槽，因此不会把一个通配符样板的输入送进另一个槽。
-- 超级样板总成和超级通配符总成的机器类型选择页最多显示 5 行并支持滚轮；机器类型来自所连接主控的配方类型，不是固定清单。
+- The ME Input Assembly and ME Stocking Input Assembly provide item, fluid and dual-input abilities. The stocking assembly extracts recipe inputs directly from its connected ME network.
+- All three super pattern parts provide item/fluid input, item/fluid output, dual-input and dual-output abilities simultaneously.
+- Products enter ME using complete AE keys and `long` quantities. Blocked or offline output persists and retries every 20 ticks.
+- Every pattern slot can access only its own private circuit, item and fluid catalysts plus machine-level shared catalysts. It cannot read another pattern slot's private catalysts.
+- The Super Wildcard buffer maps generated patterns back to one source slot by identity and equivalent-detail lookup. Ambiguous or unknown origins are rejected instead of falling back to slot zero.
+- The Super Pattern Buffer and Super Wildcard Pattern Buffer mode selectors show up to five rows with scrolling. Their machine types are read dynamically from the connected controller rather than from a fixed list.
 
-## 游戏内配置
+## In-game configuration
 
-配置可从“模组 -> GTO HJS -> 配置”打开，并在重启游戏后生效。
+Open the screen through Mods -> GTO HJS -> Config. Changes take effect after restarting the game.
 
-| 配置项 | 默认值 | 可配置范围 |
+| Option | Default | Range |
 | --- | --- | --- |
-| ME 超级样板总成：每行样板数量 | 9 | 1-18 |
-| ME 超级样板总成：每页行数 | 6 | 1-10 |
-| ME 超级样板总成：最大页数 | 6 | 1-10 |
-| ME 超级通配符样板总成：每行样板数量 | 3 | 3-8 |
-| ME 超级通配符样板总成：每页行数 | 3 | 3-8；固定 1 页 |
+| ME Super Pattern Buffer: patterns per row | 9 | 1-18 |
+| ME Super Pattern Buffer: rows per page | 6 | 1-10 |
+| ME Super Pattern Buffer: maximum pages | 6 | 1-10 |
+| ME Super Wildcard Pattern Buffer: patterns per row | 3 | 3-8 |
+| ME Super Wildcard Pattern Buffer: rows per page | 3 | 3-8; always one page |
 
-扩容会按线性槽位顺序保留全部样板和每槽配置；缩容只保留新容量能够容纳的槽位并删除溢出内容。只有 ME 超级样板总成会根据列数动态扩宽 UI，普通 GTO 总成和超级通配符总成保持原生宽度。
+Expansion preserves all patterns and per-slot settings in linear slot order. Shrinking keeps only the range that fits and deletes overflow slots. Only the ME Super Pattern Buffer dynamically widens its UI to fit extra columns; native GTO buffers and the Super Wildcard buffer retain native width.
 
-## 开发工具
+## Development tools
 
-### GTOHJS 配方编辑器
+### GTOHJS Recipe Editor
 
-- 右键 GT 配方机器可打开机器配方编辑器；右键原版工作台可打开 3×3 有序工作台配方编辑器。
-- 机器配方初稿支持 ID、电路配置、EU/t、tick、炉温、MANA/t，以及物品/流体输入输出；通用电路会写为相应等级的电路 Tag。
-- 对已有内容的槽位按中键可修改数量：物品范围 `1..127`，流体范围 `1..2,147,483,647 mB`，不会再直接删除槽中内容。
-- 生成的 Java 初稿写入 `<游戏目录>\gtohjs\recipes`，供开发者审查后加入源码。
+- Right-click a GT recipe machine for a machine-recipe editor, or a vanilla crafting table for a 3x3 shaped-crafting editor.
+- Machine drafts support recipe ID, circuit configuration, EU/t, ticks, blast temperature, MANA/t and item/fluid I/O. Generic circuits are emitted as the matching tier circuit tag.
+- Middle-click a populated slot to change its amount: items support `1..127`, fluids support `1..2,147,483,647 mB`, and the click no longer removes the slot contents.
+- Generated Java drafts are written to `<game directory>\gtohjs\recipes` for developer review before source registration.
 
-### 自定义多方块结构导出工具
+### Custom Multiblock Structure Exporter
 
-- 支持蒸汽或电力机器类型、两点框选，以及控制器、输入、输出、维护、并行、加速替代方块设置。
-- 电力模式可设置能源仓上限 `1..64`、输入/输出仓上限 `-1..64`，并控制维护、并行和加速能力；蒸汽模式强制关闭维护、并行和加速。
-- 单轴最多 32 格、总体积最多 32,768 格；空气导出为空格并使用可忽略谓词，因此结构空位可放置任意方块。
-- 结构按背面 aisle 优先、每层自上而下导出至 `<游戏目录>\gtohjs\structures`。
-- 当前版本已完全取消导出器预览功能，只负责扫描和生成 Java 初稿。
+- Supports steam/electric machine types, two-point selection and controller, input, output, maintenance, parallel and acceleration substitute blocks.
+- Electric mode allows an energy-hatch limit of `1..64`, input/output limits of `-1..64`, and maintenance/parallel/acceleration switches. Steam mode forcibly disables maintenance, parallel and acceleration.
+- Each axis is limited to 32 blocks and total volume to 32,768. Air exports as spaces with ignored predicates, allowing arbitrary blocks in unused structure coordinates.
+- Structures export back-aisle first and top-to-bottom per layer into `<game directory>\gtohjs\structures`.
+- Preview support is completely removed in the current version; this tool only scans and generates Java drafts.
 
-## 新配方类型
+## New recipe types
 
-| 配方类型 | I/O 上限 | 用途 |
+| Recipe type | I/O limits | Purpose |
 | --- | --- | --- |
-| `gtceu:one_stop_rare_earth_processing` | 物品 6 入/18 出；流体 9 入/3 出 | 一站式稀土处理。 |
-| `gtceu:large_petal_apothecary` | 物品 17 入/1 出；无流体 | Botania 花药台配方代理。 |
-| `gtceu:fragment_world_collection` | 物品 3 入/12 出；流体 1 入/1 出 | 世界碎片、原矿、流体与特殊资源采集。 |
+| `gtceu:one_stop_rare_earth_processing` | Items 6 in/18 out; fluids 9 in/3 out | One-stop rare-earth processing. |
+| `gtceu:large_petal_apothecary` | Items 17 in/1 out; no fluids | Botania petal-apothecary proxy. |
+| `gtceu:fragment_world_collection` | Items 3 in/12 out; fluids 1 in/1 out | World fragments, ores, fluids and special-resource collection. |
 
-## 配方内容
+## Recipe content
 
-当前目标整合包客户端验证到 764 条由 GTOHJS 固定注册或运行时代理的配方：
+The current version registers or proxies 768 recipes:
 
-| 类别 | 数量 | 内容 |
+| Category | Count | Content |
 | --- | ---: | --- |
-| 碎片世界采集 | 254 | 15 条世界碎片生成、101 条原矿、130 条流体、7 条特殊资源和 1 条大马士革钢粉。 |
-| 批量锻造锤 | 408 | 对当前全部具有锭与粉形态的材料注册 `64 锭 -> 64 粉`，`16 EU/t`，耗时为 `max(1, 材料质量/2)`。 |
-| Botania 花药台代理 | 71 | 转换为大型花药台配方，固定 `16 EU/t`、`100t`，无魔力输入输出。 |
-| 工作台有序配方 | 18 | 最终 ID 使用 `gtohjs:shaped/<path>`。 |
-| 化学反应釜铂族污泥 | 4 | 黝铜矿、辉铜矿、斑铜矿和硫砷铜矿处理。 |
-| 铂族污泥电解 | 1 | 36 污泥粉输出铂 4、钯 4、钌 4、铱 4、锇 2、铑 3，`2048 EU/t`、`1000t`。 |
-| 一站式稀土处理 | 3 | 独居石、氟碳铈矿和稀土氧化物分离，均为 `1920 EU/t`。 |
-| ME 输入总成装配 | 2 | 普通总成 `480 EU/t, 300t`；库存总成 `30720 EU/t, 300t`。 |
-| 导入机器制造 | 3 | 大型花药台装配机配方，以及超维度化工厂、超维度冶炼炉装配线配方；后两者使用 ZPM 电路 Tag。 |
+| Fragment World Collection | 254 | 15 world-fragment conversions, 101 ore recipes, 130 fluid recipes, seven special-resource recipes and one Damascus steel dust recipe. |
+| Bulk Forge Hammer | 408 | Registers `64 ingots -> 64 dust` for every currently loaded material with ingot and dust forms, at `16 EU/t` for `max(1, material mass/2)`. |
+| Botania Petal Apothecary proxy | 71 | Converts to Large Petal Apothecary recipes at `16 EU/t`, `100t`, with no mana I/O. |
+| Shaped crafting | 22 | Final IDs use `gtohjs:shaped/<path>`. |
+| Chemical Reactor platinum-group sludge | 4 | Tetrahedrite, chalcocite, bornite and cooperite processing. |
+| Platinum-group sludge electrolysis | 1 | 36 sludge dust produces 4 platinum, 4 palladium, 4 ruthenium, 4 iridium, 2 osmium and 3 rhodium at `2048 EU/t` for `1000t`. |
+| One-stop rare-earth processing | 3 | Monazite, bastnasite and rare-earth oxide separation recipes at `1920 EU/t`. |
+| ME input assembly crafting | 2 | Normal assembly at `480 EU/t, 300t`; stocking assembly at `30720 EU/t, 300t`. |
+| Imported machine crafting | 3 | Large Petal Apothecary assembler recipe plus assembly-line recipes for the Hyperdimensional Chemical Factory and Smelter; the latter two use a ZPM circuit tag. |
 
-碎片采集配方排除了 GTO 中不存在的三种晶体概率输出，并把缺失的纯钛钻头映射为 `gtocore:titanium_ti64_drill_head`。大型碎片采集器没有流体仓位，因此流体采集配方由单方块采集器运行。
+The Fragment World Collection set omits three probabilistic crystal outputs unavailable in GTO and maps the missing pure-titanium drill head to `gtocore:titanium_ti64_drill_head`. The large collector has no fluid hatch positions, so fluid collection recipes run in the single-block collector.
 
-18 条工作台配方分别用于：整体青铜框架、一站式稀土处理厂、通用蒸汽厂、高级炼金锅、进阶发电阵列、蒸汽阵列、进阶蒸汽阵列、福鲁伊克斯魔力池、LV 机器外壳、MV 机器外壳、超维度锻炉、超维度蒸汽熔炉、碎片世界采集器兼容配方、大型碎片世界采集器、ULV 碎片世界采集器、ME 超级样板总成、ME 超级样板总成镜像和 ME 超级通配符样板总成。
+The 22 shaped recipes produce: Integral Bronze Framework, One-Stop Rare Earth Processing Plant, Universal Steam Factory, Advanced Alchemy Cauldron, Advanced Generator Array, Steam Array, Advanced Steam Array, Fluix Mana Pool, LV Machine Hull, MV Machine Hull, Hyperdimensional Forge, Hyperdimensional Steam Furnace, the Fragment World Collection compatibility entry, Large Fragment World Collection Machine, ULV Fragment World Collection Machine, ME Super Pattern Buffer, its Proxy, the ME Super Wildcard Pattern Buffer, the centered `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch` recipe, Advanced Infinite Intake Hatch, Ultimate Infinite Intake Hatch and Vacuum Cover. The retained final IDs are `gtohjs:shaped/electromagnetic_thermal_control_hatch`, `gtohjs:shaped/advanced_infinite_intake_hatch`, `gtohjs:shaped/ultimate_infinite_intake_hatch` and `gtohjs:shaped/vacuum_cover`.
 
-## 兼容与文档范围
+## Compatibility and documentation scope
 
-- 机器和配方注册使用 GTO 原生生命周期，并在加载完成后校验注册表、配方表、结构和能力。
-- 样板网格、动态 UI 宽度、模式滚轮、代理输出和隔离修复只作用于对应的 GTOHJS 机器，不改变普通 GTO 样板总成。
-- 大型花药台会向 GTO 客户端配方缓存同步运行时代理结果，以便显示 71 条配方；项目没有修改 EMI 源文件。
-- 当前清洁源码包包含 `docs` 下的全部开发文档、注册模板、项目规则与索引。公开 Git 镜像是否包含内部开发文档由发布操作单独决定。
-- 当前源码不包含自定义车床、大型自定义切割机、终级终端或导出器预览功能；历史遗留翻译键不代表物品已经注册。
+- Machine and recipe registration follows GTO's native lifecycle and validates registry identity, recipes, structures and abilities after loading.
+- Pattern grids, dynamic UI width, scrolling mode selectors, proxy output and isolation fixes are limited to their matching GTOHJS machines and do not alter native GTO pattern buffers.
+- The Large Petal Apothecary synchronizes its 71 runtime proxy recipes into GTO's client recipe cache for display. No EMI source file is modified.
+- The current clean source bundle includes all development documents under `docs`, the registration template, project rules and index. Whether a public Git mirror contains internal development documents is decided separately during publishing.
+- The current source does not contain the removed Custom Lathe, Large Custom Cutter, Ultimate Terminal or exporter preview. Historical translation keys do not register items.
 
-## 许可证
+## 许可与第三方声明
 
-项目源代码使用 [LGPL-3.0-only](LICENSE) 许可证。GTOHJS 拥有版权的原创材质与任务内容使用 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International（CC BY-NC-SA 4.0）](LICENSE_ASSETS.md) 许可证。第三方素材不因本项目的内容许可而重新授权，其来源和上游许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+源代码使用 LGPL-3.0-only 许可证。GTOHJS 原创材质、艺术作品和任务内容使用 CC BY-NC-SA 4.0 许可证；第三方资源不重新授权，继续遵循各自上游项目的许可条款。
+
+### 原创材质与任务内容许可 / Asset and quest content license
+
+SPDX identifier: `CC-BY-NC-SA-4.0`
+
+Except for the third-party content listed in `the third-party notices section below`, original textures, artwork, and quest content owned by GTOHJS contributors are licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+You may share and adapt this content subject to attribution, non-commercial use, and ShareAlike requirements. Attribution should name `GTO HJS contributors` and link to the project source page from which the content was obtained. The [CC BY-NC-SA 4.0 Legal Code](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) controls if this summary differs from the license.
+
+This license does not apply to Java, JavaScript, JSON, Gradle scripts, or other program source code; program source code is licensed under `LGPL-3.0-only` in the root `LICENSE` file. It also does not relicense third-party content. See `the third-party notices section below` for third-party asset provenance and applicable upstream terms.
+
+### 第三方资源声明 / Third-party asset notices
+
+Original GTOHJS textures and quest content are licensed under `CC-BY-NC-SA-4.0` as described in `the license section above`. GTOHJS also includes assets copied or adapted from other mods. Those files are excluded from the GTOHJS content license and remain governed by their upstream terms. This notice records their provenance; it does not replace or expand the upstream license terms.
+
+#### ExtendedAE recipe editor icon
+
+- GTOHJS asset: `assets/gtohjs/textures/item/recipe_editor.png`
+- Upstream asset: `assets/expatternprovider/textures/item/pattern_modifier.png`
+- Upstream project: [ExtendedAE](https://github.com/GlodBlock/ExtendedAE), version 1.4.17
+- Relationship: byte-for-byte copy. GTOCore 0.5.6-beta also points its recipe editor item model at this upstream asset.
+- License record: the inspected ExtendedAE Forge artifact declares `LGPL-3.0` in `META-INF/mods.toml`.
+
+#### GTOCore integral bronze framework
+
+- GTOHJS asset: `assets/gtohjs/textures/block/casings/integral_bronze_framework.png`
+- Upstream asset: `assets/gtocore/textures/block/casings/integral_framework/ulv.png`
+- Upstream project: [GTOCore](https://github.com/GregTech-Odyssey/GTOCore), version 0.5.6-beta
+- Relationship: recolored/adapted texture for the GTOHJS integral bronze framework.
+- License record: the inspected GTOCore source repository includes the GNU Lesser General Public License version 3 text in its `LICENSE` file.
+
+#### GTOCore and GTCEu configurable hatch and cover overlays
+
+- GTOHJS assets: `assets/gtohjs/textures/block/machines/electromagnetic_thermal_control_hatch/*`, `assets/gtohjs/textures/block/machines/advanced_infinite_intake_hatch/*` and `assets/gtohjs/textures/block/cover/vacuum_cover.png`.
+- Upstream assets: GTCEu IV parallel hatch, HV item magnet and advanced item detector cover textures; GTOCore MV accelerate hatch, infinite-intake hatch and high-pressure steam vacuum-pump textures.
+- Upstream projects: [GregTech CEu Modern](https://github.com/GregTechCEu/GregTech-Modern) and [GTOCore](https://github.com/GregTech-Odyssey/GTOCore), GTO 0.5.6-beta dependency set.
+- Relationship: deterministic cropped and recolored composite overlays. The electromagnetic hatch retains the IV parallel-hatch center and HV magnet upper half, with the MV accelerate-hatch blue animation used as the emissive magnetic field. The intake hatch retains the infinite-intake louver pattern in its upper half. The Vacuum Cover combines the detector-cover base with the vacuum-pump side glass, then adds a blue border and `#` mark.
+- License record: the inspected GTOCore source repository includes the GNU Lesser General Public License version 3 text in its `LICENSE` file. GTCEu assets remain governed by their upstream project license.
+
+#### GTLCore world fragments and collector overlays
+
+- GTOHJS assets: `assets/gtohjs/textures/item/world_fragments_*.png` and `assets/gtohjs/textures/block/machines/fragment_world_collection_machine/*`
+- Upstream assets: the corresponding `assets/gtlcore/textures/item/world_fragments_*` and `assets/gtceu/textures/block/machines/fragment_world_collection_machine/*` files
+- Upstream project: [GTLCore](https://github.com/nutant233/GTLCore), version `1.2.2.9-fix4`, distributed with GregTech Leisure 1.4.5.1
+- Relationship: texture copies. The GTOHJS item model JSON files only change the texture namespace from `gtlcore` to `gtohjs`.
+- License record: the inspected GTLCore artifact declares `LGPLv3.0` in `META-INF/mods.toml`.
+
+Copyright remains with the respective upstream contributors.
+

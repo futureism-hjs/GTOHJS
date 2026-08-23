@@ -990,6 +990,81 @@ function initializeCoreMod() {
                 return method;
             }
         },
+        'gtohjs_advanced_generator_array_fixed_multiplier': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.generator.GeneratorArrayMachine',
+                'methodName': 'getRealRecipe',
+                'methodDesc': '(Lcom/gregtechceu/gtceu/api/recipe/handler/RecipeHandlerUnit;Lcom/gregtechceu/gtceu/api/recipe/GTRecipe;)Lcom/gregtechceu/gtceu/api/recipe/GTRecipe;'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var matched = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.GETSTATIC &&
+                        node.owner === 'com/gtocore/common/machine/multiblock/generator/GeneratorArrayMachine' &&
+                        node.name === 'multiply' && node.desc === 'D') {
+                        method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 0));
+                        method.instructions.insert(node, ASMAPI.buildMethodCall(
+                            'com/gtohjs/machine/AdvancedGeneratorArraySupport',
+                            'resolveMultiplier',
+                            '(Lcom/gtocore/common/machine/multiblock/generator/GeneratorArrayMachine;D)D',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        matched++;
+                    }
+                }
+                if (matched !== 1) {
+                    throw new Error('GTOHJS expected one GeneratorArrayMachine.multiply read, found ' + matched);
+                }
+                if (method.maxStack < 7) {
+                    method.maxStack = 7;
+                }
+                ASMAPI.log('INFO', 'GTOHJS injected the advanced generator array fixed 2x multiplier');
+                return method;
+            }
+        },
+        'gtohjs_advanced_generator_array_zero_wireless_loss': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.generator.GeneratorArrayMachine',
+                'methodName': 'handleTickRecipe',
+                'methodDesc': '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipe;)Z'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var setLossCalls = 0;
+                var patched = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.INVOKEVIRTUAL &&
+                        node.owner === 'com/gtolib/api/wireless/ExtendWirelessEnergyContainer' &&
+                        node.name === 'setLoss' && node.desc === '(I)V') {
+                        setLossCalls++;
+                        if (setLossCalls === 1) {
+                            method.instructions.insertBefore(node, new VarInsnNode(Opcodes.ALOAD, 0));
+                            method.instructions.insertBefore(node, ASMAPI.buildMethodCall(
+                                'com/gtohjs/machine/AdvancedGeneratorArraySupport',
+                                'resolveAppliedWirelessLoss',
+                                '(ILcom/gtocore/common/machine/multiblock/generator/GeneratorArrayMachine;)I',
+                                ASMAPI.MethodType.STATIC
+                            ));
+                            patched++;
+                        }
+                    }
+                }
+                if (setLossCalls !== 2 || patched !== 1) {
+                    throw new Error('GTOHJS expected two GeneratorArrayMachine wireless setLoss calls and patched exactly one, found calls=' +
+                        setLossCalls + ', patched=' + patched);
+                }
+                if (method.maxStack < 5) {
+                    method.maxStack = 5;
+                }
+                ASMAPI.log('INFO', 'GTOHJS injected zero-loss wireless transfer for the advanced generator array');
+                return method;
+            }
+        },
         'gtohjs_after_gto_machines_clinit': {
             'target': {
                 'type': 'METHOD',
@@ -1071,6 +1146,12 @@ function initializeCoreMod() {
                         ));
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
                             'com/gtohjs/bootstrap/FragmentWorldCollectionMachineRegistration',
+                            'register',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/bootstrap/ThermalAndIntakeHatchRegistration',
                             'register',
                             '()V',
                             ASMAPI.MethodType.STATIC

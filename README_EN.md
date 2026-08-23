@@ -3,11 +3,11 @@
 > [!WARNING]
 > This project contains code, documentation, textures and quest content generated or produced with AI assistance. They may contain errors, security issues, or incompatibilities with upstream APIs and licenses. Review and test them before use, modification, or redistribution; no accuracy, completeness, or fitness is guaranteed.
 
-[中文](README_ZH.md) | [Full historical changelog](CHANGELOG.md) | [2.0-per1 to 2.0-alpha changelog](CHANGELOG_2.0_PER1_TO_2.0_ALPHA.md)
+[Legacy README path, now English](README_ZH.md) | [Development documentation](docs/README_ZH_EN.md) | [Bilingual changelog](CHANGELOG.md)
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current release is `2.0-alpha-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, 18 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
+The current source version `2.3-alpha-for-gtocore-0.5.6-beta` completed a network-enabled Java 21 clean build and was deployed for user client verification; the preceding clean-build baseline is `2.2-alpha-for-gtocore-0.5.6-beta`. The source registers 23 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other. The 2.3-alpha line does not require an additional API Mod.
 
 ## Runtime and development dependencies
 
@@ -30,14 +30,14 @@ After closing the client, place the GTOHJS JAR in the `mods` directory of a Mine
 Use Java 21 and an online Gradle build by default:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-21'
-.\gradlew.bat clean build --stacktrace
+$env:JAVA_HOME = '<JDK 21 path>'
+.\gradlew.bat build --stacktrace
 ```
 
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-2.0-alpha-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.
@@ -50,6 +50,7 @@ These are all non-machine entries currently registered in the GTOHJS namespace.
 | --- | --- | --- |
 | GTOHJS Recipe Editor | `gtohjs:recipe_editor` | Generates Java recipe drafts from GT recipe machines or a vanilla crafting table. |
 | Custom Multiblock Structure Exporter | `gtohjs:multiblock_structure_generator` | Selects a cuboid and exports a GTO multiblock Java draft. |
+| Vacuum Cover | `gtohjs:vacuum_cover` | Passively satisfies vacuum tiers 1-3 when installed on a single-block machine or a multiblock maintenance hatch. |
 | Basic AE Component Pack | `gtohjs:basic_ae_component_pack` | Preloads 123 basic AE item types. |
 | AE Machine Component Pack | `gtohjs:ae_machine_component_pack` | Preloads 42 AE/GTO machine component types. |
 | Advanced AE Hatch Component Pack | `gtohjs:advanced_ae_hatch_component_pack` | Preloads 21 advanced AE hatches and parts. |
@@ -80,19 +81,19 @@ These are all non-machine entries currently registered in the GTOHJS namespace.
 
 ## All machines and multiblock parts
 
-All 18 definitions below are registered by GTOHJS in the `gtocore` namespace.
+All 22 definitions below are registered by GTOHJS in the `gtocore` namespace.
 
 | Name | Registry ID | Core behavior |
 | --- | --- | --- |
 | Fragment World Collection Machine | `gtocore:ulv_fragment_world_collection_machine` | ULV single-block collector that runs Fragment World Collection recipes with tiered overclocking. |
 | Large Fragment World Collection Machine | `gtocore:large_fragment_world_collection_machine` | Item I/O only; uses 256x energy and 0.25x duration, with left-tab parallelism from `1..9,007,199,254,740,991`. |
-| Universal Steam Factory | `gtocore:universal_steam_factory` | Steam-powered 15-mode factory accepting MV-and-below recipes and locking final duration to 1t. |
+| Universal Steam Factory | `gtocore:universal_steam_factory` | Steam-powered 17-mode factory accepting MV-and-below recipes and locking final duration to 1t. |
 | One-Stop Rare Earth Processing Plant | `gtocore:one_stop_rare_earth_processing_plant` | Runs its dedicated recipe type with 6 item/9 fluid inputs, 18 item/3 fluid outputs, parallel and acceleration support, and required maintenance. |
 | Hyperdimensional Forge | `gtocore:hyperdimensional_forge` | Requires no energy, runs only primitive blast-furnace recipes, uses fixed 524,288 parallelism and forces 1t. |
 | Hyperdimensional Steam Furnace | `gtocore:hyperdimensional_steam_furnace` | Steam-powered furnace recipes with fixed 524,288 parallelism and 1t duration; no steam vent hatch is required. |
 | Hyperdimensional Smelter | `gtocore:hyperdimensional_smelter` | Runs electric blast-furnace or alloy-smelter recipes after meeting recipe temperature; parallelism and threads are independently configurable and recipes are forced to 1t. |
 | Hyperdimensional Chemical Factory | `gtocore:hyperdimensional_chemical_factory` | Runs large chemical-reactor or polymerization recipes, needs no external heat source, uses vacuum tier 4, exposes custom parallelism/threads and forces 1t. |
-| Advanced Generator Array | `gtocore:advanced_generator_array` | Holds up to 16 supported generators, including steam turbine, combustion/gas/semi-fluid, rocket-engine and naquadah-reactor families. |
+| Advanced Generator Array | `gtocore:advanced_generator_array` | Holds up to 16 supported generators, including steam turbine, combustion/gas/semi-fluid, rocket-engine and naquadah-reactor families; its generation multiplier is fixed at 2x and wireless-grid transmission loss is 0. |
 | Steam Array | `gtocore:steam_array` | Holds up to 16 LP solid or liquid boilers, has no warmup and produces 1.5x nominal steam. |
 | Advanced Steam Array | `gtocore:advanced_steam_array` | Holds up to 64 LP/HP solid, liquid or solar boilers; solar mode requires valid sunlight and steam output remains 1.5x. |
 | Advanced Alchemy Cauldron | `gtocore:advanced_alchemy_cauldron` | Chanced inputs are present but not consumed, and chanced outputs always succeed; maintenance is required, thermal hatches are forbidden, and it cannot be used for bathing. |
@@ -102,10 +103,24 @@ All 18 definitions below are registered by GTOHJS in the `gtocore` namespace.
 | ME Super Pattern Buffer | `gtocore:me_super_pattern_buffer` | Defaults to `9x6x6=324` slots, configures up to `18x10x10=1800`, and supports bidirectional I/O with per-slot isolation. |
 | ME Super Pattern Buffer Proxy | `gtocore:me_super_pattern_buffer_proxy` | Proxies the Super Pattern Buffer's pattern slots and bidirectional I/O; output forwarding is enabled only when correctly bound to the custom super buffer. |
 | ME Super Wildcard Pattern Buffer | `gtocore:me_super_wildcard_pattern_buffer` | Defaults to one `3x3` page, configures up to `8x8`, retains wildcard search/blacklisting and routes execution to the exact source slot. |
+| Electromagnetic Thermal Control Hatch (part form) | `gtocore:electromagnetic_thermal_control_hatch` | MV multiblock heat part configurable from `0..3600 K`; a normal screwdriver right-click changes it into the standalone machine form. |
+| Electromagnetic Thermal Control Hatch (machine form) | `gtocore:electromagnetic_thermal_control_machine` | MV standalone zero-energy heat source, defaulting to `300 K`, with primary-UI target-temperature control and a configurable heat-output side; a normal screwdriver right-click changes it back into the part form. |
+| Advanced Infinite Intake Hatch | `gtocore:advanced_infinite_intake_hatch` | MV tiered hull plus the GTOCore intake front; `IO.IN` recipe handling with bidirectional external fluid capability, `1,024,000 mB` capacity, selectable air/oxygen/gaseous nitrogen and configurable output. |
+| Ultimate Infinite Intake Hatch | `gtocore:ultimate_infinite_intake_hatch` | IV tiered hull plus the same GTOCore intake front; `IO.IN` recipe handling with bidirectional external fluid capability, `2,147,483,647 mB` capacity and per-tick refill of the selected gas. |
 
 ### Modes and multiblock behavior
 
-- The Universal Steam Factory has 15 modes: Bender, Rolling, Wiremill, Loom, Fluid Solidification, Lathe, Extractor, Packer, Unpacker, Extruder, Forming Press, Cluster Mill, Forge Hammer, Chemical Bath and Circuit Assembler. Its mode page shows at most five rows and supports scrolling.
+- The Universal Steam Factory has 17 modes: Bender, Rolling, Wiremill, Loom, Fluid Solidification, Lathe, Extractor, Packer, Unpacker, Extruder, Forming Press, Cluster Mill, Forge Hammer, Chemical Bath, Circuit Assembler, Mixer and Centrifuge. Its mode page shows at most five rows and supports scrolling.
+- Electromagnetic thermal control uses two definitions because workable single-block machines and multiblock parts have incompatible inheritance contracts. A normal screwdriver right-click switches hatch and machine forms; Shift+screwdriver does not convert either form. Hatch-to-machine conversion interrupts attached recipes and deliberately destroys hatch items and fluids.
+- The machine form consumes no fuel or electricity and has no alternate supply mode. Both forms share the same primary UI with a translated target-temperature label and a `0..3600 K` input; no current-mode row is added. The machine defaults to `300 K`, and its temperature lock restores the selected condition every server tick. The sidebar provides only heat-output direction and covers.
+- Player input, persisted settings and form transfers use K. The controller-local `HeatHandler` calibration fixes its ambient term to `0 K` and retains a `2.0` heat capacity, so `0 K`, `300 K`, `1800 K`, and `3600 K` write raw values `0`, `600`, `3600`, and `7200` respectively and return the same actual temperatures in K.
+- Normal screwdriver switching reports only the destination form in its action-bar message. Hatch-to-machine conversion still interrupts attached recipes and clears hatch items and fluids.
+- Both definitions reuse the verified white temperature line, `Set the temperature in Kelvin from the UI. Use a screwdriver right-click to switch forms.` The yellow form lines remain unchanged: the part shows `-> Hatch Mode` and the standalone form shows `-> Machine Mode`.
+- Both forms share the user-supplied eight-frame ordinary front overlay and its `.mcmeta` animation definition. The renderer explicitly ignores the co-located legacy `overlay_front_emissive.png`, so the front no longer gains a blue layer while both side thermometers remain visible. The sole thermal crafting recipe is centered `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch`; machine form selection requires a screwdriver after placement.
+- The Advanced Intake generates one second of the selected gas every 20 ticks and requires its old gas to be drained before switching. The Ultimate Intake refills to `2,147,483,647 mB` every tick; changing its filter drains the old gas and immediately fills the new gas when its front is clear. Recipe handling remains `IO.IN`, while the external fluid capability is `IO.BOTH`, so the tank can export without becoming a recipe-output hatch; Shift+screwdriver cannot convert either hatch into a normal export hatch.
+- The start/stop control is the standard lower-left button in the left configurator panel; the filter page contains only air, oxygen and gaseous-nitrogen choices. Generation stops while obstructed or disabled.
+- Both hatches directly reuse the GTOCore `infinite_intake_hatch` front model/overlay with complete upper and lower intake grilles; only the MV/IV tiered hull changes.
+- The standalone `gtohjs:vacuum_cover` cover can be installed directly on an ordinary single-block machine or on a multiblock maintenance hatch. It satisfies vacuum requirements from tier 1 through tier 3, never tier 4, and does not attach to other multiblock controllers or parts. Attaching or removing it refreshes the relevant recipe logic.
 - The Hyperdimensional Smelter exposes Electric Blast Furnace and Alloy Smelter modes. The Hyperdimensional Chemical Factory exposes only Large Chemical Reactor and Polymerization; the redundant normal Chemical Reactor mode was removed.
 - Smelter and Chemical Factory parallelism is capped at `9,007,199,254,740,991`, while threads are capped at `2,147,483,647`. Both are set independently with `long` product-overflow protection and are not limited by a coil-capacity formula.
 - The Smelter accepts up to two energy or laser inputs and requires one maintenance and one muffler hatch. The Chemical Factory accepts up to two energy or laser inputs, up to two catalyst hatches and exactly one maintenance hatch.
@@ -163,14 +178,14 @@ Expansion preserves all patterns and per-slot settings in linear slot order. Shr
 
 ## Recipe content
 
-The current target-pack client validates 764 recipes registered directly by GTOHJS or created by its runtime proxies:
+The current version registers or proxies 768 recipes:
 
 | Category | Count | Content |
 | --- | ---: | --- |
 | Fragment World Collection | 254 | 15 world-fragment conversions, 101 ore recipes, 130 fluid recipes, seven special-resource recipes and one Damascus steel dust recipe. |
 | Bulk Forge Hammer | 408 | Registers `64 ingots -> 64 dust` for every currently loaded material with ingot and dust forms, at `16 EU/t` for `max(1, material mass/2)`. |
 | Botania Petal Apothecary proxy | 71 | Converts to Large Petal Apothecary recipes at `16 EU/t`, `100t`, with no mana I/O. |
-| Shaped crafting | 18 | Final IDs use `gtohjs:shaped/<path>`. |
+| Shaped crafting | 22 | Final IDs use `gtohjs:shaped/<path>`. |
 | Chemical Reactor platinum-group sludge | 4 | Tetrahedrite, chalcocite, bornite and cooperite processing. |
 | Platinum-group sludge electrolysis | 1 | 36 sludge dust produces 4 platinum, 4 palladium, 4 ruthenium, 4 iridium, 2 osmium and 3 rhodium at `2048 EU/t` for `1000t`. |
 | One-stop rare-earth processing | 3 | Monazite, bastnasite and rare-earth oxide separation recipes at `1920 EU/t`. |
@@ -179,7 +194,7 @@ The current target-pack client validates 764 recipes registered directly by GTOH
 
 The Fragment World Collection set omits three probabilistic crystal outputs unavailable in GTO and maps the missing pure-titanium drill head to `gtocore:titanium_ti64_drill_head`. The large collector has no fluid hatch positions, so fluid collection recipes run in the single-block collector.
 
-The 18 shaped recipes produce: Integral Bronze Framework, One-Stop Rare Earth Processing Plant, Universal Steam Factory, Advanced Alchemy Cauldron, Advanced Generator Array, Steam Array, Advanced Steam Array, Fluix Mana Pool, LV Machine Hull, MV Machine Hull, Hyperdimensional Forge, Hyperdimensional Steam Furnace, the Fragment World Collection compatibility entry, Large Fragment World Collection Machine, ULV Fragment World Collection Machine, ME Super Pattern Buffer, its Proxy and the ME Super Wildcard Pattern Buffer.
+The 22 shaped recipes produce: Integral Bronze Framework, One-Stop Rare Earth Processing Plant, Universal Steam Factory, Advanced Alchemy Cauldron, Advanced Generator Array, Steam Array, Advanced Steam Array, Fluix Mana Pool, LV Machine Hull, MV Machine Hull, Hyperdimensional Forge, Hyperdimensional Steam Furnace, the Fragment World Collection compatibility entry, Large Fragment World Collection Machine, ULV Fragment World Collection Machine, ME Super Pattern Buffer, its Proxy, the ME Super Wildcard Pattern Buffer, the centered `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch` recipe, Advanced Infinite Intake Hatch, Ultimate Infinite Intake Hatch and Vacuum Cover. The retained final IDs are `gtohjs:shaped/electromagnetic_thermal_control_hatch`, `gtohjs:shaped/advanced_infinite_intake_hatch`, `gtohjs:shaped/ultimate_infinite_intake_hatch` and `gtohjs:shaped/vacuum_cover`.
 
 ## Compatibility and documentation scope
 
@@ -189,6 +204,55 @@ The 18 shaped recipes produce: Integral Bronze Framework, One-Stop Rare Earth Pr
 - The current clean source bundle includes all development documents under `docs`, the registration template, project rules and index. Whether a public Git mirror contains internal development documents is decided separately during publishing.
 - The current source does not contain the removed Custom Lathe, Large Custom Cutter, Ultimate Terminal or exporter preview. Historical translation keys do not register items.
 
-## License
+## License and Third-Party Notices
 
-The source code is licensed under [LGPL-3.0-only](LICENSE). Original textures and quest content owned by GTOHJS contributors are licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE_ASSETS.md). Third-party assets are not relicensed; their provenance and upstream terms are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Source code is licensed under LGPL-3.0-only. Original GTOHJS textures, artwork and quest content are licensed under CC BY-NC-SA 4.0. Third-party assets are not relicensed and remain governed by their upstream terms.
+
+### Asset and quest content license
+
+SPDX identifier: `CC-BY-NC-SA-4.0`
+
+Except for the third-party content listed in `the third-party notices section below`, original textures, artwork, and quest content owned by GTOHJS contributors are licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+You may share and adapt this content subject to attribution, non-commercial use, and ShareAlike requirements. Attribution should name `GTO HJS contributors` and link to the project source page from which the content was obtained. The [CC BY-NC-SA 4.0 Legal Code](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) controls if this summary differs from the license.
+
+This license does not apply to Java, JavaScript, JSON, Gradle scripts, or other program source code; program source code is licensed under `LGPL-3.0-only` in the root `LICENSE` file. It also does not relicense third-party content. See `the third-party notices section below` for third-party asset provenance and applicable upstream terms.
+
+### Third-party asset notices
+
+Original GTOHJS textures and quest content are licensed under `CC-BY-NC-SA-4.0` as described in `the license section above`. GTOHJS also includes assets copied or adapted from other mods. Those files are excluded from the GTOHJS content license and remain governed by their upstream terms. This notice records their provenance; it does not replace or expand the upstream license terms.
+
+#### ExtendedAE recipe editor icon
+
+- GTOHJS asset: `assets/gtohjs/textures/item/recipe_editor.png`
+- Upstream asset: `assets/expatternprovider/textures/item/pattern_modifier.png`
+- Upstream project: [ExtendedAE](https://github.com/GlodBlock/ExtendedAE), version 1.4.17
+- Relationship: byte-for-byte copy. GTOCore 0.5.6-beta also points its recipe editor item model at this upstream asset.
+- License record: the inspected ExtendedAE Forge artifact declares `LGPL-3.0` in `META-INF/mods.toml`.
+
+#### GTOCore integral bronze framework
+
+- GTOHJS asset: `assets/gtohjs/textures/block/casings/integral_bronze_framework.png`
+- Upstream asset: `assets/gtocore/textures/block/casings/integral_framework/ulv.png`
+- Upstream project: [GTOCore](https://github.com/GregTech-Odyssey/GTOCore), version 0.5.6-beta
+- Relationship: recolored/adapted texture for the GTOHJS integral bronze framework.
+- License record: the inspected GTOCore source repository includes the GNU Lesser General Public License version 3 text in its `LICENSE` file.
+
+#### GTOCore and GTCEu configurable hatch and cover overlays
+
+- GTOHJS assets: `assets/gtohjs/textures/block/machines/electromagnetic_thermal_control_hatch/*`, `assets/gtohjs/textures/block/machines/advanced_infinite_intake_hatch/*` and `assets/gtohjs/textures/block/cover/vacuum_cover.png`.
+- Upstream assets: GTCEu IV parallel hatch, HV item magnet and advanced item detector cover textures; GTOCore MV accelerate hatch, infinite-intake hatch and high-pressure steam vacuum-pump textures.
+- Upstream projects: [GregTech CEu Modern](https://github.com/GregTechCEu/GregTech-Modern) and [GTOCore](https://github.com/GregTech-Odyssey/GTOCore), GTO 0.5.6-beta dependency set.
+- Relationship: deterministic cropped and recolored composite overlays. The electromagnetic hatch retains the IV parallel-hatch center and HV magnet upper half, with the MV accelerate-hatch blue animation used as the emissive magnetic field. The intake hatch retains the infinite-intake louver pattern in its upper half. The Vacuum Cover combines the detector-cover base with the vacuum-pump side glass, then adds a blue border and `#` mark.
+- License record: the inspected GTOCore source repository includes the GNU Lesser General Public License version 3 text in its `LICENSE` file. GTCEu assets remain governed by their upstream project license.
+
+#### GTLCore world fragments and collector overlays
+
+- GTOHJS assets: `assets/gtohjs/textures/item/world_fragments_*.png` and `assets/gtohjs/textures/block/machines/fragment_world_collection_machine/*`
+- Upstream assets: the corresponding `assets/gtlcore/textures/item/world_fragments_*` and `assets/gtceu/textures/block/machines/fragment_world_collection_machine/*` files
+- Upstream project: [GTLCore](https://github.com/nutant233/GTLCore), version `1.2.2.9-fix4`, distributed with GregTech Leisure 1.4.5.1
+- Relationship: texture copies. The GTOHJS item model JSON files only change the texture namespace from `gtlcore` to `gtohjs`.
+- License record: the inspected GTLCore artifact declares `LGPLv3.0` in `META-INF/mods.toml`.
+
+Copyright remains with the respective upstream contributors.
+

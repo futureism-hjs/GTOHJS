@@ -1,10 +1,8 @@
-# 配方页（RecipeType）注册 / Recipe Type Page Registration
+# Recipe Type Page Registration
 
-## 中文
+A "new recipe page" is a new GTO `RecipeType`. It defines the machine UI's item and fluid slots, progress bar, sound, recipe group, and EMI category. Do not hand-write an EMI page.
 
-“新配方页”就是新的 GTO `RecipeType`：它定义机器 UI 的物品/流体槽位、进度条、声音、配方分组和 EMI 分类。不要手写 EMI 页面。
-
-### Java 模板
+## Java template
 
 ```java
 public final class ExampleRecipeTypeRegistration {
@@ -22,7 +20,7 @@ public final class ExampleRecipeTypeRegistration {
             return;
         }
         definition = RecipeTypeRegisterUtils.register(
-                PATH, "示例处理", GTRecipeTypes.MULTIBLOCK)
+                PATH, "Example Processing", GTRecipeTypes.MULTIBLOCK)
             .setEUIO(IO.IN)
             .setMaxIOSize(6, 18, 9, 3)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE,
@@ -40,42 +38,34 @@ public final class ExampleRecipeTypeRegistration {
 }
 ```
 
-`setMaxIOSize(itemIn, itemOut, fluidIn, fluidOut)` 决定配方页和机器 UI 的最大槽位。通用稀土页当前是 6/18/9/3；“每行 3 个”属于 UI 布局实现，不能用错误的槽位顺序代替。
+`setMaxIOSize(itemIn, itemOut, fluidIn, fluidOut)` determines the maximum slots on the recipe page and machine UI. The current universal rare-earth page uses 6/18/9/3. "Three per row" belongs to the UI layout implementation and cannot be represented by an incorrect slot order.
 
-### 注册窗口和机器引用
+## Registration window and machine reference
 
-在 `com.gtocore.common.data.GTORecipeTypes.<clinit>()V` 的 `RETURN` 前注入 `register()`。之后机器 builder 使用同一个 `RecipeType` 对象：
+Inject `register()` before the `RETURN` of `com.gtocore.common.data.GTORecipeTypes.<clinit>()V`. The machine builder must then use the same `RecipeType` object:
 
 ```java
 .recipeTypes(ExampleRecipeTypeRegistration.definition())
 ```
 
-配方页注册必须先于机器和配方引用，但不能在 mod 构造函数中主动读取 `GTORecipeTypes` 静态字段，否则可能触发 `Registry ... cannot be set to unfrozen state`。构造函数只做资源/物品注册；状态验证放在 GTO 注册窗口和 `FMLLoadCompleteEvent`。
+The recipe page must be registered before machines and recipes reference it, but the mod constructor must not actively read a `GTORecipeTypes` static field. Doing so can trigger `Registry ... cannot be set to unfrozen state`. The constructor handles only resource and item registration; state validation belongs in the GTO registration window and `FMLLoadCompleteEvent`.
 
-### 翻译
+## Localization
 
 ```json
 {
-  "gtceu.example_process": "示例处理",
-  "gtohjs.machine.example_multiblock": "示例多方块"
+  "gtceu.example_process": "Example Processing",
+  "gtohjs.machine.example_multiblock": "Example Multiblock"
 }
 ```
 
-## English
+## External RecipeType proxies
 
-A new recipe page is a GTO `RecipeType`, not a hand-written EMI page. It owns the recipe group, item/fluid slot limits, progress texture, direction and sound. Register it before the GTO recipe-type registry freezes, by injecting `register()` before the `RETURN` of `GTORecipeTypes.<clinit>()V`. Machines and recipes must reference the same `RecipeType` object.
+When a new GTO recipe page needs to run a vanilla or another mod's `RecipeType` directly, pass that external type to the `RecipeType` constructor. The machine-search database converts proxied recipes from the current `RecipeManager`. Do not assume generic `GTRecipeType.toGTrecipe()` preserves mod-specific fields. For example, the seed for Botania's Petal Apothecary is returned by `getReagent()`, not included in `getIngredients()`.
 
-`setMaxIOSize(itemInputs, itemOutputs, fluidInputs, fluidOutputs)` controls both the recipe page and machine UI. The current rare-earth page uses 6/18/9/3. Do not force GTO recipe-type static initialization from the mod constructor; defer validation to the native registration window and load-complete event. Add translations for the recipe type and machine, then let GTO/GTCEu generate the EMI view.
+A dedicated proxy type must handle both paths:
 
-## 外部 RecipeType 代理 / External RecipeType Proxies
+1. Override `toGTrecipe()` to copy custom inputs completely and set GTO power, duration, and extensions.
+2. Override `buildRepresentativeRecipes()` to add converted results to the type's main category. Otherwise, machine search may succeed while the standard GT EMI category has no recipe definition to display.
 
-当新 GTO 配方页需要直接运行原版或其他模组的 `RecipeType` 时，可以把外部类型传给 `RecipeType` 构造器。机器搜索数据库会从当前 `RecipeManager` 转换代理配方。不要假设通用 `GTRecipeType.toGTrecipe()` 能保留模组自定义字段：例如 Botania 花药台的种子位于 `getReagent()`，不在 `getIngredients()` 中。
-
-专用代理类型必须同时处理两条路径：
-
-1. override `toGTrecipe()`，完整复制自定义输入并设置 GTO 的功率、时间和扩展；
-2. override `buildRepresentativeRecipes()`，把转换结果加入该类型的 main category，否则机器搜索可能成功，但标准 GT EMI 分类没有可显示的 recipe definition。
-
-GTOCore 0.5.6 / GTOLib 26.7.4 在首次装载后会复用 `GTORecipes` 的 RecipeManager 缓存，普通 `/reload` 不能可靠替换代理配方数据库。代理类型仍应在客户端 `RecipesUpdatedEvent` 中从事件携带的 `RecipeManager` 重建分类，但新增或修改外部配方后必须完整重启客户端/服务器，不能把热重载作为验收路径。fix62 的大型花药台是当前模板。
-
-For an external vanilla/mod RecipeType proxy, override both conversion and representative-category construction. Generic GT conversion may omit mod-specific fields, and proxy search entries are not automatically inserted into the GT category consumed by the client recipe cache. GTOCore 0.5.6 reuses its RecipeManager cache after the first load, so client synchronization may rebuild the current category, but adding or changing external recipes requires a full client/server restart rather than `/reload`.
+GTOCore 0.5.6 and GTOLib 26.7.4 reuse `GTORecipes`' RecipeManager cache after the first load, so an ordinary `/reload` cannot reliably replace the proxy recipe database. A proxy type should still rebuild its category from the `RecipeManager` carried by client `RecipesUpdatedEvent`, but adding or changing an external recipe requires a full client/server restart. Hot reload is not an acceptance path. The fix62 large Petal Apothecary is the current template.
