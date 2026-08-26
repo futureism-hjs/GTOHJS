@@ -7,7 +7,7 @@
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current source version `2.3-alpha-for-gtocore-0.5.6-beta` completed a network-enabled Java 21 clean build and was deployed for user client verification; the preceding clean-build baseline is `2.2-alpha-for-gtocore-0.5.6-beta`. The source registers 23 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other. The 2.3-alpha line does not require an additional API Mod.
+The current source version is `4.0-per1-for-gtocore-0.5.6-beta`, which adds a Kotlin 2.3.20 source migration while retaining the existing Java registration ABI. The requested network-enabled Java 21 non-clean build is the verification boundary. The preceding clean-build baseline is `2.3-alpha-for-gtocore-0.5.6-beta`. The source registers 23 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
 
 ## Runtime and development dependencies
 
@@ -37,7 +37,7 @@ $env:JAVA_HOME = '<JDK 21 path>'
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.
@@ -255,4 +255,3 @@ Original GTOHJS textures and quest content are licensed under `CC-BY-NC-SA-4.0` 
 - License record: the inspected GTLCore artifact declares `LGPLv3.0` in `META-INF/mods.toml`.
 
 Copyright remains with the respective upstream contributors.
-

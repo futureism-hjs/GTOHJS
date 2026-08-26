@@ -3,7 +3,7 @@
 > [!WARNING]
 > 本项目部分代码、文档、材质和任务内容由 AI 辅助生成或制作，可能包含错误、安全问题，或与上游 API 和许可证不兼容。使用、修改或再分发前请先检查和测试。
 
-当前源码版本（已完成 Java 21 清洁构建，并部署到客户端供用户验证）：`gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar`
+当前源码版本（Kotlin 迁移完成，待执行用户指定的 Java 21 联网非清洁构建）：`gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar`
 
 - [完整英文 README](README_EN.md)
 - [README_ZH 文档](README_ZH.md)
@@ -83,4 +83,3 @@ Original GTOHJS textures and quest content are licensed under `CC-BY-NC-SA-4.0` 
 - License record: the inspected GTLCore artifact declares `LGPLv3.0` in `META-INF/mods.toml`.
 
 Copyright remains with the respective upstream contributors.
-

@@ -3,9 +3,9 @@
 > [!WARNING]
 > This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**Target clean release version:** `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar`
+**Target build version:** `gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar`
 
-**Current source version:** `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar` (the corrected Java 21 clean build is deployed to the fixed closed client; user client verification follows)
+**Current source version:** `gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar` (Kotlin 2.3.20 migration; the Java 21 network-enabled clean build is the verification boundary)
 
 **Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
@@ -51,7 +51,9 @@
 38. `39_fixed_parallel_runtime_and_coremod_architecture.md`: real fixed-parallel runtime chain, fillable ignored positions, Coremod/Java responsibility boundary, and documentation-first maintenance rules.
 39. `40_configurable_thermal_and_infinite_intake_hatches.md`: two electromagnetic thermal-control forms; MV hull plus user front texture; player-facing `0..3600 K` with a controller-local zero-ambient, two-raw-units-per-K calibration that returns the exact selected K; a `300 K` default, exact zero-energy machine temperature lock, client-localized current-mode and target-temperature labels, and direct primary-UI control; ordinary screwdriver right-click switching between hatch and machine, no Shift conversion, destination-only switch messages, and destructive hatch-content clearing on conversion; the sole centered crafting recipe `gtocore:heater -> gtocore:electromagnetic_thermal_control_hatch`; plus Advanced/Ultimate Infinite Intake Hatch reuse of GTOCore's intake front, input processing, bidirectional external-fluid ability, lower-left standard working toggle, complete grids, and vacuum-cover registration validation.
 
-Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 for electric and modular machines, 07/08 for recipe types and native recipe injection, and 28 for the preloaded AE component-pack storage contract.
+41. `41_gto_core_kotlin_inventory_and_gtohjs_migration.md`: complete inventory of GTOCore's 59 Kotlin files, the translation/GUI/utility/machine categories they cover, the three ABI-preserving GTOHJS migrations, Kotlin 2.3.20 build wiring, dependency requirements, and verification boundary.
+
+Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 for electric and modular machines, 07/08 for recipe types and native recipe injection, and 28 for the preloaded AE component-pack storage contract. Read 41 before changing Kotlin sources or the Kotlin build.
 
 ## Fixed rules
 
@@ -63,6 +65,15 @@ Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 fo
 - Stop and wait for the user on network download failure.
 - GTOLib is available for read-only ABI audits again.
 - Consult these documents first; re-audit upstream sources only for missing coverage, ABI changes, behavioral conflicts, or failed verification.
+
+## Restored Kotlin Baseline
+
+On 2026-08-26, the active source was restored to the verified
+`4.0-per1-for-gtocore-0.5.6-beta` artifact state immediately after the
+Kotlin tooltip/resource migration. The later compatibility-port experiment,
+its registrations, resources, Coremod injections, and active contracts are not
+part of this source tree. The restoration intentionally performed no Gradle
+build, client deployment, launch, or client shutdown.
 
 ## Current source summary
 

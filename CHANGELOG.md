@@ -1,5 +1,19 @@
 # GTO HJS 更新日志 / Changelog
 
+## 4.0-per1-for-gtocore-0.5.6-beta - 2026-08-24
+
+### 中文
+
+- 盘点 GTOCore 的 59 个 Kotlin 源文件，记录翻译、tooltip、GUI、机器、事件、序列化、AE 集成、配方和工具类的职责范围。
+- 将超维度机器介绍/并行说明、GTOHJS 物品 tooltip 事件处理和超维度结构资源解析工具迁移为 Kotlin `object`，通过 `@JvmStatic` 保持现有 Java 注册器和 Forge 事件监听器 ABI。
+- 接入与 GTOCore 对齐的 Kotlin JVM/stdlib `2.3.20`，保留 Java 21 工具链和 JVM 17 字节码目标；构建版本固定为 `4.0-per1-for-gtocore-0.5.6-beta`。
+
+### English
+
+- Catalogued all 59 GTOCore Kotlin source files and documented their translation, tooltip, GUI, machine, event, serialization, AE-integration, recipe, and utility responsibilities.
+- Migrated the hyperdimensional descriptions, the GTOHJS item-tooltip event handler, and the shared hyperdimensional pattern-resource utility to Kotlin `object` implementations with `@JvmStatic` facades, preserving the existing Java registration and Forge listener ABI.
+- Added the GTOCore-aligned Kotlin JVM/stdlib `2.3.20` build wiring while retaining the Java 21 toolchain and JVM 17 bytecode target; pinned the build version to `4.0-per1-for-gtocore-0.5.6-beta`.
+
 ## 2.3-alpha-for-gtocore-0.5.6-beta - 2026-08-22
 
 ### 中文
@@ -471,4 +485,3 @@ Changed:
 Removed:
 
 - Custom Lathe, Large Custom Cutter, their dedicated recipe, and the old native/JVMTI loading code.
-

@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '6.0.54'
+    id 'org.jetbrains.kotlin.jvm' version '2.3.20'
 }
 
 version = mod_version
@@ -45,8 +46,35 @@ dependencies {
     implementation fg.deobf(files('libs/gtceu-forge-1.20.1-26.7.3.jar'))
     implementation fg.deobf(files('libs/gtolib-forge-1.20.1-26.7.4.jar'))
     implementation fg.deobf(files('libs/gtocore-forge-1.20.1-0.5.6-beta.jar'))
-    // GTOCore's Kotlin API is referenced by the copied wildcard UI implementation.
-    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:1.9.10'
+    // Match GTOCore's Kotlin ABI; the runtime is supplied by the GTO client/Kotlin-for-Forge setup.
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:2.3.20'
+}
+
+// GTOCore keeps Kotlin sources beside Java sources. Keep the same layout for the
+// migrated helpers while compiling Kotlin before Java so @JvmStatic APIs remain
+// available to the existing Java registration classes.
+sourceSets {
+    main {
+        kotlin {
+            srcDirs('src/main/kotlin', 'src/main/java')
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        javaParameters.set(true)
+    }
+}
+
+tasks.named('compileJava', JavaCompile).configure {
+    dependsOn tasks.named('compileKotlin')
+    classpath += files(tasks.named('compileKotlin').map { it.destinationDirectory })
 }
 
 tasks.named('processResources', ProcessResources).configure {
