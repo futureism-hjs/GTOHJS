@@ -1,5 +1,29 @@
 # GTO HJS 更新日志 / Changelog
 
+## 4.0-per2-for-gtocore-0.5.6-beta - 2026-08-28
+
+### 中文
+
+与上一份清洁构建 `4.0-per1-for-gtocore-0.5.6-beta` 相比：
+
+更改：
+
+- 将三个旧的 AE 元件包（`gtohjs:basic_ae_component_pack`、`gtohjs:ae_machine_component_pack`、`gtohjs:advanced_ae_hatch_component_pack`）替换为两个新元件包：`gtohjs:normal_ae_component_pack`（129 种普通 AE 与附属组件类型）和 `gtohjs:super_ae_component_pack`（17 种超级样板与装配机组件类型）。
+- 两个新元件包均按测试存档玩家外部存储快照的精确物品 ID 列表预装，每种物品 `16M（16,777,216）`，默认满电 `20,000 AE`，复用 AE2 256K 便携元件盒的模型与配色，并为每个新元件包生成独立的外部存储 UUID。
+- 被移除的三个旧物品 ID 不提供兼容别名；新注册不会迁移、重写或修改任何已有的玩家外部存储记录。
+- 构建版本固定为 `4.0-per2-for-gtocore-0.5.6-beta`，英文开发文档、公开 README 与内部文档已同步为双元件包契约。
+
+### English
+
+Compared with the previous clean build `4.0-per1-for-gtocore-0.5.6-beta`:
+
+Changed:
+
+- Replaced the three legacy AE component packs (`gtohjs:basic_ae_component_pack`, `gtohjs:ae_machine_component_pack`, `gtohjs:advanced_ae_hatch_component_pack`) with two new packs: `gtohjs:normal_ae_component_pack` (129 normal AE and addon component types) and `gtohjs:super_ae_component_pack` (17 super pattern-buffer and assembler component types).
+- Both new packs preload the exact item-ID lists read from the test world's player external-storage snapshots, store every listed type at `16M (16,777,216)`, start fully charged at `20,000 AE`, reuse the AE2 256K portable item-cell model and tinting, and receive their own independent external-storage UUID.
+- The removed item IDs have no compatibility aliases; the new registrations neither migrate, rewrite, nor mutate any existing player external-storage record.
+- Pinned the build version to `4.0-per2-for-gtocore-0.5.6-beta` and synchronized the English development documentation, public READMEs, and internal documents with the two-pack contract.
+
 ## 4.0-per1-for-gtocore-0.5.6-beta - 2026-08-24
 
 ### 中文
