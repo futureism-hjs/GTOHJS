@@ -1,32 +1,32 @@
-# GTOHJS 机器、配方与配方页注册模板
+# GTOHJS Machine, Recipe, and Recipe-Type Registration Templates
 
-适用基线：Minecraft 1.20.1、Forge 47.4.20、GTOCore 0.5.6-beta、GTOLib 26.7.4。
+Applicable baseline: Minecraft 1.20.1, Forge 47.4.20, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
-本文中的“新配方页”指一个新的 GTO `RecipeType`，也就是机器 UI/EMI 中独立显示的配方分类页。它不是手工编写 EMI 页面；GTO 的 `RecipeType` 正确注册后，EMI 页面会由 GTO/GTCEu 集成自动生成。
+In this document, a `new recipe type` means a new GTO `RecipeType`: a recipe category displayed independently in machine UI and EMI. It is not a hand-authored EMI page. Once the GTO `RecipeType` is registered correctly, the GTO/GTCEu integration generates the EMI page automatically.
 
-## 1. 四种注册的生命周期
+## 1. Lifecycles for Four Registration Types
 
-| 目标 | Java 注册入口 | Coremod 注入位置 | 原因 |
+| Target | Java registration entry point | Coremod injection point | Reason |
 | --- | --- | --- | --- |
-| 单方块机器 | `MachineRegisterUtils.machine(...).register()` | `GTOMachines.<clinit>` 的 `RETURN` 前 | 必须在 GTO 机器注册表冻结前完成 |
-| 多方块机器 | `MachineRegisterUtils.multiblock(...).register()` | `GTOMachines.<clinit>` 或所属分组类 `<clinit>` 的 `RETURN` 前 | 需要同时收集 definition、方块、物品、BE、renderer 和 pattern |
-| 新配方页 | `RecipeTypeRegisterUtils.register(...)` | `GTORecipeTypes.<clinit>` 的 `RETURN` 前 | 必须先于引用该类型的机器和配方注册 |
-| 新配方 | GTOlib `RecipeType.recipeBuilder(...).save()` | `Data.commonInit()` 中唯一 `RecipeFilter.init()` 后 | GTO 会在此窗口处理过滤、保存和最终配方表 |
+| Single-block machine | `MachineRegisterUtils.machine(...).register()` | Before each `RETURN` in `GTOMachines.<clinit>` | Must complete before the GTO machine registry freezes |
+| Multiblock machine | `MachineRegisterUtils.multiblock(...).register()` | Before each `RETURN` in `GTOMachines.<clinit>` or the owning group class's `<clinit>` | Must collect the definition, block, item, block entity, renderer, and pattern together |
+| New recipe type | `RecipeTypeRegisterUtils.register(...)` | Before each `RETURN` in `GTORecipeTypes.<clinit>` | Must precede registration of machines and recipes that reference the type |
+| New recipe | GTOlib `RecipeType.recipeBuilder(...).save()` | After the sole `RecipeFilter.init()` in `Data.commonInit()` | GTO performs filtering, saving, and final recipe-table processing in this window |
 
-当前项目中可直接参考的已验证实现：
+Verified implementations available as direct references in the current project:
 
-- 单方块部件：`MEInputAssemblyRegistration.java`
-- 多方块：`OneStopRareEarthProcessingPlantRegistration.java`、`UniversalSteamFactoryRegistration.java`
-- 新配方页：`OneStopRareEarthRecipeTypeRegistration.java`
-- 新配方：`OneStopRareEarthRecipeRegistration.java` 与 `coremods/gtohjs_machine_registration.js`
+- Single-block part: `MEInputAssemblyRegistration.java`
+- Multiblocks: `OneStopRareEarthProcessingPlantRegistration.java`, `UniversalSteamFactoryRegistration.java`
+- New recipe type: `OneStopRareEarthRecipeTypeRegistration.java`
+- New recipes: `OneStopRareEarthRecipeRegistration.java` and `coremods/gtohjs_machine_registration.js`
 
-不要把机器注册放到普通 `FMLCommonSetupEvent`，也不要把 GTO 配方简单改写成普通 GTM/KubeJS 的注册方式。当前 GTOlib 26.7.4 下，配方 builder/save 的实际字节码必须处于 GTO 的原生 `Data.commonInit()` 加载窗口。
+Do not place machine registration in an ordinary `FMLCommonSetupEvent`, and do not mechanically rewrite GTO recipes as ordinary GTM/KubeJS registration. Under the current GTOLib 26.7.4 contract, the actual recipe builder/save bytecode must execute inside GTO's native `Data.commonInit()` loading window.
 
-## 2. 注册单方块机器
+## 2. Registering a Single-Block Machine
 
-### 2.1 Java 注册类模板
+### 2.1 Java Registration-Class Template
 
-文件建议：`src/main/java/com/gtohjs/bootstrap/ExampleSingleMachineRegistration.java`
+Suggested file: `src/main/java/com/gtohjs/bootstrap/ExampleSingleMachineRegistration.java`
 
 ```java
 package com.gtohjs.bootstrap;
@@ -65,7 +65,7 @@ public final class ExampleSingleMachineRegistration {
 
         definition = MachineRegisterUtils.machine(
                         PATH,
-                        "示例单方块机器",
+                        "Example Single-Block Machine",
                         holder -> new SimpleTieredMachine(
                                 holder,
                                 TIER,
@@ -99,17 +99,17 @@ public final class ExampleSingleMachineRegistration {
 }
 ```
 
-需要替换的关键参数：
+Key parameters to replace:
 
-1. `PATH`、中文名和 `.langValue(...)`。
-2. `TIER`。如果需要多个电压等级，应先检查目标 GTO 机器的注册方式，而不是简单循环复制 definition。
-3. `.recipeType(...)`、`.editableUI(...)` 和 `.recipeModifier(...)`。
-4. renderer 路径。复用现有机器材质时可以复制相应纹理到 GTOHJS 资源目录，再使用 GTOHJS 自己的资源 ID。
-5. tooltip 中的配方类型、功率和容量。
+1. `PATH`, the Chinese localization literal, and `.langValue(...)`.
+2. `TIER`. When multiple voltage tiers are required, inspect how the target GTO machine registers them instead of copying one definition in a simple loop.
+3. `.recipeType(...)`, `.editableUI(...)`, and `.recipeModifier(...)`.
+4. Renderer path. To reuse an existing machine appearance, copy the relevant texture into the GTOHJS resource directory and reference it through a GTOHJS resource ID.
+5. Recipe type, power, and capacity in the tooltip.
 
-### 2.2 Coremod 注入模板
+### 2.2 Coremod Injection Template
 
-在 `gtohjs_after_gto_machines_clinit` 的每个 `RETURN` 前增加：
+Add this before each `RETURN` in `gtohjs_after_gto_machines_clinit`:
 
 ```javascript
 method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
@@ -120,7 +120,7 @@ method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
 ));
 ```
 
-默认目标是：
+The default target is:
 
 ```javascript
 class: 'com.gtocore.common.data.GTOMachines'
@@ -128,11 +128,11 @@ methodName: '<clinit>'
 methodDesc: '()V'
 ```
 
-如果仿造的原机属于 `GCYMMachines` 等独立分组，应注入该分组类的 `<clinit>`，不要为了方便全部塞进 `GTOMachines`。
+If the source machine belongs to an independent group such as `GCYMMachines`, inject that group class's `<clinit>` rather than routing every registration through `GTOMachines` for convenience.
 
-### 2.3 材质与翻译
+### 2.3 Textures and Localizations
 
-单方块 renderer 示例：
+Single-block renderer example:
 
 ```text
 src/main/resources/assets/gtohjs/textures/block/machines/example_single_machine/
@@ -142,21 +142,21 @@ src/main/resources/assets/gtohjs/textures/block/machines/example_single_machine/
   overlay_front_active_emissive.png
 ```
 
-翻译至少补充：
+Add at least these localization entries:
 
 ```json
 {
-  "block.gtocore.example_single_machine": "示例单方块机器",
-  "item.gtocore.example_single_machine": "示例单方块机器"
+  "block.gtocore.example_single_machine": "Example Single-Block Machine",
+  "item.gtocore.example_single_machine": "Example Single-Block Machine"
 }
 ```
 
-### 2.4 ME 物品/流体输入总成模板（fix65 已验证）
+### 2.4 ME Item/Fluid Input Assembly Template (Verified in fix65)
 
-ME 多方块部件应注入 `com.gtocore.common.data.machines.GTAEMachines.<clinit>()V`，不要沿用普通 `GTOMachines` 窗口。注册定义必须同时声明三种能力：
+Inject ME multiblock parts into `com.gtocore.common.data.machines.GTAEMachines.<clinit>()V`, not the ordinary `GTOMachines` window. The registered definition must declare all three abilities:
 
 ```java
-MachineRegisterUtils.machine(PATH, "ME输入总成", MEInputAssemblyPartMachine::new)
+MachineRegisterUtils.machine(PATH, "ME Input Assembly", MEInputAssemblyPartMachine::new)
         .tier(GTValues.EV)
         .allRotation()
         .abilities(
@@ -169,15 +169,15 @@ MachineRegisterUtils.machine(PATH, "ME输入总成", MEInputAssemblyPartMachine:
         .register();
 ```
 
-三个 ability 只决定结构候选和控制器收集范围，不会自动生成配方库存。控制器实现还必须创建两个真正的 `NotifiableContentHandler`，例如一个 `ExportOnlyAEItemList` 和一个 `ExportOnlyAEFluidList`，且都以 `IO.IN` 接入同一部件和同一 AE 节点。普通输入总成把目标数量同步到本地 handler；库存输入总成只保存配置与库存快照，模拟阶段用 `Actionable.SIMULATE`，实际消耗阶段用 `Actionable.MODULATE` 从 ME 网络扣除。
+The three abilities determine only structure candidates and controller collection scope; they do not create recipe inventory automatically. The controller implementation must also create two real `NotifiableContentHandler` instances, such as one `ExportOnlyAEItemList` and one `ExportOnlyAEFluidList`, both connected as `IO.IN` through the same part and AE node. A normal input assembly synchronizes target quantities into local handlers. A stocking input assembly stores only configuration and inventory snapshots, using `Actionable.SIMULATE` during simulation and `Actionable.MODULATE` to deduct actual consumption from the ME network.
 
-库存总成同时有物品和流体两套槽位，不能直接实现只返回一个 `IConfigurableSlotList` 的原生 `IMEStockingPart` 接口。需要分别完成：跨同一控制器的同介质配置去重、断网时清理自动配置、手动配置保留、自动/手动模式切换清理，以及数据棒对两套配置的读写。当前已验证实现是 `MEInputAssemblyPartMachine.java`、`MEStockingInputAssemblyPartMachine.java` 和 `MEInputAssemblyRegistration.java`。
+A stocking assembly has separate item and fluid slot sets, so it cannot directly implement the native `IMEStockingPart` interface that returns only one `IConfigurableSlotList`. Implement same-medium configuration deduplication across one controller, automatic-configuration cleanup on disconnect, manual-configuration retention, cleanup when switching automatic/manual modes, and data-stick read/write for both configuration sets. The current verified implementations are `MEInputAssemblyPartMachine.java`, `MEStockingInputAssemblyPartMachine.java`, and `MEInputAssemblyRegistration.java`.
 
-## 3. 注册多方块机器
+## 3. Registering a Multiblock Machine
 
-### 3.1 电力多方块 Java 模板
+### 3.1 Electric Multiblock Java Template
 
-文件建议：`src/main/java/com/gtohjs/bootstrap/ExampleMultiblockRegistration.java`
+Suggested file: `src/main/java/com/gtohjs/bootstrap/ExampleMultiblockRegistration.java`
 
 ```java
 package com.gtohjs.bootstrap;
@@ -221,7 +221,7 @@ public final class ExampleMultiblockRegistration {
 
         definition = MachineRegisterUtils.multiblock(
                         PATH,
-                        "示例多方块机器",
+                        "Example Multiblock Machine",
                         ElectricMultiblockMachine::new)
                 .langValue("Example Multiblock")
                 .nonYAxisRotation()
@@ -262,31 +262,31 @@ public final class ExampleMultiblockRegistration {
 }
 ```
 
-### 3.2 结构与仓室规则
+### 3.2 Structure and Hatch Rules
 
-1. `.aisle(...)` 的第一个 aisle 是结构最后面；在默认 `FactoryBlockPattern.start(machine)` 下，每个 aisle 内的字符串必须按底到顶（`minY -> maxY`）排列，第 0 行是底层。
-2. 控制器必须使用 `.where('S', Predicates.controller(machine))`。
-3. `.where(...)` 中允许什么仓室，决定了结构真正能安装什么部件。外观相似不等于能力相同。
-4. `GTOPredicates.autoAccelerateAbilities(...)`、`autoGCYMAbilities(...)`、`autoLaserAbilities(...)` 等不能互换。新增机器前应按目标原机检查 GTOCore/GTOLib 中的 controller、predicate、recipe modifier 和部件能力。
-5. `setExactLimit(1)` 是必须恰好一个；`setMaxGlobalLimited(1)` 是最多一个。数量限制要与机器运行逻辑一致。
-6. `.multiblockPreviewRenderer(true, true)` 分别启用世界预览与 XEI/EMI 结构预览。只要 definition 和 pattern 正确，不需要手工修改 EMI。
-7. `' '` 如果映射为 `Predicates.any()`，表示忽略该位置，不表示必须为空气。
+1. The first `.aisle(...)` is the back of the structure. Under the default `FactoryBlockPattern.start(machine)`, strings within each aisle must run bottom-to-top (`minY -> maxY`), with row 0 as the bottom layer.
+2. The controller must use `.where('S', Predicates.controller(machine))`.
+3. Hatches allowed in `.where(...)` determine what parts the structure can actually install. Similar appearance does not imply equal ability.
+4. `GTOPredicates.autoAccelerateAbilities(...)`, `autoGCYMAbilities(...)`, `autoLaserAbilities(...)`, and related helpers are not interchangeable. Before adding a machine, inspect the source GTOCore/GTOLib controller, predicate, recipe modifier, and part abilities for the target machine.
+5. `setExactLimit(1)` requires exactly one, while `setMaxGlobalLimited(1)` allows at most one. Quantity limits must match machine runtime logic.
+6. `.multiblockPreviewRenderer(true, true)` enables the in-world preview and XEI/EMI structure preview respectively. Correct definitions and patterns require no manual EMI modification.
+7. Mapping `' '` to `Predicates.any()` ignores that position; it does not require air.
 
-### 3.3 蒸汽多方块的差异
+### 3.3 Differences for Steam Multiblocks
 
-蒸汽机不要直接套电力模板。基本替换如下：
+Do not apply the electric template directly to a steam machine. Basic replacements are:
 
 ```java
 MachineRegisterUtils.multiblock(
         "example_steam_multiblock",
-        "示例蒸汽多方块",
+        "Example Steam Multiblock",
         SteamMultiblockMachine::new)
     .recipeTypes(GTORecipeTypes.COMPRESSOR_RECIPES)
     .steamOverclock()
     .block(GTBlocks.CASING_BRONZE_BRICKS)
 ```
 
-结构主机壳通常组合：
+The primary structure casing typically combines:
 
 ```java
 .where('X', Predicates.blocks(GTBlocks.CASING_BRONZE_BRICKS.get())
@@ -297,29 +297,29 @@ MachineRegisterUtils.multiblock(
         .setExactLimit(1)))
 ```
 
-低级蒸汽机应只允许对应低级蒸汽仓室，并需要检查排气仓。蒸汽模式默认不要加入维护、并行或加速仓。
+Low-tier steam machines should accept only the matching low-tier steam hatches and must account for the Steam Vent Hatch. Do not add Maintenance, Parallel, or Accelerate Hatches to steam machines by default.
 
-`LargeSteamMultiblockMachine(holder, eut)` 的 `eut` 只是基础值。原生 `BaseSteamMultiblockMachine.getRealRecipe` 使用 `eut << steamHatchMultiplier`，高级蒸汽仓会提高实际可接受的配方功率。若产品契约要求无论蒸汽仓等级都不能超过某一配方等级，`.steamOverclock(tier)` 只能提供 builder 等级元数据和提示，不能作为运行时硬限制；必须在 `getRealRecipe` 路径按机器 ID 对原始 `recipe.getInputEUt()` 另行限幅。通用蒸汽厂的已验证模板是：构造器基础值 `GTValues.V[MV]`、`.steamOverclock(GTValues.MV)`，再由条件化 coremod 拒绝 `EUt > 128`，且对其他蒸汽机器直接放行。
+The `eut` argument of `LargeSteamMultiblockMachine(holder, eut)` is only a base value. Native `BaseSteamMultiblockMachine.getRealRecipe` uses `eut << steamHatchMultiplier`, so advanced Steam Hatches increase the recipe power the machine can actually accept. If the product contract requires a fixed recipe-tier ceiling regardless of Steam Hatch tier, `.steamOverclock(tier)` supplies only builder tier metadata and tooltips; it is not a hard runtime limit. Apply a separate machine-ID-scoped clamp to original `recipe.getInputEUt()` in the `getRealRecipe` path. The verified Universal Steam Factory template uses constructor base `GTValues.V[MV]`, `.steamOverclock(GTValues.MV)`, and a conditional coremod that rejects `EUt > 128` for that machine while passing every other steam machine through unchanged.
 
-### 3.4 Coremod 与翻译
+### 3.4 Coremod and Localizations
 
-多方块注册类与单方块一样，在所属机器分组 `<clinit>` 的 `RETURN` 前调用 `register()`。
+As with single-block machines, call the multiblock registration class's `register()` before each `RETURN` in the owning machine group's `<clinit>`.
 
-翻译至少补充：
+Add at least these localization entries:
 
 ```json
 {
-  "block.gtocore.example_multiblock": "示例多方块机器",
-  "item.gtocore.example_multiblock": "示例多方块机器",
-  "machine.gtocore.example_multiblock": "示例多方块机器"
+  "block.gtocore.example_multiblock": "Example Multiblock Machine",
+  "item.gtocore.example_multiblock": "Example Multiblock Machine",
+  "machine.gtocore.example_multiblock": "Example Multiblock Machine"
 }
 ```
 
-## 4. 注册新配方页（RecipeType）
+## 4. Registering a New Recipe Type
 
-### 4.1 Java 注册类模板
+### 4.1 Java Registration-Class Template
 
-文件建议：`src/main/java/com/gtohjs/bootstrap/ExampleRecipeTypeRegistration.java`
+Suggested file: `src/main/java/com/gtohjs/bootstrap/ExampleRecipeTypeRegistration.java`
 
 ```java
 package com.gtohjs.bootstrap;
@@ -366,7 +366,7 @@ public final class ExampleRecipeTypeRegistration {
 
         definition = RecipeTypeRegisterUtils.register(
                         PATH,
-                        "示例处理",
+                        "Example Processing",
                         GTRecipeTypes.MULTIBLOCK)
                 .setEUIO(IO.IN)
                 .setMaxIOSize(
@@ -394,17 +394,17 @@ public final class ExampleRecipeTypeRegistration {
 }
 ```
 
-参数含义：
+Parameter meanings:
 
-- `GTRecipeTypes.MULTIBLOCK`：该配方页所属的大类。
-- `setEUIO(IO.IN)`：电力方向；普通耗能机器为输入。
-- `setMaxIOSize(itemIn, itemOut, fluidIn, fluidOut)`：机器 UI 和配方页的最大槽位数。
-- `setProgressBar(...)`：进度条纹理和方向。
-- `setSound(...)`：运行音效。
+- `GTRecipeTypes.MULTIBLOCK`: parent category of the recipe type.
+- `setEUIO(IO.IN)`: EU direction; ordinary consuming machines use input.
+- `setMaxIOSize(itemIn, itemOut, fluidIn, fluidOut)`: maximum slot counts in the machine UI and recipe page.
+- `setProgressBar(...)`: progress-bar texture and direction.
+- `setSound(...)`: operating sound.
 
-### 4.2 Coremod 注入模板
+### 4.2 Coremod Injection Template
 
-新配方页必须在 `GTORecipeTypes.<clinit>` 返回前注册：
+Register the new recipe type before `GTORecipeTypes.<clinit>` returns:
 
 ```javascript
 'gtohjs_after_gto_recipe_types_clinit': {
@@ -436,27 +436,27 @@ public final class ExampleRecipeTypeRegistration {
 }
 ```
 
-配方页中文翻译：
+Chinese recipe-type localization:
 
 ```json
 {
-  "gtceu.example_process": "示例处理"
+  "gtceu.example_process": "Example Processing"
 }
 ```
 
-最后让机器引用它：
+Finally, make the machine reference it:
 
 ```java
 .recipeTypes(ExampleRecipeTypeRegistration.definition())
 ```
 
-只注册配方页但没有机器引用、没有配方内容时，页面可能不会出现在常用查看入口中。
+A registered recipe type may not appear in common viewing entry points when no machine references it and it contains no recipes.
 
-## 5. 注册新配方
+## 5. Registering a New Recipe
 
-### 5.1 可读的配方定义
+### 5.1 Readable Recipe Definition
 
-从逻辑上看，一条配方是：
+Conceptually, a recipe is:
 
 ```java
 ExampleRecipeTypeRegistration.definition()
@@ -469,17 +469,17 @@ ExampleRecipeTypeRegistration.definition()
         .save();
 ```
 
-但在当前 GTO/GTOLib 版本中，不要把上面这段放进普通 Java 包装方法，再从 Coremod 只调用这个包装方法。已验证这种方式可能让 `save()` 返回 `gtceu:default` 的 DUMMY 配方。实际 builder/save 调用必须以内联字节码形式插入 `Data.commonInit()`。
+Under the current GTO/GTOLib version, do not place the code above in an ordinary Java wrapper and call only that wrapper from the coremod. This path has been verified to allow `save()` to return the `gtceu:default` DUMMY recipe. Insert the actual builder/save calls as inline bytecode in `Data.commonInit()`.
 
-### 5.2 Coremod 配方构建模板
+### 5.2 Coremod Recipe-Building Template
 
-以下模板复用当前 Coremod 已有的 `appendResourceLocation`、`appendDustRecipeItem`、`appendMaterialRecipeFluid` 和 `appendRecipePowerAndDuration`：
+The following template reuses the current coremod's `appendResourceLocation`, `appendDustRecipeItem`, `appendMaterialRecipeFluid`, and `appendRecipePowerAndDuration` helpers:
 
 ```javascript
 function buildExampleRecipe() {
     var instructions = new InsnList();
 
-    // 新配方页：通过 Java registration class 取得 RecipeType。
+    // New recipe type: obtain its RecipeType from the Java registration class.
     instructions.add(ASMAPI.buildMethodCall(
         'com/gtohjs/bootstrap/ExampleRecipeTypeRegistration',
         'definition',
@@ -487,9 +487,9 @@ function buildExampleRecipe() {
         ASMAPI.MethodType.STATIC
     ));
 
-    // 如果使用 GTO 已有配方页，则把上面的调用替换为：
+    // When using an existing GTO recipe type, replace the call above with:
     // GETSTATIC com/gtocore/common/data/GTORecipeTypes FIELD_NAME
-    // 描述符仍为 Lcom/gtolib/api/recipe/RecipeType;
+    // The descriptor remains Lcom/gtolib/api/recipe/RecipeType;
 
     appendResourceLocation(instructions, 'gtohjs', 'example_recipe');
     instructions.add(new MethodInsnNode(
@@ -523,7 +523,7 @@ function buildExampleRecipe() {
 }
 ```
 
-把它加入统一列表：
+Add it to the shared list:
 
 ```javascript
 function buildCustomRecipes() {
@@ -533,7 +533,7 @@ function buildCustomRecipes() {
 }
 ```
 
-然后在 `Data.commonInit()` 中唯一 `RecipeFilter.init()` 调用之后插入：
+Then insert it after the sole `RecipeFilter.init()` call in `Data.commonInit()`:
 
 ```javascript
 if (node.getOpcode() === Opcodes.INVOKESTATIC &&
@@ -545,11 +545,11 @@ if (node.getOpcode() === Opcodes.INVOKESTATIC &&
 }
 ```
 
-必须校验 `injected === 1`。如果目标方法结构变化，不应静默跳过。
+Require `injected === 1`. Do not skip silently if the target method structure changes.
 
-### 5.3 Java 接收与最终验证模板
+### 5.3 Java Receiver and Final Validation Template
 
-文件建议：`src/main/java/com/gtohjs/bootstrap/ExampleRecipeRegistration.java`
+Suggested file: `src/main/java/com/gtohjs/bootstrap/ExampleRecipeRegistration.java`
 
 ```java
 package com.gtohjs.bootstrap;
@@ -600,7 +600,7 @@ public final class ExampleRecipeRegistration {
 }
 ```
 
-在 `RecipeBuilder.finish()` 之后插入最终验证：
+Insert final validation after `RecipeBuilder.finish()`:
 
 ```javascript
 if (node.getOpcode() === Opcodes.INVOKESTATIC &&
@@ -617,73 +617,73 @@ if (node.getOpcode() === Opcodes.INVOKESTATIC &&
 }
 ```
 
-必须校验 `finalized === 1`。
+Require `finalized === 1`.
 
-### 5.4 配方参数规则
+### 5.4 Recipe Parameter Rules
 
-1. `duration` 单位是 tick，`20t = 1 秒`。
-2. `EUt` 是 `long`，字节码调用描述符必须是 `(J)`。本文复用的辅助函数用 `SIPUSH` 压入整数，只适用于 `-32768..32767`；更大的 EUt、duration、物品量或流体量必须改用 `LdcInsnNode`（EUt 随后仍需 `I2L` 或直接压入 long），不能继续使用 `SIPUSH`。
-3. 流体数量单位是 mB。
-4. 每条 raw ID 必须唯一。最终 ID 通常为 `gtohjs:<recipe_type_path>/<raw_path>`，应使用 `RecipeBuilder.getTypeID(...)` 计算，不能手拼。
-5. GTCEu 材料来自 `GTMaterials`，GTO 材料来自 `GTOMaterials`。
-6. 水使用 `GTMaterials.Water`。当前 API 不应使用不存在的 `RegistriesUtils.getFluidStack("minecraft:water", ...)` 配方 builder 重载。
-7. 输入/输出数量不得超过配方页 `setMaxIOSize(...)` 的限制。
-8. 如果只允许特定机器运行共享 recipe type，需要增加 `RecipeCondition`，并让机器侧条件判断与配方页一致。
+1. `duration` is measured in ticks; `20t = 1 second`.
+2. `EUt` is a `long`, so its bytecode call descriptor must be `(J)`. The reused helpers in this document push integers with `SIPUSH` and are valid only for `-32768..32767`. Larger EUt, duration, item amount, or fluid amount values must use `LdcInsnNode`; EUt must then use `I2L` or push a long directly. Do not continue using `SIPUSH`.
+3. Fluid amounts are measured in mB.
+4. Every raw ID must be unique. The final ID is usually `gtohjs:<recipe_type_path>/<raw_path>` and must be calculated with `RecipeBuilder.getTypeID(...)`, not assembled by hand.
+5. GTCEu materials come from `GTMaterials`; GTO materials come from `GTOMaterials`.
+6. Use `GTMaterials.Water` for water. The current API does not provide the `RegistriesUtils.getFluidStack("minecraft:water", ...)` recipe-builder overload.
+7. Input/output counts must not exceed the recipe type's `setMaxIOSize(...)` limits.
+8. When only a specific machine may run a shared recipe type, add a `RecipeCondition` and keep machine-side condition checks aligned with the recipe type.
 
-外部配方类型代理同样遵循 raw ID 规则：`toGTrecipe(...)` 应把不含 recipe type 路径的 ID 传给 `recipeBuilder(rawId)`，再用 `RecipeBuilder.getTypeID(rawId, this)` 校验转换结果。不要先手工加入 `<recipe_type_path>/` 后再调用 builder，否则最终 ID 会重复前缀。
+External recipe-type proxies follow the same raw-ID rule: `toGTrecipe(...)` must pass an ID without the recipe-type path to `recipeBuilder(rawId)`, then validate the result with `RecipeBuilder.getTypeID(rawId, this)`. Do not prepend `<recipe_type_path>/` manually before calling the builder, or the final ID will repeat the prefix.
 
-## 6. 主类、资源与版本收尾
+## 6. Main Class, Resources, and Version Finalization
 
-新增注册类后，还要完成：
+After adding a registration class, also complete:
 
-1. 在 `GTOHJS.java` 的构造日志和 `FMLLoadCompleteEvent` 中记录/验证 registration 状态。
-2. 在 `assets/gtohjs/lang/zh_cn.json` 和 `en_us.json` 增加机器与配方页翻译。
-3. 单方块自定义 renderer 需要把纹理放到 `assets/gtohjs/textures/...`。
-4. 确认 `META-INF/coremods.json` 仍指向 `coremods/gtohjs_machine_registration.js`。
-5. 发布分支按 `preN` 规则递增 `gradle.properties` 中的版本号；历史 `fixN` 仅保留在开发记录中。
-6. 不要为配方页或多方块结构预览手工修改 EMI；先修正 GTO definition、recipe type 和 pattern。
+1. Log and validate registration state in the `GTOHJS.java` constructor logging and `FMLLoadCompleteEvent`.
+2. Add machine and recipe-type localizations to `assets/gtohjs/lang/zh_cn.json` and `en_us.json`.
+3. Put textures for a custom single-block renderer under `assets/gtohjs/textures/...`.
+4. Confirm that `META-INF/coremods.json` still points to `coremods/gtohjs_machine_registration.js`.
+5. On release branches, increment the version in `gradle.properties` according to the `preN` rule. Retain historical `fixN` identifiers only in development records.
+6. Do not modify EMI manually for a recipe type or multiblock structure preview. Correct the GTO definition, recipe type, and pattern first.
 
-## 7. 构建与客户端验收
+## 7. Build and Client Acceptance
 
-默认使用 Java 21 和联网构建：
+Use Java 21 and an online build by default:
 
 ```powershell
-$env:JAVA_HOME = '[Java 21 安装目录]'
+$env:JAVA_HOME = '<JDK 21 path>'
 .\gradlew.bat clean build --stacktrace
 ```
 
-Coremod 修改后先检查 JavaScript：
+After changing a coremod, check its JavaScript first:
 
 ```powershell
 node --check src\main\resources\coremods\gtohjs_machine_registration.js
 ```
 
-默认用命令行启动客户端。日志最低验收条件：
+Launch the client from the command line by default. Minimum log acceptance requirements:
 
-1. 配方页注入命中预期次数，recipe type 状态为 `REGISTERED`。
-2. 机器注入命中预期次数，`GTRegistries.MACHINES` 中 definition 与 builder 返回对象一致。
-3. 多方块 `patternFactory` 能实际构建，renderer 非空，预览开关符合设计。
-4. 每条配方 `save()` 返回非 null、非 `gtceu:default`，并记录准确的物品、流体、EUt 和 duration。
-5. `RecipeBuilder.finish()` 后，两张最终配方表仍保留同一个 definition。
-6. GTOHJS `ERROR/FATAL = 0`，客户端无崩溃标记。
+1. Recipe-type injection has the expected match count and recipe-type status is `REGISTERED`.
+2. Machine injection has the expected match count and the definition in `GTRegistries.MACHINES` is the same object returned by the builder.
+3. The multiblock `patternFactory` builds successfully, its renderer is non-null, and preview flags match the design.
+4. Every recipe `save()` returns non-null and non-`gtceu:default`, with exact item, fluid, EUt, and duration values logged.
+5. After `RecipeBuilder.finish()`, both final recipe tables retain the same definition object.
+6. GTOHJS `ERROR/FATAL = 0` and the client has no crash marker.
 
-## 8. 常见错误
+## 8. Common Errors
 
-| 现象 | 常见原因 | 处理方式 |
+| Symptom | Common cause | Resolution |
 | --- | --- | --- |
-| 机器物品存在但 definition/模型异常 | 注册阶段太晚或绕过 `MachineRegisterUtils` | 注入对应机器分组 `<clinit>` |
-| 多方块 EMI 结构页空白 | pattern 未成功构建、controller predicate 错误或 renderer 缺失 | 验证 `patternFactory`、`Predicates.controller(machine)` 和 renderer |
-| `save()` 返回 `gtceu:default` | 在普通 Java 包装方法中调用 GTOlib builder/save | 在 `Data.commonInit()` 中内联 builder/save 字节码 |
-| 配方页存在但机器不接受配方 | 机器 `.recipeTypes(...)` 指向错误对象或注册顺序错误 | 先注册 RecipeType，再让机器引用同一 definition |
-| 配方被覆盖 | raw ID 重复 | 按来源/工艺拆分唯一 ID |
-| 水流体调用编译失败 | 使用了当前 API 不存在的 `RegistriesUtils` 配方重载 | 使用 `GTMaterials.Water` |
-| 仓室能摆入但机器不工作 | predicate 与 controller/runtime trait 不匹配 | 对照 GTOCore/GTOLib 原机检查能力、modifier 和部件类 |
+| Machine item exists but definition/model is invalid | Registration stage is too late or bypasses `MachineRegisterUtils` | Inject the owning machine group's `<clinit>` |
+| Multiblock EMI structure page is blank | Pattern failed to build, controller predicate is wrong, or renderer is missing | Validate `patternFactory`, `Predicates.controller(machine)`, and renderer |
+| `save()` returns `gtceu:default` | GTOlib builder/save is called from an ordinary Java wrapper | Inline builder/save bytecode in `Data.commonInit()` |
+| Recipe type exists but the machine rejects its recipes | Machine `.recipeTypes(...)` points to the wrong object or registration order is wrong | Register the RecipeType first, then reference the same definition from the machine |
+| Recipe is overwritten | Duplicate raw ID | Assign unique IDs by source/process |
+| Water-fluid call fails compilation | Uses a `RegistriesUtils` recipe overload absent from the current API | Use `GTMaterials.Water` |
+| Hatch can be placed but machine does not work | Predicate does not match controller/runtime trait | Compare abilities, modifiers, and part classes against the source GTOCore/GTOLib machine |
 
-新增大功能或更换 GTOCore/GTOLib 版本时，必须重新核对相关 builder ABI、目标 `<clinit>`、`Data.commonInit()` 指令结构、仓室 predicate 和 recipe modifier，不能只依赖本模板。
+When adding a major feature or changing the GTOCore/GTOLib version, recheck the relevant builder ABI, target `<clinit>`, `Data.commonInit()` instruction structure, hatch predicates, and recipe modifiers. Do not rely only on this template.
 
-## 5.5 注册工作台有序配方（VanillaRecipeHelper）
+## 5.5 Registering a Shaped Crafting Recipe (`VanillaRecipeHelper`)
 
-工作台配方不是 GTOLib `RecipeBuilder` 配方页。它应在与 GTO 原生配方加载相同的 `Data.commonInit()` 窗口中调用 GTCEu 的 `VanillaRecipeHelper.addShapedRecipe(...)`，并使用 GTOHJS 自己的 namespace：
+A crafting-table recipe is not a GTOLib `RecipeBuilder` recipe-type entry. Call GTCEu's `VanillaRecipeHelper.addShapedRecipe(...)` inside the same `Data.commonInit()` window as GTO native recipe loading, using the GTOHJS namespace:
 
 ```java
 public static final ResourceLocation RAW_ID = GTOHJS.id("example_crafting");
@@ -703,31 +703,31 @@ VanillaRecipeHelper.addShapedRecipe(
         'E', new MaterialEntry(TagPrefix.plateDouble, GTMaterials.Titanium));
 ```
 
-关键点：`ShapedRecipeBuilder.getId()` 会自动在路径前添加 `shaped/`。传给 helper 的 `RAW_ID` 是 `gtohjs:example_crafting`，写入 native map 和最终 `RecipeManager` 的实际 ID 是 `gtohjs:shaped/example_crafting`。验证器、移除逻辑和日志审计必须明确区分 raw ID 与 final ID，不能拿 raw ID 调用 `containsKey` 或 `RecipeManager.byKey(...)`。
+Critical detail: `ShapedRecipeBuilder.getId()` automatically prepends `shaped/` to the path. The helper receives raw ID `gtohjs:example_crafting`, while the native map and final `RecipeManager` use actual ID `gtohjs:shaped/example_crafting`. Validators, removal logic, and log audits must distinguish raw IDs from final IDs. Do not call `containsKey` or `RecipeManager.byKey(...)` with the raw ID.
 
-`CustomCraftingRecipeRegistration` 应在 `FMLLoadCompleteEvent` 检查注册状态，在 `ServerStartedEvent` 使用 final ID 验证全部工作台配方的 `RecipeType.CRAFTING` 和输出。只检查输出物品非空或 raw ID 会产生假阳性/假阴性。不要使用旧 ABI 的 `.asItem()`；`GTItems` 当前版本使用 `.get()`。工作台配方不会进入 GTRecipeType 页面，但会随 Minecraft 配方管理器显示和工作。
+`CustomCraftingRecipeRegistration` should check registration state in `FMLLoadCompleteEvent`, then use final IDs in `ServerStartedEvent` to validate `RecipeType.CRAFTING` and output for every crafting recipe. Checking only a nonempty output or a raw ID causes false positives or false negatives. Do not use the old `.asItem()` ABI; current `GTItems` uses `.get()`. Crafting recipes do not enter a GTRecipeType page, but they display and function through Minecraft's RecipeManager.
 
-## 5.6 超维度机器线程边界
+## 5.6 Hyperdimensional Machine Threading Boundary
 
-GTOLib 26.7.4 只有电力 `CrossRecipeMultiblockMachine` 提供真实独立线程。`NoEnergyCustomParallelMultiblockMachine` 和 GTO `BaseSteamMultiblockMachine` 只有单配方并行逻辑。fix49 因此将超维度锻炉、超维度蒸汽熔炉实现为真实固定 `524288` 并行和 `1t`，不伪造一个不会被运行时调用的 `getThread()`。真实无能源/蒸汽 CrossRecipe 需要另一个版本先完成小线程数（2/8）的专门控制器和蒸汽扣能测试。
+In GTOLib 26.7.4, only the electric `CrossRecipeMultiblockMachine` provides genuinely independent threads. `NoEnergyCustomParallelMultiblockMachine` and GTO `BaseSteamMultiblockMachine` provide only single-recipe parallel logic. Fix49 therefore implements the Hyperdimensional Forge and Hyperdimensional Steam Furnace with real fixed `524288` parallelism and `1t`, without inventing a `getThread()` method that runtime never calls. A real no-energy or steam CrossRecipe implementation requires a separate version that first validates dedicated controllers at small thread counts (2/8) and steam-energy deduction.
 
-### fix52 超维度线圈配置、专用仓位与忽略空格模板
+### fix52 Hyperdimensional Coil Configuration, Dedicated Hatch Positions, and Ignored-Space Template
 
-线圈多线程机器继续使用 `CoilCrossRecipeMultiblockMachine`，但并行和线程不能再复用一个 `int` 容量函数。当前公式仿照 `gtocore:chemical_complex`，先计算 `raw = 2^min(60, floor(temperature / 900))`；并行上限为 `min(IParallelMachine.MAX_PARALLEL, raw)`，线程上限为 `min(Integer.MAX_VALUE, raw)`。未成型时运行值为 0。
+Coil-based multithreaded machines continue to use `CoilCrossRecipeMultiblockMachine`, but parallelism and threads must not share one `int` capacity function. The current formula follows `gtocore:chemical_complex`: first calculate `raw = 2^min(60, floor(temperature / 900))`; the parallel ceiling is `min(IParallelMachine.MAX_PARALLEL, raw)`, and the thread ceiling is `min(Integer.MAX_VALUE, raw)`. Runtime values are zero while the structure is unformed.
 
-需要玩家配置时，在 `attachConfigurators(ConfiguratorPanel)` 中追加 `LongInputWidget` 并行页和 `IntInputWidget` 线程页，并以 `@SaveToDisk` 保存设定值。初始数据和线圈变化均应从服务端同步范围；setter 和运行 getter 都必须把过高输入限制到当前线圈上限。GTOLib 会计算 `parallel * thread`，因此还必须避免该乘积溢出 `long`；推荐采用“最后编辑项优先，自动下调另一项”的确定性规则。不要保留 `.coilParallelTooltips()` 或 `.multipleRecipesTooltips()`；应只添加与实际公式一致的自定义“特殊多线程”提示，因为本项目的两台线圈机器不允许安装线程仓。
+For player configuration, append a `LongInputWidget` parallel page and an `IntInputWidget` thread page in `attachConfigurators(ConfiguratorPanel)`, and persist both settings with `@SaveToDisk`. Synchronize ranges from the server in initial data and after coil changes. Both setters and runtime getters must clamp excessive input to the current coil limit. GTOLib calculates `parallel * thread`, so the product must also be protected from `long` overflow. Prefer the deterministic rule `last edited value wins; reduce the other value automatically`. Do not retain `.coilParallelTooltips()` or `.multipleRecipesTooltips()`; add only a custom `special multithreading` tooltip matching the actual formula because the two coil machines in this project do not allow Thread Hatches.
 
-客户端 `CoilTrait` 的成型状态和温度不保证同步。配置器从服务端读取动态范围后，客户端 value supplier 不得再次通过本地 `isFormed()/getTemperature()` 计算范围；应缓存服务端发送的并行/线程上限并仅用于 UI。真实运行值仍必须在服务端重新按当前线圈限幅。
+Client `CoilTrait` formation state and temperature are not guaranteed to synchronize. After a configurator reads dynamic ranges from the server, its client value supplier must not recalculate them through local `isFormed()/getTemperature()`. Cache server-sent parallel/thread ceilings for UI use only. The server must still clamp actual runtime values against the current coil.
 
-fix64 例外：超维度冶炼炉和超维度化工厂已经取消线圈容量公式。它们仍使用 `CoilCrossRecipeMultiblockMachine` 保留线圈结构与冶炼温度检查，但并行页固定使用 `IParallelMachine.MAX_PARALLEL`，线程页固定使用 `Integer.MAX_VALUE`。由于 `CrossRecipeTrait` 直接计算 `parallel * thread`，必须继续保证乘积不超过 `Long.MAX_VALUE`；“取消线圈上限”不等于取消数据类型和溢出安全边界。
+Fix64 is an exception: the Hyperdimensional Smelter and Hyperdimensional Chemical Factory no longer use a coil-capacity formula. They retain `CoilCrossRecipeMultiblockMachine` for coil structure and smelting-temperature checks, but the parallel page uses fixed `IParallelMachine.MAX_PARALLEL` and the thread page fixed `Integer.MAX_VALUE`. Because `CrossRecipeTrait` directly calculates `parallel * thread`, the product must remain at or below `Long.MAX_VALUE`. Removing the coil ceiling does not remove data-type and overflow-safety boundaries.
 
-Litematic 中用真实仓室作为定位标记时，应给该坐标独立字符，例如冶炼炉 `M`：
+When a Litematic uses a real hatch as a placement marker, assign that coordinate a dedicated symbol, such as Smelter `M`:
 
 ```java
 .where('M', Predicates.abilities(PartAbility.MUFFLER)
         .setExactLimit(1).setPreviewCount(1))
 ```
 
-不要再在通用 H 谓词中开放同一能力。化工厂维护仓仍属于 39 个合法 H 位置，因此在 H 谓词中使用 `PartAbility.MAINTENANCE.setExactLimit(1)`；过滤器模型和 `cleanroomFilters()` 已在 fix50 取消。结构生成器必须按控制器所在有效 Z 端决定 aisle 顺序，并保持 Y 为 `minY -> maxY`。
+Do not expose the same ability again through the general `H` predicate. The Chemical Factory Maintenance Hatch remains one of 39 legal `H` positions, so its `H` predicate uses `PartAbility.MAINTENANCE.setExactLimit(1)`. The filter model and `cleanroomFilters()` were removed in fix50. The structure generator must choose aisle order from the valid Z end containing the controller and keep Y ordered `minY -> maxY`.
 
-空气/空格位允许放置任意方块时，必须使用 `.where(' ', Predicates.any())`。`FactoryBlockPattern.where` 会跳过 `isAny()` predicate，因此这些坐标不会进入结构监听，也不会把放入其中的仓室附加到控制器。不要重新引入测试型自定义 predicate，否则空格处的方块变化会触发结构重检。
+When air/space positions may contain arbitrary blocks, use `.where(' ', Predicates.any())`. `FactoryBlockPattern.where` skips `isAny()` predicates, so those coordinates do not enter structure listeners and hatches placed there do not attach to the controller. Do not reintroduce an experimental custom predicate, which would make block changes in spaces trigger structure rechecks.

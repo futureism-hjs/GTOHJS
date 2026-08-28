@@ -23,7 +23,7 @@ Recommended reading order:
 16. `25_fix65_me_input_assemblies.md`: ME Input Assembly, ME Stocking Input Assembly, and removal of the old custom lathe feature.
 17. `26_fix66_deferred_me_ability_validation.md`: two-stage validation of ME part definitions and ability binding.
 18. `27_fix67_me_assembly_recipes.md`: two native assembler recipes for ME input assemblies, LV/MV machine-casing crafting recipes, and final-table validation.
-19. `28_preloaded_ae_component_packs.md`: external storage format, 16M count, full-charge initialization, over-capacity direct write, and server validation contracts for three preloaded AE component packs.
+19. `28_preloaded_ae_component_packs.md`: external storage format, 16M count, full-charge initialization, over-capacity direct write, and server validation contracts for the normal and super AE component packs.
 20. `29_pre3_recipe_directory_and_cauldron_constraints.md`: five recipe drafts, two ZPM circuit tags, Advanced Alchemy Cauldron heat-hatch filtering, and tooltip text.
 21. `30_per4_universal_steam_factory_crafting.md`: universal steam factory crafting recipe and per4 no-client build acceptance.
 22. `31_gtl_fragment_world_collection_research.md`: GTL Fragment World Collector, 254 upstream recipe records, exact GTO mappings, unmapped-crystal blockers, and migrated content.
@@ -37,4 +37,4 @@ Recommended reading order:
 30. `39_fixed_parallel_runtime_and_coremod_architecture.md`: real fixed-parallel runtime chain, fillable ignored positions, Coremod/Java responsibility boundary, and documentation-first workflow.
 31. `40_configurable_thermal_and_infinite_intake_hatches.md`: two electromagnetic thermal-control forms, player-facing `0..3600 K` with controller-local zero-ambient, two-raw-units-per-K calibration returning the exact selected K, exact temperature locking, main-UI current-mode labels, destination-only screwdriver-switch messages, retained hatch-content clearing, eight-frame animation, complete advanced/ultimate intake grids, and vacuum-cover variants.
 
-Version baseline: GTO 0.5.6-beta, GTOLib 26.7.4, GTCEu 26.7.3, and Forge 47.4.20. The current build target is `gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar`; the preceding clean-build baseline is `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar`. Core resources are read-only; GTOLib is used only for read-only ABI audits; this documentation describes only GTOHJS development strategy.
+Version baseline: GTO 0.5.6-beta, GTOLib 26.7.4, GTCEu 26.7.3, and Forge 47.4.20. The current build target is `gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar`; the preceding clean-build baseline is `gtohjs-2.3-alpha-for-gtocore-0.5.6-beta.jar`. Core resources are read-only; GTOLib is used only for read-only ABI audits; this documentation describes only GTOHJS development strategy.

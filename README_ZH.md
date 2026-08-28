@@ -7,7 +7,7 @@
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current source version is `4.0-per1-for-gtocore-0.5.6-beta`, which adds a Kotlin 2.3.20 source migration while retaining the existing Java registration ABI. The requested network-enabled Java 21 non-clean build is the verification boundary. The preceding clean-build baseline is `2.3-alpha-for-gtocore-0.5.6-beta`. The source registers 23 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
+The current source version is `4.0-per2-for-gtocore-0.5.6-beta`, which adds a Kotlin 2.3.20 source migration while retaining the existing Java registration ABI. The verification boundary is a network-enabled Java 21 clean build. The preceding clean-build baseline is `2.3-alpha-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
 
 ## Runtime and development dependencies
 
@@ -37,7 +37,7 @@ $env:JAVA_HOME = '<JDK 21 path>'
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.
@@ -51,9 +51,8 @@ These are all non-machine entries currently registered in the GTOHJS namespace.
 | GTOHJS Recipe Editor | `gtohjs:recipe_editor` | Generates Java recipe drafts from GT recipe machines or a vanilla crafting table. |
 | Custom Multiblock Structure Exporter | `gtohjs:multiblock_structure_generator` | Selects a cuboid and exports a GTO multiblock Java draft. |
 | Vacuum Cover | `gtohjs:vacuum_cover` | Passively satisfies vacuum tiers 1-3 when installed on a single-block machine or a multiblock maintenance hatch. |
-| Basic AE Component Pack | `gtohjs:basic_ae_component_pack` | Preloads 123 basic AE item types. |
-| AE Machine Component Pack | `gtohjs:ae_machine_component_pack` | Preloads 42 AE/GTO machine component types. |
-| Advanced AE Hatch Component Pack | `gtohjs:advanced_ae_hatch_component_pack` | Preloads 21 advanced AE hatches and parts. |
+| Normal AE Component Pack | `gtohjs:normal_ae_component_pack` | Preloads 129 normal AE and addon component types. |
+| Super AE Component Pack | `gtohjs:super_ae_component_pack` | Preloads 17 super pattern-buffer and assembler component types. |
 | Integral Bronze Framework | `gtohjs:integral_bronze_framework` | A standalone structure block and block item with its own model, texture, loot table and crafting recipe. |
 
 ### World fragments
@@ -71,12 +70,11 @@ These are all non-machine entries currently registered in the GTOHJS namespace.
 
 ### AE component pack behavior
 
-- All three packs use the appearance of an AE2 256K portable item cell and start with both current and maximum power set to `20,000`.
+- Both packs use the appearance of an AE2 256K portable item cell and start with both current and maximum power set to `20,000`.
 - Every listed item type is stored at exactly `16,777,216`, bypassing the ordinary interactive 256K insertion capacity.
 - Every new pack receives an independent GTO external-storage UUID and cannot be disassembled back into components.
-- The Basic pack contains 123 item types and neither contains nor references tools or components from `ME Placement Tool for gto`.
-- The AE Machine pack contains 42 types. The Advanced AE Hatch pack contains 21 types, including `gtocore:me_wireless_connection_machine`.
-- Existing packs retain their UUID, existing quantities and charge across content versions. This build does not actively delete third-party item keys already present in an older external store.
+- The Normal pack contains 129 item types. The Super pack contains 17 pattern-buffer and assembler component types.
+- Each newly created pack receives its own external-storage UUID. The replacement neither migrates nor mutates instances of the removed three item IDs.
 - New `gtohjs:*` items use the shared colored "Added by GTO HJS" attribution line. Injected `gtocore` machine items join the same behavior through a controlled list.
 
 ## All machines and multiblock parts

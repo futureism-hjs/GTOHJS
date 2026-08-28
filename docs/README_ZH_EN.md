@@ -3,9 +3,9 @@
 > [!WARNING]
 > This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**Target build version:** `gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar`
+**Target build version:** `gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar`
 
-**Current source version:** `gtohjs-4.0-per1-for-gtocore-0.5.6-beta.jar` (Kotlin 2.3.20 migration; the Java 21 network-enabled clean build is the verification boundary)
+**Current source version:** `gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar` (Kotlin 2.3.20 migration; the Java 21 network-enabled clean build is the verification boundary)
 
 **Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
@@ -37,7 +37,7 @@
 24. `25_fix65_me_input_assemblies.md`: ME Input Assembly, ME Stocking Input Assembly, Pattern Buffer texture, direct-inventory semantics, and removal of the old custom lathe feature.
 25. `26_fix66_deferred_me_ability_validation.md`: delay ME ability member validation until the load-complete phase after Registrate binding.
 26. `27_fix67_me_assembly_recipes.md`: two native GTO assembler recipes for ME assemblies, LV/MV machine-casing crafting recipes, and final-table validation contract.
-27. `28_preloaded_ae_component_packs.md`: external storage format, 16M count, full-charge initialization, over-capacity direct write, and server validation contracts for three preloaded AE component packs.
+27. `28_preloaded_ae_component_packs.md`: external storage format, 16M count, full-charge initialization, over-capacity direct write, and server validation contracts for the normal and super AE component packs.
 28. `29_pre3_recipe_directory_and_cauldron_constraints.md`: five recipe drafts, two ZPM circuit tags, Advanced Alchemy Cauldron heat-hatch filtering, and tooltip text.
 29. `30_per4_universal_steam_factory_crafting.md`: universal steam factory crafting recipe and per4 no-client build acceptance.
 30. `31_gtl_fragment_world_collection_research.md`: GTL Fragment World Collector, 254 upstream recipes, exact GTO mappings, unmapped-crystal blockers, and migrated content.

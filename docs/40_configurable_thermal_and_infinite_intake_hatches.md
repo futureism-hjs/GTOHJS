@@ -1,6 +1,6 @@
 # Configurable Thermal Control, Infinite Intake Hatches, and Vacuum Cover
 
-> **Applies to:** Minecraft 1.20.1, Forge 47.4.20, GTCEu 26.7.3, GTOCore 0.5.6-beta, GTOLib 26.7.4, GTOHJS `4.0-per1-for-gtocore-0.5.6-beta`.
+> **Applies to:** Minecraft 1.20.1, Forge 47.4.20, GTCEu 26.7.3, GTOCore 0.5.6-beta, GTOLib 26.7.4, GTOHJS `4.0-per2-for-gtocore-0.5.6-beta`.
 
 ## 1. Definitions and Registration Windows
 
