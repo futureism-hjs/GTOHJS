@@ -665,7 +665,7 @@ function buildForgeHammerBulkRecipe() {
     instructions.add(new FieldInsnNode(
         Opcodes.GETSTATIC,
         'com/gtocore/common/data/GTORecipeTypes',
-        'FORGE_HAMMER_RECIPES',
+        'CLUSTER_RECIPES',
         'Lcom/gtolib/api/recipe/RecipeType;'
     ));
     instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -1234,13 +1234,13 @@ function initializeCoreMod() {
                     }
                 }
                 if (injected !== 0) {
-                    throw new Error('GTOHJS found an existing bulk forge-hammer injection in processIngot()V');
+                    throw new Error('GTOHJS found an existing bulk cluster injection in processIngot()V');
                 }
                 method.instructions.insertBefore(nodes[0], buildForgeHammerBulkRecipe());
                 if (method.maxStack < 8) {
                     method.maxStack = 8;
                 }
-                ASMAPI.log('INFO', 'GTOHJS injected bulk forge-hammer recipe generation into ' +
+                ASMAPI.log('INFO', 'GTOHJS injected bulk cluster recipe generation into ' +
                     'GTOMaterialRecipeHandler.processIngot(Material)');
                 return method;
             }

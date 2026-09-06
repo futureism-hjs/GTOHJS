@@ -67,9 +67,9 @@ Exactly one call must be found. Throw an error if the target structure changes; 
 
 The acceptance class must reject null, `gtceu:default`, an incorrect recipe type, incorrect EUt or duration, and incorrect I/O contents. After `RecipeBuilder.finish()`, verify that `RecipeBuilder.get(id)` and `recipeType.recipes.get(id)` still reference the same definition.
 
-## 5. Current forge-hammer batch recipes
+## 5. Current cluster-mill bulk recipes
 
-Fix47 injects the builder at the entry to GTO's native `GTOMaterialRecipeHandler.processIngot(Material)`. For every material with both ingot and dust forms, it generates 64 ingots -> 64 dust, EUt 16, duration `max(1, material.mass / 2)`, and no fluids. The client validated 408 recipes with `skippedMaterials=0`. These are independent recipes for every material whose ingot and dust forms actually exist, not one wildcard recipe that matches across materials.
+Fix47 injects the builder at the entry to GTO's native `GTOMaterialRecipeHandler.processIngot(Material)`. For every material with both ingot and dust forms, it generates a multi-roll/cluster-mill recipe with 64 ingots -> 64 dust, EUt 16, duration `max(1, material.mass / 2)`, and no fluids. The recipe type is `GTORecipeTypes.CLUSTER_RECIPES`, so the generated recipes appear in the multi-roll mill and are absent from the forge hammer. These are independent recipes for every material whose ingot and dust forms actually exist, not one wildcard recipe that matches across materials.
 
 ## 6. Do not modify EMI
 

@@ -26,8 +26,8 @@ import net.minecraftforge.registries.ForgeRegistries;
  * Receives the recipes built inline in GTO's material recipe generator.
  *
  * <p>A wildcard ingot ingredient cannot select a material-dependent dust
- * output.  The coremod therefore calls the inline builder once for every
- * material handled by {@code GTOMaterialRecipeHandler.processIngot}.</p>
+ * output.  The coremod therefore calls the inline cluster-mill builder once
+ * for every material handled by {@code GTOMaterialRecipeHandler.processIngot}.</p>
  */
 public final class ForgeHammerBulkRecipeRegistration {
     public enum State {
@@ -84,7 +84,7 @@ public final class ForgeHammerBulkRecipeRegistration {
         return new ResourceLocation(GTOHJS.MOD_ID, "ingot_to_dust_64_" + name);
     }
 
-    /** Matches the duration convention used by GTO's generated hammer recipes. */
+    /** Matches the duration convention used by GTO's generated cluster recipes. */
     public static int duration(Material material) {
         long mass = material == null ? 1L : material.getMass();
         return (int) Math.max(1L, Math.min(Integer.MAX_VALUE, mass / 2L));
@@ -94,23 +94,23 @@ public final class ForgeHammerBulkRecipeRegistration {
     public static synchronized void accept(Material material, GTRecipeDefinition candidate) {
         try {
             if (material == null || candidate == null) {
-                throw new IllegalStateException("Bulk forge-hammer recipe builder returned null");
+                throw new IllegalStateException("Bulk cluster recipe builder returned null");
             }
             if (DUMMY_RECIPE_ID.equals(candidate.id)) {
-                throw new IllegalStateException("Bulk forge-hammer recipe builder returned RecipeDefinition.DUMMY");
+                throw new IllegalStateException("Bulk cluster recipe builder returned RecipeDefinition.DUMMY");
             }
             ResourceLocation rawId = rawId(material);
-            ResourceLocation savedId = RecipeBuilder.getTypeID(rawId, GTORecipeTypes.FORGE_HAMMER_RECIPES);
+            ResourceLocation savedId = RecipeBuilder.getTypeID(rawId, GTORecipeTypes.CLUSTER_RECIPES);
             if (!savedId.equals(candidate.id)) {
-                throw new IllegalStateException("Unexpected bulk forge-hammer recipe id " + candidate.id +
+                throw new IllegalStateException("Unexpected bulk cluster recipe id " + candidate.id +
                         ", expected " + savedId);
             }
-            if (candidate.recipeType != GTORecipeTypes.FORGE_HAMMER_RECIPES) {
+            if (candidate.recipeType != GTORecipeTypes.CLUSTER_RECIPES) {
                 throw new IllegalStateException("Bulk recipe was saved to an unexpected recipe type: " +
                         candidate.recipeType);
             }
             if (candidate.eut != EU_PER_TICK || candidate.duration != duration(material)) {
-                throw new IllegalStateException("Unexpected bulk forge-hammer power/duration for " + rawId +
+                throw new IllegalStateException("Unexpected bulk cluster power/duration for " + rawId +
                         ": EUt=" + candidate.eut + ", duration=" + candidate.duration);
             }
             validateContents(material, candidate);
@@ -118,11 +118,11 @@ public final class ForgeHammerBulkRecipeRegistration {
             state = State.REGISTERED;
         } catch (Throwable error) {
             state = State.FAILED;
-            ModLog.error("Bulk forge-hammer recipe validation failed", error);
+            ModLog.error("Bulk cluster recipe validation failed", error);
             if (error instanceof RuntimeException runtimeException) {
                 throw runtimeException;
             }
-            throw new IllegalStateException("Bulk forge-hammer recipe validation failed", error);
+            throw new IllegalStateException("Bulk cluster recipe validation failed", error);
         }
     }
 
@@ -131,7 +131,7 @@ public final class ForgeHammerBulkRecipeRegistration {
                 candidate.itemOutputs == null || candidate.itemOutputs.size() != 1 ||
                 candidate.fluidInputs != null && !candidate.fluidInputs.isEmpty() ||
                 candidate.fluidOutputs != null && !candidate.fluidOutputs.isEmpty()) {
-            throw new IllegalStateException("Bulk forge-hammer recipe has unexpected I/O lists: " + candidate.id);
+            throw new IllegalStateException("Bulk cluster recipe has unexpected I/O lists: " + candidate.id);
         }
 
         ItemStack expectedIngot = ChemicalHelper.get(TagPrefix.ingot, material, 1);
@@ -144,13 +144,13 @@ public final class ForgeHammerBulkRecipeRegistration {
                                             String direction, ResourceLocation recipeId) {
         if (content == null || content.inner == null || content.chance != Content.MAX_CHANCE ||
                 content.tierChanceBoost != 0 || content.getIntAmount() != AMOUNT) {
-            throw new IllegalStateException("Unexpected bulk forge-hammer " + direction + " content in " + recipeId);
+            throw new IllegalStateException("Unexpected bulk cluster " + direction + " content in " + recipeId);
         }
         ItemStack actual = content.inner.getItem();
         if (actual.isEmpty() || expected.isEmpty() || actual.getItem() != expected.getItem()) {
             ResourceLocation actualId = actual.isEmpty() ? null : ForgeRegistries.ITEMS.getKey(actual.getItem());
             ResourceLocation expectedId = expected.isEmpty() ? null : ForgeRegistries.ITEMS.getKey(expected.getItem());
-            throw new IllegalStateException("Unexpected bulk forge-hammer " + direction + " item in " + recipeId +
+            throw new IllegalStateException("Unexpected bulk cluster " + direction + " item in " + recipeId +
                     ": actual=" + actualId + ", expected=" + expectedId);
         }
     }
@@ -163,36 +163,36 @@ public final class ForgeHammerBulkRecipeRegistration {
         }
         if (DEFINITIONS.isEmpty()) {
             state = State.FAILED;
-            throw new IllegalStateException("No bulk forge-hammer recipes were generated");
+            throw new IllegalStateException("No bulk cluster recipes were generated");
         }
 
         try {
             for (Map.Entry<ResourceLocation, GTRecipeDefinition> entry : DEFINITIONS.entrySet()) {
-                ResourceLocation savedId = RecipeBuilder.getTypeID(entry.getKey(), GTORecipeTypes.FORGE_HAMMER_RECIPES);
+                ResourceLocation savedId = RecipeBuilder.getTypeID(entry.getKey(), GTORecipeTypes.CLUSTER_RECIPES);
                 GTRecipeDefinition retained = RecipeBuilder.get(savedId);
                 if (retained != entry.getValue()) {
                     throw new IllegalStateException("Finalized recipe table lost " + savedId);
                 }
             }
             state = State.REGISTERED;
-            ModLog.info("Validated {} bulk forge-hammer recipes (64 ingots -> 64 dust); skippedMaterials={}",
+            ModLog.info("Validated {} bulk cluster recipes (64 ingots -> 64 dust); skippedMaterials={}",
                     DEFINITIONS.size(), skippedMaterials);
         } catch (Throwable error) {
             state = State.FAILED;
-            ModLog.error("Finalized bulk forge-hammer recipe validation failed", error);
+            ModLog.error("Finalized bulk cluster recipe validation failed", error);
             if (error instanceof RuntimeException runtimeException) {
                 throw runtimeException;
             }
-            throw new IllegalStateException("Finalized bulk forge-hammer recipe validation failed", error);
+            throw new IllegalStateException("Finalized bulk cluster recipe validation failed", error);
         }
     }
 
     public static synchronized void validateLoaded() {
         if (state != State.REGISTERED || DEFINITIONS.isEmpty()) {
-            throw new IllegalStateException("Bulk forge-hammer recipes were not registered; state=" + state +
+            throw new IllegalStateException("Bulk cluster recipes were not registered; state=" + state +
                     ", count=" + DEFINITIONS.size());
         }
-        ModLog.info("Loaded {} bulk forge-hammer recipes; state={}", DEFINITIONS.size(), state);
+        ModLog.info("Loaded {} bulk cluster recipes; state={}", DEFINITIONS.size(), state);
     }
 
     public static State state() {

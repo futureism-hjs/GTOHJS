@@ -3,9 +3,9 @@
 > [!WARNING]
 > This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**Target build version:** `gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar`
+**Target build version:** `gtohjs-4.0-per3-for-gtocore-0.5.6-beta.jar`
 
-**Current source version:** `gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar` (Kotlin 2.3.20 migration; the Java 21 network-enabled clean build is the verification boundary)
+**Current source version:** `gtohjs-4.0-per3-for-gtocore-0.5.6-beta.jar` (cluster-mill bulk-recipe migration; the Java 21 network-enabled clean build and fixed-beta client test passed)
 
 **Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
@@ -18,7 +18,7 @@
 5. `05_electric_multiblock_advanced_hatches.md`: parallel, acceleration, thread, overclock, maintenance, muffler, and laser hatches.
 6. `06_machine_modules_and_preview.md`: six representative machine families, module bonuses, and the preview chain.
 7. `07_recipe_type_page_registration.md`: new recipe pages and RecipeType registration.
-8. `08_recipe_registration.md`: GTO recipes and batch forge-hammer recipes.
+8. `08_recipe_registration.md`: GTO recipes and multi-roll/cluster-mill bulk recipes.
 9. `10_hyperdimensional_multiblock_fix49.md`: four hyperdimensional multiblocks, hatch boundaries, coil formula, threading boundary, and Y-axis correction.
 10. `11_hyperdimensional_multiblock_fix50.md`: squared coil formula, new smelter/chemical-factory models, dedicated muffler point, mandatory maintenance hatch, and source tooltip.
 11. `12_fix51_parallel_pattern_and_ignored_spaces.md`: Chemical Complex exponential formula, unified parallel/thread cap, ignored spaces, and the universal steam factory's `5 x 5 x 5` model.

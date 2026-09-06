@@ -108,7 +108,7 @@ public final class GTOHJS {
                         "importedChemicalRecipes={}, importedChemicalRecipesState={}, " +
                         "importedDirectoryRecipes={}, importedDirectoryRecipesState={}, " +
                         "craftingRecipeState={}, sludgeRecipe={}, sludgeRecipeState={}, " +
-                        "bulkForgeHammerRecipes={}, bulkForgeHammerState={}, " +
+                        "bulkClusterRecipes={}, bulkClusterState={}, " +
                         "hyperdimensionalForge={}, hyperdimensionalForgeState={}, " +
                         "hyperdimensionalSteamFurnace={}, hyperdimensionalSteamFurnaceState={}, " +
                         "hyperdimensionalSmelter={}, hyperdimensionalSmelterState={}, " +

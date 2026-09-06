@@ -42,5 +42,5 @@ Reliable acceptance evidence includes:
 Registered gtocore:universal_steam_factory ... recipeTypes=[15 entries]
 Validated loaded gtocore:universal_steam_factory; patternBuilt=true; cachedPatterns=1
 Load complete; ... universalSteamFactoryState=REGISTERED
-Validated 408 bulk forge-hammer recipes (64 ingots -> 64 dust)
+Validated 408 bulk cluster recipes (64 ingots -> 64 dust)
 ```

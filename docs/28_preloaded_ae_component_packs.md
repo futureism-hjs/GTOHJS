@@ -1,6 +1,6 @@
 # GTOHJS Preloaded AE Component Packs
 
-**Status:** 4.0-per2 replacement baseline (internal documentation)  
+**Status:** 4.0-per3 cluster-recipe baseline (internal documentation)  
 **Runtime:** Minecraft 1.20.1, Forge 47.4.20, GTO 0.5.6-beta, Java 21  
 **Scope:** Two independent `gtohjs` items; no AE2, GTOCore, GTOLib, EMI, or player-world source modification.
 

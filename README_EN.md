@@ -7,7 +7,7 @@
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current source version is `4.0-per2-for-gtocore-0.5.6-beta`, which adds a Kotlin 2.3.20 source migration while retaining the existing Java registration ABI. The verification boundary is a network-enabled Java 21 clean build. The preceding clean-build baseline is `2.3-alpha-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
+The current source version is `4.0-per3-for-gtocore-0.5.6-beta`, which moves the HJS bulk ingot-to-dust recipes from the forge hammer to GTOCore's multi-roll/cluster-mill recipe type while retaining the existing Java registration ABI. The Java 21 network-enabled clean build and fixed-beta client test passed: the bulk recipes appear in the multi-roll/cluster mill and are absent from the forge hammer. The preceding clean-build baseline is `4.0-per2-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
 
 ## Runtime and development dependencies
 
@@ -181,7 +181,7 @@ The current version registers or proxies 768 recipes:
 | Category | Count | Content |
 | --- | ---: | --- |
 | Fragment World Collection | 254 | 15 world-fragment conversions, 101 ore recipes, 130 fluid recipes, seven special-resource recipes and one Damascus steel dust recipe. |
-| Bulk Forge Hammer | 408 | Registers `64 ingots -> 64 dust` for every currently loaded material with ingot and dust forms, at `16 EU/t` for `max(1, material mass/2)`. |
+| Bulk Cluster Mill | 408 | Registers `64 ingots -> 64 dust` in the multi-roll/cluster mill for every currently loaded material with ingot and dust forms, at `16 EU/t` for `max(1, material mass/2)`; no HJS bulk recipe remains in the forge hammer. |
 | Botania Petal Apothecary proxy | 71 | Converts to Large Petal Apothecary recipes at `16 EU/t`, `100t`, with no mana I/O. |
 | Shaped crafting | 22 | Final IDs use `gtohjs:shaped/<path>`. |
 | Chemical Reactor platinum-group sludge | 4 | Tetrahedrite, chalcocite, bornite and cooperite processing. |

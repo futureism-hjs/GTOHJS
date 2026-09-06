@@ -1,5 +1,29 @@
 # GTO HJS 更新日志 / Changelog
 
+## 4.0-per3-for-gtocore-0.5.6-beta - 2026-09-06
+
+### 中文
+
+与上一份清洁构建 `4.0-per2-for-gtocore-0.5.6-beta` 相比：
+
+更改：
+
+- 将 HJS 添加的 `64 锭 -> 64 粉` 批量配方从锻造锤配方类型迁移到多辊式轧机（`GTORecipeTypes.CLUSTER_RECIPES`）。
+- 保留每种材料独立配方、64 锭输入、64 粉输出、`16 EU/t` 和 `max(1, material.mass / 2)` 时长；锻造锤不再承载这批 HJS 配方。
+- 将 Java 校验、Coremod builder、最终配方 ID 检查、日志、开发文档和版本元数据同步到 `4.0-per3-for-gtocore-0.5.6-beta`。
+- 用户已完成 Java 21 清洁构建并在固定 GTO 客户端完成测试：多辊式轧机显示 HJS 的 `64 锭 -> 64 粉` 配方，锻造锤不再显示该批量配方。
+
+### English
+
+Compared with the previous clean build `4.0-per2-for-gtocore-0.5.6-beta`:
+
+Changed:
+
+- Moved the HJS `64 ingots -> 64 dust` bulk recipes from the forge-hammer recipe type to the multi-roll/cluster-mill type (`GTORecipeTypes.CLUSTER_RECIPES`).
+- Preserved one independent recipe per material, 64 ingot input, 64 dust output, `16 EU/t`, and `max(1, material.mass / 2)` duration; the forge hammer no longer carries this HJS bulk set.
+- Synchronized Java validation, the Coremod builder, final recipe-ID checks, logs, development documentation, and version metadata with `4.0-per3-for-gtocore-0.5.6-beta`.
+- The user completed the Java 21 clean build and fixed-beta client test: the multi-roll/cluster mill shows the HJS `64 ingots -> 64 dust` recipes, and the forge hammer no longer shows this bulk set.
+
 ## 4.0-per2-for-gtocore-0.5.6-beta - 2026-08-28
 
 ### 中文

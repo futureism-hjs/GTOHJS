@@ -123,7 +123,7 @@ behavioral rewrite rather than a description/utility migration.
 ## Verification boundary
 
 The requested build is a network-enabled, non-clean Gradle build for
-`4.0-per2-for-gtocore-0.5.6-beta`. Verification must confirm Kotlin compilation,
+`4.0-per3-for-gtocore-0.5.6-beta`. Verification must confirm Kotlin compilation,
 Java call-site compatibility, packaged Kotlin classes/resources, and deployment to the fixed
 client. When the user chooses PCL launch, the assistant force-deploys after preserving a
 backup, tells the user that deployment is complete and waits for PCL, then keeps a background

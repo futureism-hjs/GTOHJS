@@ -51,4 +51,4 @@ GTO also registers or supplements `IMPORT_ITEMS`, `EXPORT_ITEMS`, `IMPORT_FLUIDS
 
 ## Current fix47 internal verification result
 
-Fix47 client logs prove that the coremod injected the display/click mode hooks and scrolling mode-page adapter, while recipe-page, machine, and forge-hammer generation all reached their expected registration windows. The universal steam factory has one cached pattern, 15 registered recipe types, and 408 retained final-table forge-hammer recipes. The scrollbar and mode clicks still require manual in-game confirmation. Java 21 no longer reports a `com.gtocore` split package or premature recipe-registry unfreezing.
+Fix47 client logs prove that the coremod injected the display/click mode hooks and scrolling mode-page adapter, while recipe-page, machine, and cluster-mill generation all reached their expected registration windows. The universal steam factory has one cached pattern, 15 registered recipe types, and 408 retained final-table cluster recipes. The scrollbar and mode clicks still require manual in-game confirmation. Java 21 no longer reports a `com.gtocore` split package or premature recipe-registry unfreezing.
