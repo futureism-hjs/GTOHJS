@@ -9,7 +9,7 @@ import com.gregtechceu.gtceu.api.recipe.info.FluidRecipeInfo;
 import com.gregtechceu.gtceu.api.recipe.info.ItemRecipeInfo;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTSoundEntries;
-import com.gtohjs.recipe.LargePetalApothecaryRecipeType;
+import com.gtohjs.api.LargePetalApothecaryRecipeType;
 import com.gtohjs.util.ModLog;
 import com.gtolib.utils.register.RecipeTypeRegisterUtils;
 import net.minecraft.core.registries.BuiltInRegistries;

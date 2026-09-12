@@ -1,5 +1,6 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
+import com.gtohjs.bootstrap.OneStopRareEarthRecipeTypeRegistration;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
@@ -118,6 +119,40 @@ public final class OneStopRareEarthRecipeRegistration {
             state = State.FAILED;
             throw registrationFailure("Unable to begin one-stop rare-earth recipe registration", error);
         }
+    }
+
+    /** Method-mode catalog metadata for the one-stop rare-earth recipe group. */
+    public static int recipeCount() {
+        return SPECS.size();
+    }
+
+    public static ResourceLocation rawId(int index) {
+        return SPECS.get(index).rawId();
+    }
+
+    public static com.gtolib.api.recipe.RecipeType recipeType(int index) {
+        rawId(index);
+        return OneStopRareEarthRecipeTypeRegistration.definition();
+    }
+
+    /** Configures only; the shared CoreMod loop owns RecipeBuilder.save(). */
+    public static void configure(RecipeBuilder builder, int index) {
+        Objects.requireNonNull(builder, "One-stop rare-earth recipe builder");
+        RecipeSpec spec = SPECS.get(index);
+        for (DustSpec input : spec.itemInputs()) {
+            builder.inputItems(TagPrefix.dust, input.material(), input.amount());
+        }
+        for (DustSpec output : spec.itemOutputs()) {
+            builder.outputItems(TagPrefix.dust, output.material(), output.amount());
+        }
+        for (FluidSpec input : spec.fluidInputs()) {
+            builder.inputFluids(input.material(), input.amount());
+        }
+        builder.EUt(EU_PER_TICK).duration(spec.duration());
+    }
+
+    public static void accept(GTRecipeDefinition candidate, int index) {
+        acceptInjected(index, candidate);
     }
 
     public static void acceptMonazite(GTRecipeDefinition candidate) {
@@ -423,3 +458,5 @@ public final class OneStopRareEarthRecipeRegistration {
         }
     }
 }
+
+

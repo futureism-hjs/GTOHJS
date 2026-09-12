@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.gregtechceu.gtceu.api.recipe.GTRecipeDefinition;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
@@ -125,3 +125,5 @@ public final class PlatinumGroupSludgeRecipeRegistration {
         return definition;
     }
 }
+
+

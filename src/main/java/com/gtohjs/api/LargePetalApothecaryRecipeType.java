@@ -1,4 +1,4 @@
-package com.gtohjs.recipe;
+package com.gtohjs.api;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeDefinition;
@@ -304,3 +304,5 @@ public final class LargePetalApothecaryRecipeType extends com.gtolib.api.recipe.
         }
     }
 }
+
+

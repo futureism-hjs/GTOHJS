@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
@@ -548,3 +548,5 @@ final class FragmentWorldCollectionRecipeData {
             int duration) {
     }
 }
+
+

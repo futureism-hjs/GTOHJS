@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.google.gson.JsonElement;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
@@ -143,6 +143,32 @@ public final class ImportedRecipeDirectoryRegistration {
             state = State.FAILED;
             throw registrationFailure("Unable to begin recipe-directory import", error);
         }
+    }
+
+    /** Method-mode catalog metadata for the three imported-directory recipes. */
+    public static int recipeCount() {
+        return SPECS.size();
+    }
+
+    public static ResourceLocation rawId(int index) {
+        return SPECS.get(index).rawId();
+    }
+
+    public static RecipeType recipeType(int index) {
+        return SPECS.get(index).recipeType();
+    }
+
+    public static void configure(RecipeBuilder builder, int index) {
+        switch (index) {
+            case 0 -> configureLargePetalApothecary(builder);
+            case 1 -> configureHyperdimensionalChemicalFactory(builder);
+            case 2 -> configureHyperdimensionalSmelter(builder);
+            default -> throw new IndexOutOfBoundsException("Imported recipe index: " + index);
+        }
+    }
+
+    public static void accept(GTRecipeDefinition candidate, int index) {
+        acceptInjected(index, candidate);
     }
 
     /** Applies the large-petal-apothecary draft to the builder created by the coremod. */
@@ -487,3 +513,5 @@ public final class ImportedRecipeDirectoryRegistration {
         }
     }
 }
+
+

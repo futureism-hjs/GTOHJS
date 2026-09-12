@@ -1,5 +1,30 @@
 # GTO HJS 更新日志 / Changelog
 
+## 5.0per1 - 2026-09-08
+
+### 中文
+
+更改：
+
+- 将所有当前 GT、工作台、导入、代理关联和材料批量配方注册路径改为方法模式来源目录；配方源代码集中于 `com.gtohjs.gtrecipe`，共享发现、GT/工作台执行和代理实现集中于 `com.gtohjs.api`。
+- 将 CoreMod 中每条配方的 ASM 构建片段替换为两个统一循环：`Data.commonInit()` 中有限 GT 配方循环和 `processIngot(Material)` 中材料动态族循环。两个循环继续在 `RecipeFilter.init()` 之后以内联 ASM 调用 `RecipeType.recipeBuilder(...)` 与 `RecipeBuilder.save()`，并在 `RecipeBuilder.finish()` 后验证最终表。
+- 保留 2 条 ME、4 条化反应器导入、3 条目录导入、3 条稀土、1 条铂族、254 条碎片世界、64 锭转 64 粉动态族、22 条工作台和 Large Petal 代理的原有配方语义与校验。
+- 配方生成器现在输出完整的 `com.gtohjs.gtrecipe` Java 类到客户端 `gtohjs/recipe`；文件名等于 public 类名，并保留 NBT、circuit、温度、MANAt、EUt 和 duration。
+- 修复了超级样板总成镜像连接超级样板总成时超级样板总成镜像所在机器配方不运行的问题。
+
+验证：Java 21.0.5 Gradle CLI 在任何任务或依赖解析前因 `java.io.IOException: Unable to establish loopback connection` 停止；JDK selector 可复现相同 AF_UNIX pipe 故障。随后 IntelliJ IDEA MCP 完整重建成功，修正两处 `GTMaterials.PlatinumGroupSludge` 所有者后生成 `gtohjs-5.0per1.jar`。旧 `4.0-per3` 客户端 JAR 已备份，新 JAR 已部署；用户手动启动客户端并确认旧配方正常加载，新生成配方未纳入本次验收。
+
+### English
+
+Changed:
+
+- Replaced every current GT, crafting, imported, proxy-related, and material-bulk recipe registration path with method-mode sources. Recipe source code is centralized under `com.gtohjs.gtrecipe`; shared discovery, GT/crafting execution, and proxy implementation are in `com.gtohjs.api`.
+- Replaced the per-recipe CoreMod ASM builders with two shared loops: the finite GT loop in `Data.commonInit()` and the contextual material-family loop in `processIngot(Material)`. Both retain inline `RecipeType.recipeBuilder(...)` and `RecipeBuilder.save()` after `RecipeFilter.init()`, with final-table validation after `RecipeBuilder.finish()`.
+- Preserved the existing semantics and validations for 2 ME recipes, 4 chemical imports, 3 directory imports, 3 rare-earth recipes, 1 platinum-group recipe, 254 fragment-world recipes, the dynamic 64-ingot-to-64-dust family, 22 shaped recipes, and the Large Petal proxy.
+- The recipe editor now writes complete `com.gtohjs.gtrecipe` Java classes to the client `gtohjs/recipe` directory. The filename equals the public class name and generated GT sources retain NBT, circuit, temperature, MANAt, EUt, and duration.
+
+Verification: Java 21.0.5 Gradle CLI stopped before task execution with `java.io.IOException: Unable to establish loopback connection`; the JDK selector reproduces the same AF_UNIX pipe failure. IntelliJ IDEA MCP then completed a full rebuild and, after the two `GTMaterials.PlatinumGroupSludge` ownership corrections, produced `gtohjs-5.0per1.jar`. The prior `4.0-per3` client JAR was backed up and the new JAR deployed. The user manually launched Minecraft and confirmed that existing recipes load normally; new generated recipes were not included in this acceptance pass.
+
 ## 4.0-per3-for-gtocore-0.5.6-beta - 2026-09-06
 
 ### 中文

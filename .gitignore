@@ -1,5 +1,6 @@
 # Gradle and ForgeGradle output
 .gradle/
+.gradle-home/
 build/
 /outputs/
 out/
@@ -25,6 +26,10 @@ replay_pid*
 .classpath
 .project
 .settings/
+
+# Local tool configuration and stray build metadata
+.codex/
+/META-INF/
 
 # Runtime logs and crash output
 logs/

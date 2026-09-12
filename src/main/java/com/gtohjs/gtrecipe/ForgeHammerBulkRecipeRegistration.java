@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
@@ -203,3 +203,5 @@ public final class ForgeHammerBulkRecipeRegistration {
         return new ArrayList<>(DEFINITIONS.values());
     }
 }
+
+

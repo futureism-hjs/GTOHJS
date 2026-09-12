@@ -1,5 +1,6 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
+import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeTypeRegistration;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeDefinition;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.ItemIngredient;
@@ -232,3 +233,5 @@ public final class FragmentWorldCollectionRecipeRegistration {
         return DEFINITIONS.get(savedId(DAMASCUS_RAW_ID));
     }
 }
+
+

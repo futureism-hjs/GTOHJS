@@ -35,9 +35,8 @@ public abstract class MEPatternBufferProxyPartMachineMixin {
         if (!MESuperPatternBufferRegistration.PROXY_ID.equals(self.getDefinition().getId())) {
             return;
         }
-        if (!(getBuffer() instanceof MEPatternBufferOutputAccess)) {
-            return;
-        }
+        // The proxy can be bound after its controller has collected handlers.
+        // Keep the forwarding handler present and validate the binding per operation.
         var handlers = new ArrayList<>(callback.getReturnValue());
         handlers.add(RecipeHandlerUnit.of(
                 IO.OUT,
@@ -70,6 +69,18 @@ public abstract class MEPatternBufferProxyPartMachineMixin {
         @Override
         public boolean canHandleFluid() {
             return true;
+        }
+
+        @Override
+        public boolean isInfiniteOutputItem() {
+            IRecipeHandler target = target();
+            return target != null && target.isInfiniteOutputItem();
+        }
+
+        @Override
+        public boolean isInfiniteOutputFluid() {
+            IRecipeHandler target = target();
+            return target != null && target.isInfiniteOutputFluid();
         }
 
         @Override

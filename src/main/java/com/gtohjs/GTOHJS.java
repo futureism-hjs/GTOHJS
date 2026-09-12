@@ -1,34 +1,27 @@
 package com.gtohjs;
 
-import com.gtohjs.bootstrap.CustomCraftingRecipeRegistration;
 import com.gtohjs.bootstrap.AdvancedAlchemyCauldronRegistration;
 import com.gtohjs.bootstrap.AdvancedGeneratorArrayRegistration;
 import com.gtohjs.bootstrap.AdvancedSteamArrayRegistration;
-import com.gtohjs.bootstrap.ForgeHammerBulkRecipeRegistration;
 import com.gtohjs.bootstrap.FragmentWorldCollectionMachineRegistration;
-import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeRegistration;
 import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeTypeRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalChemicalFactoryRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalForgeRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalSmelterRegistration;
 import com.gtohjs.bootstrap.HyperdimensionalSteamFurnaceRegistration;
-import com.gtohjs.bootstrap.ImportedChemicalReactorRecipeRegistration;
-import com.gtohjs.bootstrap.ImportedRecipeDirectoryRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRecipeTypeRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRegistration;
 import com.gtohjs.bootstrap.MEInputAssemblyRegistration;
-import com.gtohjs.bootstrap.MEInputAssemblyRecipeRegistration;
 import com.gtohjs.bootstrap.MESuperPatternBufferRegistration;
 import com.gtohjs.bootstrap.MESuperWildcardPatternBufferRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthProcessingPlantRegistration;
-import com.gtohjs.bootstrap.OneStopRareEarthRecipeRegistration;
 import com.gtohjs.bootstrap.OneStopRareEarthRecipeTypeRegistration;
-import com.gtohjs.bootstrap.PlatinumGroupSludgeRecipeRegistration;
 import com.gtohjs.bootstrap.UniversalSteamFactoryRegistration;
 import com.gtohjs.bootstrap.SteamArrayRegistration;
 import com.gtohjs.bootstrap.ThermalAndIntakeHatchRegistration;
 import com.gtohjs.bootstrap.VacuumCoverRegistration;
 import com.gtohjs.block.GTOHJSBlocks;
+import com.gtohjs.api.RecipeSourceCatalog;
 import com.gtohjs.item.GTOHJSItems;
 import com.gtohjs.item.GTOHJSItemTooltipHandler;
 import com.gtohjs.config.MEPatternBufferConfig;
@@ -68,14 +61,10 @@ public final class GTOHJS {
         LargePetalApothecaryRecipeTypeRegistration.validateLoaded();
         FragmentWorldCollectionRecipeTypeRegistration.validateLoaded();
         MEInputAssemblyRegistration.validateLoaded();
-        MEInputAssemblyRecipeRegistration.validateLoaded();
         MESuperPatternBufferRegistration.validateLoaded();
         MESuperWildcardPatternBufferRegistration.validateLoaded();
-        ImportedRecipeDirectoryRegistration.validateLoaded();
         UniversalSteamFactoryRegistration.validateLoaded();
-        ForgeHammerBulkRecipeRegistration.validateLoaded();
         OneStopRareEarthProcessingPlantRegistration.validateLoaded();
-        CustomCraftingRecipeRegistration.validateLoaded();
         HyperdimensionalForgeRegistration.validateLoaded();
         HyperdimensionalSteamFurnaceRegistration.validateLoaded();
         HyperdimensionalSmelterRegistration.validateLoaded();
@@ -88,85 +77,26 @@ public final class GTOHJS {
         ThermalAndIntakeHatchRegistration.validateLoaded();
         VacuumCoverRegistration.validateLoaded();
         FragmentWorldCollectionMachineRegistration.validateLoaded();
-        FragmentWorldCollectionRecipeRegistration.validateLoaded();
-        ModLog.info("Fragment-world load complete; recipeType={}, recipeTypeState={}, single={}, large={}, " +
-                        "machineState={}, mappedRecipes={}, recipeState={}",
-                FragmentWorldCollectionRecipeTypeRegistration.definition(),
-                FragmentWorldCollectionRecipeTypeRegistration.state(),
+
+        RecipeSourceCatalog.validateGTFinalized();
+        RecipeSourceCatalog.validateMaterialFinalized();
+        RecipeSourceCatalog.validateCraftingLoaded();
+        ModLog.info("Load complete; methodModeGTRecipes={}, fragmentWorldMachines=[{}, {}], " +
+                        "largePetalRecipeType={}, thermalHatch={}, intakeHatch={}",
+                RecipeSourceCatalog.registeredGTRecipeCount(),
                 FragmentWorldCollectionMachineRegistration.singleDefinition(),
                 FragmentWorldCollectionMachineRegistration.largeDefinition(),
-                FragmentWorldCollectionMachineRegistration.state(),
-                FragmentWorldCollectionRecipeRegistration.definitions(),
-                FragmentWorldCollectionRecipeRegistration.state());
-        ModLog.info("Load complete; meInputAssembly={}, meStockingInputAssembly={}, meAssemblyState={}, " +
-                        "meSuperPatternBuffer={}, meSuperPatternBufferProxy={}, meSuperPatternBufferState={}, " +
-                        "meAssemblyRecipes={}, meAssemblyRecipesState={}, " +
-                        "universalSteamFactory={}, universalSteamFactoryState={}, " +
-                        "rareEarthRecipeType={}, rareEarthRecipeTypeState={}, " +
-                        "rareEarthPlant={}, rareEarthPlantState={}, " +
-                        "rareEarthRecipes={}, rareEarthRecipesState={}, " +
-                        "importedChemicalRecipes={}, importedChemicalRecipesState={}, " +
-                        "importedDirectoryRecipes={}, importedDirectoryRecipesState={}, " +
-                        "craftingRecipeState={}, sludgeRecipe={}, sludgeRecipeState={}, " +
-                        "bulkClusterRecipes={}, bulkClusterState={}, " +
-                        "hyperdimensionalForge={}, hyperdimensionalForgeState={}, " +
-                        "hyperdimensionalSteamFurnace={}, hyperdimensionalSteamFurnaceState={}, " +
-                        "hyperdimensionalSmelter={}, hyperdimensionalSmelterState={}, " +
-                        "hyperdimensionalChemicalFactory={}, hyperdimensionalChemicalFactoryState={}, " +
-                        "advancedGeneratorArray={}, advancedGeneratorArrayState={}, " +
-                        "advancedAlchemyCauldron={}, advancedAlchemyCauldronState={}, " +
-                        "largePetalRecipeType={}, largePetalRecipeTypeState={}, " +
-                        "largePetalApothecary={}, largePetalApothecaryState={}, " +
-                        "thermalHatch={}, intakeHatch={}, hatchState={}",
-                MEInputAssemblyRegistration.inputDefinition(),
-                MEInputAssemblyRegistration.stockingInputDefinition(),
-                MEInputAssemblyRegistration.state(),
-                MESuperPatternBufferRegistration.bufferDefinition(),
-                MESuperPatternBufferRegistration.proxyDefinition(),
-                MESuperPatternBufferRegistration.state(),
-                MEInputAssemblyRecipeRegistration.definitions(),
-                MEInputAssemblyRecipeRegistration.state(),
-                UniversalSteamFactoryRegistration.definition(), UniversalSteamFactoryRegistration.state(),
-                OneStopRareEarthRecipeTypeRegistration.definition(),
-                OneStopRareEarthRecipeTypeRegistration.state(),
-                OneStopRareEarthProcessingPlantRegistration.definition(),
-                OneStopRareEarthProcessingPlantRegistration.state(),
-                OneStopRareEarthRecipeRegistration.definitions(),
-                OneStopRareEarthRecipeRegistration.state(),
-                ImportedChemicalReactorRecipeRegistration.definitions(),
-                ImportedChemicalReactorRecipeRegistration.state(),
-                ImportedRecipeDirectoryRegistration.definitions(),
-                ImportedRecipeDirectoryRegistration.state(),
-                CustomCraftingRecipeRegistration.state(),
-                PlatinumGroupSludgeRecipeRegistration.definition(),
-                PlatinumGroupSludgeRecipeRegistration.state(),
-                ForgeHammerBulkRecipeRegistration.definitions(),
-                ForgeHammerBulkRecipeRegistration.state(),
-                HyperdimensionalForgeRegistration.definition(),
-                HyperdimensionalForgeRegistration.state(),
-                HyperdimensionalSteamFurnaceRegistration.definition(),
-                HyperdimensionalSteamFurnaceRegistration.state(),
-                HyperdimensionalSmelterRegistration.definition(),
-                HyperdimensionalSmelterRegistration.state(),
-                HyperdimensionalChemicalFactoryRegistration.definition(),
-                HyperdimensionalChemicalFactoryRegistration.state(),
-                AdvancedGeneratorArrayRegistration.definition(),
-                AdvancedGeneratorArrayRegistration.state(),
-                AdvancedAlchemyCauldronRegistration.definition(),
-                AdvancedAlchemyCauldronRegistration.state(),
                 LargePetalApothecaryRecipeTypeRegistration.definition(),
-                LargePetalApothecaryRecipeTypeRegistration.state(),
-                LargePetalApothecaryRegistration.definition(),
-                LargePetalApothecaryRegistration.state(),
                 ThermalAndIntakeHatchRegistration.thermalDefinition(),
-                ThermalAndIntakeHatchRegistration.intakeDefinition(),
-                ThermalAndIntakeHatchRegistration.state());
+                ThermalAndIntakeHatchRegistration.intakeDefinition());
     }
 
     private void onServerStarted(ServerStartedEvent event) {
-        CustomCraftingRecipeRegistration.validateServerRecipes(event.getServer());
+        RecipeSourceCatalog.validateCraftingServerRecipes(event.getServer());
         int recipes = LargePetalApothecaryRecipeTypeRegistration.validateProxyRecipes(
                 event.getServer());
-        ModLog.info("Server started; validated large petal apothecary proxy recipes={}", recipes);
+        ModLog.info("Server started; validated method-mode crafting recipes and " +
+                "large petal apothecary proxy recipes={}", recipes);
     }
+
 }

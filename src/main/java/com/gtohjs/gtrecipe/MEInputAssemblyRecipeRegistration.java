@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.gregtechceu.gtceu.api.recipe.GTRecipeDefinition;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
@@ -28,15 +28,6 @@ public final class MEInputAssemblyRecipeRegistration {
     private static final ResourceLocation DUMMY_RECIPE_ID = new ResourceLocation("gtceu", "default");
     private static final List<RecipeSpec> SPECS = List.of(
             new RecipeSpec(
-                    GTOHJS.id("me_input_assembly"),
-                    Map.of(
-                            id("gtceu", "ev_dual_input_hatch"), 1,
-                            id("ae2", "cable_interface"), 1,
-                            id("ae2", "speed_card"), 1),
-                    Map.of(id("gtocore", "me_input_assembly"), 1),
-                    480L,
-                    300),
-            new RecipeSpec(
                     GTOHJS.id("me_stocking_input_assembly"),
                     Map.of(
                             id("gtceu", "luv_dual_input_hatch"), 1,
@@ -56,14 +47,14 @@ public final class MEInputAssemblyRecipeRegistration {
     private MEInputAssemblyRecipeRegistration() {
     }
 
-    /** Called immediately before the two native builders injected into GTO's Data.commonInit method. */
+    /** Called immediately before the native stocking builder injected into GTO's Data.commonInit method. */
     public static synchronized void beginInjectedRegistration() {
         state = State.REGISTERING;
         definitions = List.of();
         try {
             validateUniqueRawIds();
             validateItemsAvailable();
-            ModLog.info("Beginning native ME input assembly recipe registration; rawIds={}",
+            ModLog.info("Beginning native ME stocking input assembly recipe registration; rawIds={}",
                     SPECS.stream().map(RecipeSpec::rawId).toList());
         } catch (Throwable error) {
             state = State.FAILED;
@@ -71,12 +62,8 @@ public final class MEInputAssemblyRecipeRegistration {
         }
     }
 
-    public static void acceptInputAssembly(GTRecipeDefinition candidate) {
-        acceptInjected(0, candidate);
-    }
-
     public static void acceptStockingInputAssembly(GTRecipeDefinition candidate) {
-        acceptInjected(1, candidate);
+        acceptInjected(0, candidate);
     }
 
     private static synchronized void acceptInjected(int index, GTRecipeDefinition candidate) {
@@ -90,17 +77,17 @@ public final class MEInputAssemblyRecipeRegistration {
             List<GTRecipeDefinition> accepted = new ArrayList<>(definitions);
             accepted.add(candidate);
             definitions = List.copyOf(accepted);
-            ModLog.info("Accepted native ME assembly recipe {}; inputs={}, output={}, EUt={}, duration={}t",
+            ModLog.info("Accepted native ME stocking assembly recipe {}; inputs={}, output={}, EUt={}, duration={}t",
                     candidate.id, spec.inputs(), spec.outputs(), candidate.eut, candidate.duration);
         } catch (Throwable error) {
             state = State.FAILED;
-            throw registrationFailure("Native ME assembly recipe validation failed for " + spec.rawId(), error);
+            throw registrationFailure("Native ME stocking assembly recipe validation failed for " + spec.rawId(), error);
         }
     }
 
     public static synchronized void completeInjectedRegistration() {
         if (state != State.REGISTERING || definitions.size() != SPECS.size()) {
-            throw registrationFailure("ME input assembly recipe registration is incomplete; state=" + state +
+            throw registrationFailure("ME stocking input assembly recipe registration is incomplete; state=" + state +
                     ", accepted=" + definitions.size(), null);
         }
         state = State.REGISTERED;
@@ -277,3 +264,5 @@ public final class MEInputAssemblyRecipeRegistration {
             int duration) {
     }
 }
+
+

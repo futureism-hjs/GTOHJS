@@ -731,3 +731,23 @@ When a Litematic uses a real hatch as a placement marker, assign that coordinate
 Do not expose the same ability again through the general `H` predicate. The Chemical Factory Maintenance Hatch remains one of 39 legal `H` positions, so its `H` predicate uses `PartAbility.MAINTENANCE.setExactLimit(1)`. The filter model and `cleanroomFilters()` were removed in fix50. The structure generator must choose aisle order from the valid Z end containing the controller and keep Y ordered `minY -> maxY`.
 
 When air/space positions may contain arbitrary blocks, use `.where(' ', Predicates.any())`. `FactoryBlockPattern.where` skips `isAny()` predicates, so those coordinates do not enter structure listeners and hatches placed there do not attach to the controller. Do not reintroduce an experimental custom predicate, which would make block changes in spaces trigger structure rechecks.
+
+## 5.7 Method-Mode Recipe Sources (5.0per1)
+
+新配方 Java 文件放在 `src/main/java/com/gtohjs/gtrecipe`。不要再为每个
+配方编写 CoreMod ASM 片段，也不要在普通 Java 方法中调用 `RecipeBuilder.save()`。
+
+- 单个 GT 配方实现 `GTRecipeSource`；配方族实现 `GTRecipeBatchSource`；材料动态族实现
+  `MaterialRecipeSource`；工作台配方实现 `CraftingRecipeSource`。
+- `RecipeSourceCatalog` 发现 `com.gtohjs.gtrecipe` 中的来源并在运行时排序、检查 raw/final
+  ID 重复。GT builder 的 `recipeBuilder(...)` 和 `save()` 仍由 `Data.commonInit()` 中、
+  `RecipeFilter.init()` 之后的唯一 ASM 循环执行。
+- Java 来源只配置已经由 ASM 创建的 builder，并保留标签、`MaterialEntry`、NBT、机会产物、
+  circuit、温度、MANAt、EUt、duration 与专用校验；不得调用 `save()` 或 `build()`。
+- 工作台来源在相同窗口中调用 `VanillaRecipeHelper`；验证时使用
+  `gtohjs:shaped/<path>` 最终 ID。
+- 游戏内配方生成器输出完整 Java 类到版本目录根部的 `gtohjs/recipe`。手动复制该文件到
+  项目 `com.gtohjs.gtrecipe` 后重建 JAR；文件名必须等于 public 类名。
+
+完整英文契约、代理边界和生成器字段覆盖见
+`docs/42_method_mode_recipe_sources.md`。

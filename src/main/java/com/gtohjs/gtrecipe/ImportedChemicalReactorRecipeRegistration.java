@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.google.gson.JsonElement;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
@@ -92,6 +92,37 @@ public final class ImportedChemicalReactorRecipeRegistration {
             state = State.FAILED;
             throw registrationFailure("Unable to begin imported chemical-reactor recipe registration", error);
         }
+    }
+
+    /** Method-mode catalog metadata for the imported chemical recipe group. */
+    public static int recipeCount() {
+        return SPECS.size();
+    }
+
+    public static ResourceLocation rawId(int index) {
+        return SPECS.get(index).rawId();
+    }
+
+    public static com.gtolib.api.recipe.RecipeType recipeType(int index) {
+        rawId(index);
+        return GTORecipeTypes.CHEMICAL_RECIPES;
+    }
+
+    /** Configures only; the shared CoreMod loop owns RecipeBuilder.save(). */
+    public static void configure(RecipeBuilder builder, int index) {
+        Objects.requireNonNull(builder, "Imported chemical recipe builder");
+        RecipeSpec spec = SPECS.get(index);
+        builder.inputItems(ChemicalHelper.get(TagPrefix.dust, spec.inputMaterial(), 1))
+                .outputItems(ChemicalHelper.get(TagPrefix.dust, GTMaterials.PlatinumGroupSludge,
+                        spec.outputDustAmount()))
+                .inputFluids(GTMaterials.NitricAcid, NITRIC_ACID_AMOUNT)
+                .outputFluids(spec.outputFluidMaterial(), NITRIC_ACID_AMOUNT)
+                .EUt(EU_PER_TICK)
+                .duration(spec.duration());
+    }
+
+    public static void accept(GTRecipeDefinition candidate, int index) {
+        acceptInjected(index, candidate);
     }
 
     public static void acceptTetrahedrite(GTRecipeDefinition candidate) {
@@ -370,3 +401,4 @@ public final class ImportedChemicalReactorRecipeRegistration {
         }
     }
 }
+

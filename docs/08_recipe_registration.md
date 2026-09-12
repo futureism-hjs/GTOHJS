@@ -78,3 +78,19 @@ After the recipe page and machine are registered correctly, EMI discovers conten
 ## 7. Final IDs for coded crafting-table recipes
 
 Crafting-table recipes do not use GTO's `RecipeBuilder`; they continue to call `VanillaRecipeHelper` in the native `Data.commonInit()` window. However, `ShapedRecipeBuilder.getId()` automatically transforms a raw `gtohjs:<path>` ID into the final ID `gtohjs:shaped/<path>`. Registration logs may retain the raw ID, but queries against `GTRecipes.RECIPE_MAP` or the final `RecipeManager.byKey(...)` must use the resolved ID. `ServerStartedEvent` must verify every ID, recipe type, and output. The alpha client's final recipe count increased by exactly five; the earlier report that five recipes were missing was a false positive caused by a validator using raw IDs.
+
+## 8. Method-mode catalog (5.0per1)
+
+The per-recipe CoreMod fragments in earlier sections are historical examples.
+Current code uses `RecipeSourceCatalog` and providers in
+`com.gtohjs.gtrecipe`. The CoreMod emits one indexed runtime loop after
+`RecipeFilter.init()`: it gets the indexed `RecipeType` and raw ID, invokes
+`recipeBuilder`, lets Java configure the already-created builder, then invokes
+the literal `RecipeBuilder.save()` instruction and validates the returned
+definition. It performs a second catalog validation after `RecipeBuilder.finish()`.
+
+The same catalog owns duplicate raw/final-ID rejection. It supports finite GT
+providers, contextual material providers in `processIngot(Material)`, and
+shaped-crafting providers; it does not move `save()` into Java. See
+`docs/42_method_mode_recipe_sources.md` for the source contracts, proxy
+boundary, and generated-source workflow.

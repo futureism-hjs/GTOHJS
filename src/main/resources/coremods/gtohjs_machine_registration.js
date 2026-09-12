@@ -3,6 +3,7 @@ var Opcodes = Java.type('org.objectweb.asm.Opcodes');
 var FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
 var InsnList = Java.type('org.objectweb.asm.tree.InsnList');
 var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
+var IincInsnNode = Java.type('org.objectweb.asm.tree.IincInsnNode');
 var IntInsnNode = Java.type('org.objectweb.asm.tree.IntInsnNode');
 var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
 var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
@@ -11,590 +12,42 @@ var MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
 var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
 var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
 
-function appendResourceLocation(instructions, namespace, path) {
-    instructions.add(new TypeInsnNode(Opcodes.NEW, 'net/minecraft/resources/ResourceLocation'));
-    instructions.add(new InsnNode(Opcodes.DUP));
-    instructions.add(new LdcInsnNode(namespace));
-    instructions.add(new LdcInsnNode(path));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKESPECIAL,
-        'net/minecraft/resources/ResourceLocation',
-        '<init>',
-        '(Ljava/lang/String;Ljava/lang/String;)V',
-        false
-    ));
-}
-
-function appendDustRecipeItemFromOwner(instructions, methodName, materialOwner, materialField, amount) {
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gregtechceu/gtceu/api/data/tag/TagPrefix',
-        'dust',
-        'Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;'
-    ));
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        materialOwner,
-        materialField,
-        'Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;'
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, amount));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKESTATIC,
-        'com/gregtechceu/gtceu/api/data/chemical/ChemicalHelper',
-        'get',
-        '(Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)Lnet/minecraft/world/item/ItemStack;',
-        false
-    ));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        methodName,
-        '(Lnet/minecraft/world/item/ItemStack;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
-function appendDustRecipeItem(instructions, methodName, materialField, amount) {
-    appendDustRecipeItemFromOwner(
-        instructions,
-        methodName,
-        'com/gregtechceu/gtceu/common/data/GTMaterials',
-        materialField,
-        amount
-    );
-}
-
-function appendGTODustRecipeItem(instructions, methodName, materialField, amount) {
-    appendDustRecipeItemFromOwner(
-        instructions,
-        methodName,
-        'com/gtocore/common/data/GTOMaterials',
-        materialField,
-        amount
-    );
-}
-
-function appendMaterialRecipeFluid(instructions, methodName, materialField, amount) {
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gregtechceu/gtceu/common/data/GTMaterials',
-        materialField,
-        'Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;'
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, amount));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        methodName,
-        '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
-function appendStringRecipeItem(instructions, methodName, itemId, amount) {
-    instructions.add(new LdcInsnNode(itemId));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, amount));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        methodName,
-        '(Ljava/lang/String;I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
-function appendRecipePowerAndDuration(instructions, eut, duration) {
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, eut));
-    instructions.add(new InsnNode(Opcodes.I2L));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'EUt',
-        '(J)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, duration));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'duration',
-        '(I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
-function appendRecipeSaveAndAccept(instructions, owner, methodName) {
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'save',
-        '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
-        false
-    ));
-    instructions.add(ASMAPI.buildMethodCall(
-        owner,
-        methodName,
-        '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;)V',
-        ASMAPI.MethodType.STATIC
-    ));
-}
-
-function beginAssemblerRecipe(rawPath) {
+function buildCatalogGTRecipes(recipeIndexLocal) {
     var instructions = new InsnList();
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gtocore/common/data/GTORecipeTypes',
-        'ASSEMBLER_RECIPES',
-        'Lcom/gtolib/api/recipe/RecipeType;'
-    ));
-    appendResourceLocation(instructions, 'gtohjs', rawPath);
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeType',
-        'recipeBuilder',
-        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    return instructions;
-}
+    var check = new LabelNode();
+    var end = new LabelNode();
 
-function buildMEInputAssemblyRecipe() {
-    var instructions = beginAssemblerRecipe('me_input_assembly');
-    appendStringRecipeItem(instructions, 'inputItems', 'gtceu:ev_dual_input_hatch', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'ae2:cable_interface', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'ae2:speed_card', 1);
-    appendStringRecipeItem(instructions, 'outputItems', 'gtocore:me_input_assembly', 1);
-    appendRecipePowerAndDuration(instructions, 480, 300);
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
-        'acceptInputAssembly'
-    );
-    return instructions;
-}
-
-function buildMEStockingInputAssemblyRecipe() {
-    var instructions = beginAssemblerRecipe('me_stocking_input_assembly');
-    appendStringRecipeItem(instructions, 'inputItems', 'gtceu:luv_dual_input_hatch', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'gtocore:me_input_assembly', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'ae2:cable_interface', 4);
-    appendStringRecipeItem(instructions, 'inputItems', 'gtceu:luv_conveyor_module', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'gtceu:luv_electric_pump', 1);
-    appendStringRecipeItem(instructions, 'inputItems', 'ae2:speed_card', 4);
-    appendStringRecipeItem(instructions, 'inputItems', 'gtceu:luv_sensor', 1);
-    appendStringRecipeItem(instructions, 'outputItems', 'gtocore:me_stocking_input_assembly', 1);
-    appendRecipePowerAndDuration(instructions, 30720, 300);
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
-        'acceptStockingInputAssembly'
-    );
-    return instructions;
-}
-
-function buildMEInputAssemblyRecipes() {
-    var instructions = new InsnList();
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
-        'beginInjectedRegistration',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'beginGTRegistration',
         '()V',
         ASMAPI.MethodType.STATIC
     ));
-    instructions.add(buildMEInputAssemblyRecipe());
-    instructions.add(buildMEStockingInputAssemblyRecipe());
+    instructions.add(new InsnNode(Opcodes.ICONST_0));
+    instructions.add(new VarInsnNode(Opcodes.ISTORE, recipeIndexLocal));
+    instructions.add(check);
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
-        'completeInjectedRegistration',
-        '()V',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'gtRecipeCount',
+        '()I',
         ASMAPI.MethodType.STATIC
     ));
-    return instructions;
-}
+    instructions.add(new JumpInsnNode(Opcodes.IF_ICMPGE, end));
 
-function beginAssemblyLineRecipe(rawPath) {
-    var instructions = new InsnList();
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gtocore/common/data/GTORecipeTypes',
-        'ASSEMBLY_LINE_RECIPES',
-        'Lcom/gtolib/api/recipe/RecipeType;'
-    ));
-    appendResourceLocation(instructions, 'gtohjs', rawPath);
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeType',
-        'recipeBuilder',
-        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    return instructions;
-}
-
-function appendImportedRecipeConfiguration(instructions, methodName) {
-    instructions.add(new InsnNode(Opcodes.DUP));
+    // RecipeType.recipeBuilder(...) and RecipeBuilder.save() remain literal
+    // instructions in Data.commonInit(), after RecipeFilter.init().
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        methodName,
-        '(Lcom/gtolib/api/recipe/RecipeBuilder;)V',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'gtRecipeType',
+        '(I)Lcom/gtolib/api/recipe/RecipeType;',
         ASMAPI.MethodType.STATIC
     ));
-}
-
-function buildImportedLargePetalApothecaryRecipe() {
-    var instructions = beginAssemblerRecipe('large_petal_apothecary');
-    appendImportedRecipeConfiguration(instructions, 'configureLargePetalApothecary');
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        'acceptLargePetalApothecary'
-    );
-    return instructions;
-}
-
-function buildImportedHyperdimensionalChemicalFactoryRecipe() {
-    var instructions = beginAssemblyLineRecipe('hyperdimensional_chemical_factory');
-    appendImportedRecipeConfiguration(instructions, 'configureHyperdimensionalChemicalFactory');
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        'acceptHyperdimensionalChemicalFactory'
-    );
-    return instructions;
-}
-
-function buildImportedHyperdimensionalSmelterRecipe() {
-    var instructions = beginAssemblyLineRecipe('hyperdimensional_smelter');
-    appendImportedRecipeConfiguration(instructions, 'configureHyperdimensionalSmelter');
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        'acceptHyperdimensionalSmelter'
-    );
-    return instructions;
-}
-
-function buildImportedRecipeDirectoryRecipes() {
-    var instructions = new InsnList();
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        'beginInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    instructions.add(buildImportedLargePetalApothecaryRecipe());
-    instructions.add(buildImportedHyperdimensionalChemicalFactoryRecipe());
-    instructions.add(buildImportedHyperdimensionalSmelterRecipe());
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-        'completeInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    return instructions;
-}
-
-function buildImportedChemicalRecipe(
-    rawPath,
-    inputMaterialField,
-    outputDustAmount,
-    outputFluidMaterialField,
-    duration,
-    acceptMethod
-) {
-    var instructions = new InsnList();
-
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gtocore/common/data/GTORecipeTypes',
-        'CHEMICAL_RECIPES',
-        'Lcom/gtolib/api/recipe/RecipeType;'
-    ));
-    appendResourceLocation(instructions, 'gtohjs', rawPath);
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeType',
-        'recipeBuilder',
-        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-
-    appendDustRecipeItem(instructions, 'inputItems', inputMaterialField, 1);
-    appendDustRecipeItem(instructions, 'outputItems', 'PlatinumGroupSludge', outputDustAmount);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'NitricAcid', 1000);
-    appendMaterialRecipeFluid(instructions, 'outputFluids', outputFluidMaterialField, 1000);
-
-    instructions.add(new IntInsnNode(Opcodes.BIPUSH, 30));
-    instructions.add(new InsnNode(Opcodes.I2L));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'EUt',
-        '(J)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, duration));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'duration',
-        '(I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'save',
-        '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
-        false
-    ));
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedChemicalReactorRecipeRegistration',
-        acceptMethod,
-        '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;)V',
-        ASMAPI.MethodType.STATIC
-    ));
-
-    return instructions;
-}
-
-function buildImportedChemicalRecipes() {
-    var instructions = new InsnList();
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedChemicalReactorRecipeRegistration',
-        'beginInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    instructions.add(buildImportedChemicalRecipe(
-        'platinum_group_sludge_from_tetrahedrite',
-        'Tetrahedrite',
-        4,
-        'SulfuricCopperSolution',
-        110,
-        'acceptTetrahedrite'
-    ));
-    instructions.add(buildImportedChemicalRecipe(
-        'platinum_group_sludge_from_chalcocite',
-        'Chalcocite',
-        4,
-        'SulfuricCopperSolution',
-        110,
-        'acceptChalcocite'
-    ));
-    instructions.add(buildImportedChemicalRecipe(
-        'platinum_group_sludge_from_bornite',
-        'Bornite',
-        4,
-        'SulfuricCopperSolution',
-        110,
-        'acceptBornite'
-    ));
-    instructions.add(buildImportedChemicalRecipe(
-        'platinum_group_sludge_from_cooperite',
-        'Cooperite',
-        8,
-        'SulfuricNickelSolution',
-        150,
-        'acceptCooperite'
-    ));
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ImportedChemicalReactorRecipeRegistration',
-        'completeInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    return instructions;
-}
-
-function appendOneStopRecipeBuilder(instructions, rawPath) {
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/OneStopRareEarthRecipeTypeRegistration',
-        'definition',
-        '()Lcom/gtolib/api/recipe/RecipeType;',
-        ASMAPI.MethodType.STATIC
-    ));
-    appendResourceLocation(instructions, 'gtohjs', rawPath);
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeType',
-        'recipeBuilder',
-        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-}
-
-function appendOneStopSaveAndAccept(instructions, acceptMethod) {
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'save',
-        '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
-        false
-    ));
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/OneStopRareEarthRecipeRegistration',
-        acceptMethod,
-        '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;)V',
-        ASMAPI.MethodType.STATIC
-    ));
-}
-
-function buildOneStopMonaziteRecipe() {
-    var instructions = new InsnList();
-    appendOneStopRecipeBuilder(instructions, 'rare_earth_dust_from_monazite');
-    appendDustRecipeItem(instructions, 'inputItems', 'Monazite', 20);
-    appendDustRecipeItem(instructions, 'inputItems', 'Salt', 2);
-    appendDustRecipeItem(instructions, 'inputItems', 'Saltpeter', 40);
-    appendDustRecipeItem(instructions, 'outputItems', 'RareEarth', 5);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Acetone', 2000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'NitricAcid', 6000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Water', 4000);
-    appendRecipePowerAndDuration(instructions, 1920, 1100);
-    appendOneStopSaveAndAccept(instructions, 'acceptMonazite');
-    return instructions;
-}
-
-function buildOneStopBastnasiteRecipe() {
-    var instructions = new InsnList();
-    appendOneStopRecipeBuilder(instructions, 'rare_earth_dust_from_bastnasite');
-    appendDustRecipeItem(instructions, 'inputItems', 'Bastnasite', 5);
-    appendDustRecipeItem(instructions, 'inputItems', 'Saltpeter', 2);
-    appendDustRecipeItem(instructions, 'outputItems', 'RareEarth', 4);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'HydrofluoricAcid', 2000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'HydrochloricAcid', 1000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Acetone', 2000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Water', 2000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'NitricAcid', 1800);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Steam', 1000);
-    appendRecipePowerAndDuration(instructions, 1920, 1200);
-    appendOneStopSaveAndAccept(instructions, 'acceptBastnasite');
-    return instructions;
-}
-
-function buildOneStopOxidesRecipe() {
-    var instructions = new InsnList();
-    appendOneStopRecipeBuilder(instructions, 'lanthanum_oxide_dust');
-    appendDustRecipeItem(instructions, 'inputItems', 'RareEarth', 6);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'LanthanumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'PraseodymiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'NeodymiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'CeriumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'EuropiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'GadoliniumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'SamariumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'TerbiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'DysprosiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'HolmiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'ErbiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'ThuliumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'YtterbiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'LutetiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'ScandiumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'YttriumOxide', 1);
-    appendGTODustRecipeItem(instructions, 'outputItems', 'PromethiumOxide', 1);
-    appendDustRecipeItem(instructions, 'outputItems', 'SodiumHydroxide', 1);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'NitricAcid', 1000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'Water', 3000);
-    appendMaterialRecipeFluid(instructions, 'inputFluids', 'HydrochloricAcid', 6000);
-    appendRecipePowerAndDuration(instructions, 1920, 440);
-    appendOneStopSaveAndAccept(instructions, 'acceptOxides');
-    return instructions;
-}
-
-function buildOneStopRareEarthRecipes() {
-    var instructions = new InsnList();
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/OneStopRareEarthRecipeRegistration',
-        'beginInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    instructions.add(buildOneStopMonaziteRecipe());
-    instructions.add(buildOneStopBastnasiteRecipe());
-    instructions.add(buildOneStopOxidesRecipe());
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/OneStopRareEarthRecipeRegistration',
-        'completeInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
-    return instructions;
-}
-
-function buildPlatinumGroupSludgeElectrolysisRecipe() {
-    var instructions = new InsnList();
-
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gtocore/common/data/GTORecipeTypes',
-        'ELECTROLYZER_RECIPES',
-        'Lcom/gtolib/api/recipe/RecipeType;'
-    ));
-    appendResourceLocation(instructions, 'gtohjs', 'platinum_group_sludge_electrolysis');
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeType',
-        'recipeBuilder',
-        '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-
-    appendDustRecipeItem(instructions, 'inputItems', 'PlatinumGroupSludge', 36);
-    appendDustRecipeItem(instructions, 'outputItems', 'Platinum', 4);
-    appendDustRecipeItem(instructions, 'outputItems', 'Palladium', 4);
-    appendDustRecipeItem(instructions, 'outputItems', 'Ruthenium', 4);
-    appendDustRecipeItem(instructions, 'outputItems', 'Iridium', 4);
-    appendDustRecipeItem(instructions, 'outputItems', 'Osmium', 2);
-    appendDustRecipeItem(instructions, 'outputItems', 'Rhodium', 3);
-
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, 2048));
-    instructions.add(new InsnNode(Opcodes.I2L));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'EUt',
-        '(J)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, 1000));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'duration',
-        '(I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'save',
-        '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
-        false
-    ));
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/PlatinumGroupSludgeRecipeRegistration',
-        'accept',
-        '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;)V',
-        ASMAPI.MethodType.STATIC
-    ));
-
-    return instructions;
-}
-
-function buildFragmentWorldRecipe(index) {
-    var instructions = new InsnList();
-
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeTypeRegistration',
-        'definition',
-        '()Lcom/gtolib/api/recipe/RecipeType;',
-        ASMAPI.MethodType.STATIC
-    ));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, index));
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-        'rawId',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'gtRawId',
         '(I)Lnet/minecraft/resources/ResourceLocation;',
         ASMAPI.MethodType.STATIC
     ));
@@ -605,74 +58,79 @@ function buildFragmentWorldRecipe(index) {
         '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
         false
     ));
-
-    // Keep save() inline in GTO's native registration window. The Java helper only
-    // configures the already-created builder, matching the verified imported-recipe path.
     instructions.add(new InsnNode(Opcodes.DUP));
-    instructions.add(new IntInsnNode(Opcodes.SIPUSH, index));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-        'configure',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'configureGTRecipe',
         '(Lcom/gtolib/api/recipe/RecipeBuilder;I)V',
         ASMAPI.MethodType.STATIC
     ));
-    appendRecipeSaveAndAccept(
-        instructions,
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-        'accept'
-    );
-    return instructions;
-}
-
-function buildFragmentWorldRecipes() {
-    var instructions = new InsnList();
+    instructions.add(new MethodInsnNode(
+        Opcodes.INVOKEVIRTUAL,
+        'com/gtolib/api/recipe/RecipeBuilder',
+        'save',
+        '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
+        false
+    ));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-        'beginInjectedRegistration',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'acceptGTRecipe',
+        '(Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;I)V',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(new IincInsnNode(recipeIndexLocal, 1));
+    instructions.add(new JumpInsnNode(Opcodes.GOTO, check));
+    instructions.add(end);
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'completeGTRegistration',
         '()V',
         ASMAPI.MethodType.STATIC
     ));
-    for (var index = 0; index < 254; index++) {
-        instructions.add(buildFragmentWorldRecipe(index));
-    }
-    instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-        'completeInjectedRegistration',
-        '()V',
-        ASMAPI.MethodType.STATIC
-    ));
     return instructions;
 }
 
-function buildForgeHammerBulkRecipe() {
+function buildCatalogMaterialRecipes(materialLocal, recipeIndexLocal) {
     var instructions = new InsnList();
+    var check = new LabelNode();
     var end = new LabelNode();
 
-    // GTOMaterialRecipeHandler calls processIngot once per generated ingot.
-    // The Java guard only filters materials without a registered dust form;
-    // the RecipeBuilder chain itself remains inline in GTO's native window.
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+    instructions.add(new VarInsnNode(Opcodes.ALOAD, materialLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration',
-        'isEligible',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'beginMaterialRecipes',
         '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;)Z',
         ASMAPI.MethodType.STATIC
     ));
     instructions.add(new JumpInsnNode(Opcodes.IFEQ, end));
-
-    // Keep the material below the builder result for accept(Material, result).
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gtocore/common/data/GTORecipeTypes',
-        'CLUSTER_RECIPES',
-        'Lcom/gtolib/api/recipe/RecipeType;'
-    ));
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+    instructions.add(new InsnNode(Opcodes.ICONST_0));
+    instructions.add(new VarInsnNode(Opcodes.ISTORE, recipeIndexLocal));
+    instructions.add(check);
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration',
-        'rawId',
-        '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;)Lnet/minecraft/resources/ResourceLocation;',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'materialRecipeCount',
+        '()I',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(new JumpInsnNode(Opcodes.IF_ICMPGE, end));
+
+    instructions.add(new VarInsnNode(Opcodes.ALOAD, materialLocal));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'materialRecipeType',
+        '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)Lcom/gtolib/api/recipe/RecipeType;',
+        ASMAPI.MethodType.STATIC
+    ));
+    instructions.add(new VarInsnNode(Opcodes.ALOAD, materialLocal));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
+    instructions.add(ASMAPI.buildMethodCall(
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'materialRawId',
+        '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)Lnet/minecraft/resources/ResourceLocation;',
         ASMAPI.MethodType.STATIC
     ));
     instructions.add(new MethodInsnNode(
@@ -682,65 +140,14 @@ function buildForgeHammerBulkRecipe() {
         '(Lnet/minecraft/resources/ResourceLocation;)Lcom/gtolib/api/recipe/RecipeBuilder;',
         false
     ));
-
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gregtechceu/gtceu/api/data/tag/TagPrefix',
-        'ingot',
-        'Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;'
-    ));
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-    instructions.add(new IntInsnNode(Opcodes.BIPUSH, 64));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'inputItems',
-        '(Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;' +
-            'Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)' +
-            'Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-
-    instructions.add(new FieldInsnNode(
-        Opcodes.GETSTATIC,
-        'com/gregtechceu/gtceu/api/data/tag/TagPrefix',
-        'dust',
-        'Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;'
-    ));
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-    instructions.add(new IntInsnNode(Opcodes.BIPUSH, 64));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'outputItems',
-        '(Lcom/gregtechceu/gtceu/api/data/tag/TagPrefix;' +
-            'Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)' +
-            'Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-
-    instructions.add(new IntInsnNode(Opcodes.BIPUSH, 16));
-    instructions.add(new InsnNode(Opcodes.I2L));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'EUt',
-        '(J)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
-    ));
-    instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+    instructions.add(new InsnNode(Opcodes.DUP));
+    instructions.add(new VarInsnNode(Opcodes.ALOAD, materialLocal));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration',
-        'duration',
-        '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;)I',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'configureMaterialRecipe',
+        '(Lcom/gtolib/api/recipe/RecipeBuilder;Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;I)V',
         ASMAPI.MethodType.STATIC
-    ));
-    instructions.add(new MethodInsnNode(
-        Opcodes.INVOKEVIRTUAL,
-        'com/gtolib/api/recipe/RecipeBuilder',
-        'duration',
-        '(I)Lcom/gtolib/api/recipe/RecipeBuilder;',
-        false
     ));
     instructions.add(new MethodInsnNode(
         Opcodes.INVOKEVIRTUAL,
@@ -749,31 +156,30 @@ function buildForgeHammerBulkRecipe() {
         '()Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;',
         false
     ));
+    instructions.add(new VarInsnNode(Opcodes.ALOAD, materialLocal));
+    instructions.add(new InsnNode(Opcodes.SWAP));
+    instructions.add(new VarInsnNode(Opcodes.ILOAD, recipeIndexLocal));
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration',
-        'accept',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'acceptMaterialRecipe',
         '(Lcom/gregtechceu/gtceu/api/data/chemical/material/Material;' +
-            'Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;)V',
+            'Lcom/gregtechceu/gtceu/api/recipe/GTRecipeDefinition;I)V',
         ASMAPI.MethodType.STATIC
     ));
+    instructions.add(new IincInsnNode(recipeIndexLocal, 1));
+    instructions.add(new JumpInsnNode(Opcodes.GOTO, check));
     instructions.add(end);
     return instructions;
 }
 
-function buildCustomRecipes() {
-    var instructions = new InsnList();
-    instructions.add(buildPlatinumGroupSludgeElectrolysisRecipe());
-    instructions.add(buildFragmentWorldRecipes());
-    instructions.add(buildMEInputAssemblyRecipes());
+function buildCustomRecipes(recipeIndexLocal) {
+    var instructions = buildCatalogGTRecipes(recipeIndexLocal);
     instructions.add(ASMAPI.buildMethodCall(
-        'com/gtohjs/bootstrap/CustomCraftingRecipeRegistration',
-        'register',
+        'com/gtohjs/api/RecipeSourceCatalog',
+        'registerCraftingRecipes',
         '()V',
         ASMAPI.MethodType.STATIC
     ));
-    instructions.add(buildImportedRecipeDirectoryRecipes());
-    instructions.add(buildImportedChemicalRecipes());
-    instructions.add(buildOneStopRareEarthRecipes());
     return instructions;
 }
 
@@ -1228,17 +634,20 @@ function initializeCoreMod() {
                 var injected = 0;
                 for (var i = 0; i < nodes.length; i++) {
                     if (nodes[i].getOpcode() === Opcodes.INVOKESTATIC &&
-                        nodes[i].owner === 'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration' &&
-                        nodes[i].name === 'isEligible') {
+                        nodes[i].owner === 'com/gtohjs/api/RecipeSourceCatalog' &&
+                        nodes[i].name === 'beginMaterialRecipes') {
                         injected++;
                     }
                 }
                 if (injected !== 0) {
                     throw new Error('GTOHJS found an existing bulk cluster injection in processIngot()V');
                 }
-                method.instructions.insertBefore(nodes[0], buildForgeHammerBulkRecipe());
-                if (method.maxStack < 8) {
-                    method.maxStack = 8;
+                var materialRecipeIndexLocal = method.maxLocals;
+                method.maxLocals += 1;
+                method.instructions.insertBefore(nodes[0],
+                    buildCatalogMaterialRecipes(0, materialRecipeIndexLocal));
+                if (method.maxStack < 6) {
+                    method.maxStack = 6;
                 }
                 ASMAPI.log('INFO', 'GTOHJS injected bulk cluster recipe generation into ' +
                     'GTOMaterialRecipeHandler.processIngot(Material)');
@@ -1256,6 +665,8 @@ function initializeCoreMod() {
                 var nodes = method.instructions.toArray();
                 var injected = 0;
                 var finalized = 0;
+                var recipeIndexLocal = method.maxLocals;
+                method.maxLocals += 1;
 
                 for (var i = 0; i < nodes.length; i++) {
                     var node = nodes[i];
@@ -1263,7 +674,7 @@ function initializeCoreMod() {
                         node.owner === 'com/gtocore/data/recipe/RecipeFilter' &&
                         node.name === 'init' &&
                         node.desc === '()V') {
-                        method.instructions.insert(node, buildCustomRecipes());
+                        method.instructions.insert(node, buildCustomRecipes(recipeIndexLocal));
                         injected++;
                     }
                     if (node.getOpcode() === Opcodes.INVOKESTATIC &&
@@ -1272,38 +683,14 @@ function initializeCoreMod() {
                         node.desc === '()V') {
                         var validations = new InsnList();
                         validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/ImportedChemicalReactorRecipeRegistration',
-                            'validateFinalized',
+                            'com/gtohjs/api/RecipeSourceCatalog',
+                            'validateGTFinalized',
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
                         validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/OneStopRareEarthRecipeRegistration',
-                            'validateFinalized',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/ForgeHammerBulkRecipeRegistration',
-                            'validateFinalized',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/MEInputAssemblyRecipeRegistration',
-                            'validateFinalized',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/ImportedRecipeDirectoryRegistration',
-                            'validateFinalized',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        validations.add(ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeRegistration',
-                            'validateFinalized',
+                            'com/gtohjs/api/RecipeSourceCatalog',
+                            'validateMaterialFinalized',
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
@@ -1319,11 +706,11 @@ function initializeCoreMod() {
                     throw new Error('GTOHJS expected one RecipeBuilder.finish() call, found ' + finalized);
                 }
 
-                if (method.maxStack < 5) {
-                    method.maxStack = 5;
+                if (method.maxStack < 4) {
+                    method.maxStack = 4;
                 }
-                ASMAPI.log('INFO', 'GTOHJS injected native custom recipe builders after RecipeFilter.init() ' +
-                    'and finalized validations after RecipeBuilder.finish()');
+                ASMAPI.log('INFO', 'GTOHJS injected method-mode GT/crafting recipe catalog after RecipeFilter.init() ' +
+                    'and catalog validation after RecipeBuilder.finish()');
                 return method;
             }
         },

@@ -128,7 +128,7 @@ public final class UniversalSteamFactoryRegistration {
                                     .or(Predicates.blocks(GTOMachines.STEAM_VENT_HATCH.get())
                                             .setExactLimit(1)
                                             .setPreviewCount(1))
-                                    // Ordinary higher-tier input buses are the advanced input option.
+                                    // Base item I/O abilities expand to every registered ordinary bus tier.
                                     .or(Predicates.abilities(GTOPartAbility.IMPORT_ITEMS)
                                             .setMaxGlobalLimited(1)
                                             .setPreviewCount(1))

@@ -61,7 +61,7 @@ The regular and wildcard super buffers retain GTO's independent `IO.IN` handler 
 
 Item and fluid products first enter two persistent `KeyStorage` buffers using the complete AE Key, including NBT, and a `long` amount. AE power is then used to insert them into the connected ME network. If the network is offline, lacks power, or cannot currently accept the products, nothing is discarded; the buffer retries every 20 ticks. Pending outputs persist in both world data and portable item data and resume after the part is placed again.
 
-The proxy retains GTO's native pattern-slot forwarding and adds definition-ID-scoped output forwarding only for `gtocore:me_super_pattern_buffer_proxy`. Every simulation and execution resolves the current binding again. Output is rejected when the proxy is unbound or points to an ordinary GTO buffer, preventing a stale infinite-output cache from producing a false decision.
+The proxy retains GTO's native pattern-slot forwarding and adds definition-ID-scoped output forwarding only for `gtocore:me_super_pattern_buffer_proxy`. Its output handler is present even when the proxy is initially unbound, because a controller may collect handlers before the player creates the binding. Every simulation and execution resolves the current binding again. Output is rejected when the proxy is unbound or points to an ordinary GTO buffer, preventing a stale infinite-output cache from producing a false decision.
 
 ## Crafting Recipes
 

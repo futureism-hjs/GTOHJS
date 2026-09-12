@@ -1,4 +1,4 @@
-package com.gtohjs.bootstrap;
+package com.gtohjs.gtrecipe;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialEntry;
@@ -442,6 +442,11 @@ public final class CustomCraftingRecipeRegistration {
         }
     }
 
+    /** Raw IDs exposed to the shared method-mode recipe catalog before registration. */
+    public static List<ResourceLocation> rawRecipeIds() {
+        return ALL_RAW_RECIPE_IDS;
+    }
+
     private static Item requiredItem(String rawId) {
         ResourceLocation expectedId = ResourceLocation.tryParse(rawId);
         if (expectedId == null) {
@@ -588,3 +593,5 @@ public final class CustomCraftingRecipeRegistration {
         return state;
     }
 }
+
+

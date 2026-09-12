@@ -365,8 +365,9 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
                 recipeTypeId = CRAFTING_RECIPE_TYPE_ID;
             }
             try {
+                String className = generatedRecipeClassName(recipeId);
                 Path output = RecipeDraftWriter.write(session.targetId(), recipeTypeId,
-                        recipeId, source);
+                        recipeId, className, source);
                 player.sendSystemMessage(Component.translatable("gtohjs.recipe_editor.saved",
                         output.toAbsolutePath().toString()));
             } catch (IOException error) {
@@ -391,36 +392,101 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
         }
 
         private static String buildMachineRecipeSource(DummyMachine machine, String recipeId) {
-            String recipeType = StringIndex.RECIPETYPE_MAP.getOrDefault(machine.recipeType,
-                    machine.recipeType.registryName.getPath().toUpperCase(java.util.Locale.ROOT) + "_RECIPES");
+            String className = generatedRecipeClassName(recipeId);
+            String recipeTypeId = machine.recipeType.registryName.toString();
             StringBuilder source = new StringBuilder()
-                    .append(recipeType).append(".builder(\"").append(recipeId).append("\")\n");
+                    .append("package com.gtohjs.gtrecipe;\n\n")
+                    .append("import com.gtohjs.api.GTRecipeSource;\n")
+                    .append("import com.gtohjs.api.RecipeSourceSupport;\n")
+                    .append("import com.gtolib.api.recipe.RecipeBuilder;\n")
+                    .append("import com.gtolib.api.recipe.RecipeType;\n")
+                    .append("import net.minecraft.resources.ResourceLocation;\n\n")
+                    .append("/** Generated method-mode GT recipe. RecipeBuilder.save() is injected by the CoreMod. */\n")
+                    .append("public final class ").append(className).append(" implements GTRecipeSource {\n")
+                    .append("    private static final ResourceLocation RAW_ID = new ResourceLocation(\"gtohjs\", \"")
+                    .append(escapeJava(recipeId)).append("\");\n\n")
+                    .append("    public ").append(className).append("() {}\n\n")
+                    .append("    @Override public ResourceLocation rawId() { return RAW_ID; }\n")
+                    .append("    @Override public RecipeType recipeType() { return RecipeSourceSupport.recipeType(\"")
+                    .append(escapeJava(recipeTypeId)).append("\"); }\n\n")
+                    .append("    @Override public void configure(RecipeBuilder builder) {\n");
             for (int index = 0; index < machine.importItems.size; index++) {
                 ItemStack stack = machine.importItems.stacks[index];
-                if (!stack.isEmpty()) source.append(".inputItems(")
-                        .append(StringConverter.fromItem(getItemIngredient(stack), 1)).append(")\n");
+                appendGeneratedItemCall(source, "inputItems", stack);
             }
             for (int index = 0; index < machine.exportItems.size; index++) {
                 ItemStack stack = machine.exportItems.stacks[index];
-                if (!stack.isEmpty()) source.append(".outputItems(")
-                        .append(StringConverter.fromItem(ItemIngredient.of(stack), 1)).append(")\n");
+                appendGeneratedItemCall(source, "outputItems", stack);
             }
             for (int index = 0; index < machine.importFluids.getTanks(); index++) {
                 FluidStack stack = machine.importFluids.getFluidInTank(index);
-                if (!stack.isEmpty()) source.append(".inputFluids(")
-                        .append(StringConverter.fromFluid(FluidIngredient.of(stack), true)).append(")\n");
+                appendGeneratedFluidCall(source, "inputFluids", stack);
             }
             for (int index = 0; index < machine.exportFluids.getTanks(); index++) {
                 FluidStack stack = machine.exportFluids.getFluidInTank(index);
-                if (!stack.isEmpty()) source.append(".outputFluids(")
-                        .append(StringConverter.fromFluid(FluidIngredient.of(stack), true)).append(")\n");
+                appendGeneratedFluidCall(source, "outputFluids", stack);
             }
-            if (machine.circuit > 0) source.append(".circuitMeta(").append(machine.circuit).append(")\n");
-            if (machine.eut != 0) source.append(".EUt(").append(machine.eut).append(")\n");
-            if (machine.temp != 0) source.append(".blastFurnaceTemp(").append(machine.temp).append(")\n");
-            source.append(".duration(").append(machine.duration).append(")\n");
-            if (machine.manat != 0) source.append(".MANAt(").append(machine.manat).append(")\n");
-            return source.append(".save();\n").toString();
+            if (machine.circuit > 0) source.append("        builder.circuitMeta(")
+                    .append(machine.circuit).append(");\n");
+            if (machine.temp > 0) source.append("        builder.blastFurnaceTemp(")
+                    .append(machine.temp).append(");\n");
+            if (machine.manat != 0) source.append("        builder.MANAt(")
+                    .append(machine.manat).append("L);\n");
+            return source.append("        builder.EUt(").append(machine.eut).append("L)\n")
+                    .append("                .duration(").append(machine.duration).append(");\n")
+                    .append("    }\n")
+                    .append("}\n").toString();
+        }
+
+        private static void appendGeneratedItemCall(StringBuilder source, String method, ItemStack stack) {
+            if (stack == null || stack.isEmpty()) return;
+            source.append("        builder.").append(method)
+                    .append("(RecipeSourceSupport.itemStack(\"")
+                    .append(escapeJava(ItemUtils.getIdLocation(stack.getItem()).toString()))
+                    .append("\", ").append(stack.getCount()).append(", \"")
+                    .append(escapeJava(stack.getTag() == null ? "" : stack.getTag().toString()))
+                    .append("\"));\n");
+        }
+
+        private static void appendGeneratedFluidCall(StringBuilder source, String method, FluidStack stack) {
+            if (stack == null || stack.isEmpty()) return;
+            source.append("        builder.").append(method)
+                    .append("(RecipeSourceSupport.fluidStack(\"")
+                    .append(escapeJava(FluidUtils.getIdLocation(stack.getFluid()).toString()))
+                    .append("\", ").append(stack.getAmount()).append(", \"")
+                    .append(escapeJava(stack.getTag() == null ? "" : stack.getTag().toString()))
+                    .append("\"));\n");
+        }
+
+        private static String generatedRecipeClassName(String recipeId) {
+            StringBuilder name = new StringBuilder("Generated");
+            boolean upper = true;
+            for (int index = 0; index < recipeId.length(); index++) {
+                char character = recipeId.charAt(index);
+                if (character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
+                        character >= '0' && character <= '9') {
+                    if (upper) {
+                        name.append(Character.toUpperCase(character));
+                        upper = false;
+                    } else {
+                        name.append(character);
+                    }
+                } else {
+                    upper = true;
+                }
+            }
+            if (name.length() == "Generated".length()) name.append("Recipe");
+            // Preserve the exact path in a Java-identifier-safe suffix so punctuation
+            // normalization can never make two generated public class names collide.
+            name.append("Recipe");
+            for (int index = 0; index < recipeId.length(); index++) {
+                name.append(Integer.toHexString(recipeId.charAt(index))).append('_');
+            }
+            return name.toString().replaceAll("[^A-Za-z0-9_]", "_");
+        }
+
+        private static String escapeJava(String value) {
+            return value.replace("\\", "\\\\").replace("\"", "\\\"");
         }
 
         private static ItemStack findCraftingOutput(DummyMachine machine) {
@@ -442,6 +508,7 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
         private static String buildCraftingRecipeSource(DummyMachine machine, ItemStack outputStack,
                                                         String recipeId) {
             Map<String, Character> ingredientSymbols = new LinkedHashMap<>();
+            Map<String, String> ingredientCalls = new LinkedHashMap<>();
             StringBuilder[] rows = {new StringBuilder(3), new StringBuilder(3), new StringBuilder(3)};
             char nextSymbol = 'A';
 
@@ -453,32 +520,58 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
                     continue;
                 }
 
-                ItemStack normalizedStack = inputStack.copy();
-                normalizedStack.setCount(1);
-                String ingredientSource = StringConverter.fromItem(
-                        getItemIngredient(normalizedStack), 2);
-                Character symbol = ingredientSymbols.get(ingredientSource);
+                ItemStack normalized = inputStack.copy();
+                normalized.setCount(1);
+                String key = ItemUtils.getIdLocation(normalized.getItem()) + "|" +
+                        (normalized.getTag() == null ? "" : normalized.getTag());
+                Character symbol = ingredientSymbols.get(key);
                 if (symbol == null) {
+                    if (nextSymbol > 'Z') {
+                        throw new IllegalStateException("A shaped recipe supports at most 26 distinct ingredients");
+                    }
                     symbol = nextSymbol++;
-                    ingredientSymbols.put(ingredientSource, symbol);
+                    ingredientSymbols.put(key, symbol);
+                    ingredientCalls.put(key, generatedItemStackCall(normalized));
                 }
                 rows[index / 3].append(symbol);
             }
 
-            StringBuilder source = new StringBuilder("VanillaRecipeHelper.addShapedRecipe(\n")
-                    .append("        GTOHJS.id(\"").append(recipeId).append("\"),\n")
-                    .append("        ")
-                    .append(StringConverter.fromItem(ItemIngredient.of(outputStack), 0))
-                    .append(",\n")
-                    .append("        \"").append(rows[0]).append("\",\n")
-                    .append("        \"").append(rows[1]).append("\",\n")
-                    .append("        \"").append(rows[2]).append("\"");
-
+            String className = generatedRecipeClassName(recipeId);
+            StringBuilder source = new StringBuilder()
+                    .append("package com.gtohjs.gtrecipe;\n\n")
+                    .append("import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;\n")
+                    .append("import com.gtohjs.api.CraftingRecipeSource;\n")
+                    .append("import com.gtohjs.api.RecipeSourceSupport;\n")
+                    .append("import java.util.Collection;\n")
+                    .append("import java.util.List;\n")
+                    .append("import net.minecraft.resources.ResourceLocation;\n\n")
+                    .append("/** Generated method-mode shaped crafting recipe. */\n")
+                    .append("public final class ").append(className).append(" implements CraftingRecipeSource {\n")
+                    .append("    private static final ResourceLocation RAW_ID = new ResourceLocation(\"gtohjs\", \"")
+                    .append(escapeJava(recipeId)).append("\");\n\n")
+                    .append("    public ").append(className).append("() {}\n\n")
+                    .append("    @Override public Collection<ResourceLocation> rawIds() { return List.of(RAW_ID); }\n\n")
+                    .append("    @Override public void register() {\n")
+                    .append("        VanillaRecipeHelper.addShapedRecipe(\n")
+                    .append("                RAW_ID,\n")
+                    .append("                ").append(generatedItemStackCall(outputStack)).append(",\n")
+                    .append("                \"").append(rows[0]).append("\",\n")
+                    .append("                \"").append(rows[1]).append("\",\n")
+                    .append("                \"").append(rows[2]).append("\"");
             for (var entry : ingredientSymbols.entrySet()) {
-                source.append(",\n        '").append(entry.getValue()).append("', ")
-                        .append(entry.getKey());
+                source.append(",\n                '").append(entry.getValue()).append("', ")
+                        .append(ingredientCalls.get(entry.getKey()));
             }
-            return source.append("\n);\n").toString();
+            return source.append(");\n")
+                    .append("    }\n")
+                    .append("}\n").toString();
+        }
+
+        private static String generatedItemStackCall(ItemStack stack) {
+            return "RecipeSourceSupport.itemStack(\"" +
+                    escapeJava(ItemUtils.getIdLocation(stack.getItem()).toString()) + "\", " +
+                    stack.getCount() + ", \"" +
+                    escapeJava(stack.getTag() == null ? "" : stack.getTag().toString()) + "\")";
         }
 
         private static ItemIngredient getItemIngredient(ItemStack stack) {
