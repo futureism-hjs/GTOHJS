@@ -1,0 +1,20 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "gtceu:block/overlay/machine/overlay_hatch",
+    "overlay_hatch": "gtohjs:block/machines/electromagnetic_thermal_control_hatch/overlay_front"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 0],
+      "faces": {
+        "north": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay_hatch",
+          "cullface": "north"
+        }
+      }
+    }
+  ]
+}

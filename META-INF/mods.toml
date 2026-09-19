@@ -1,0 +1,62 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "LGPL-3.0-only (code); CC-BY-NC-SA-4.0 (original textures and quests)"
+
+[[mods]]
+modId = "gtohjs"
+version = "4.0-per3-for-gtocore-0.5.6-beta"
+displayName = "GTO HJS"
+description = '''Expands GTO with more machines and recipes.'''
+authors = "Futureism,Chatgpt"
+
+[[mixins]]
+config = "gtohjs.mixins.json"
+
+[[dependencies.gtohjs]]
+modId = "forge"
+mandatory = true
+versionRange = "[47.4.20,48)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "gtocore"
+mandatory = true
+versionRange = "[0.5.6-beta,0.5.7)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "gtceu"
+mandatory = true
+versionRange = "[26.7.3,26.8)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "gtolib"
+mandatory = true
+versionRange = "[26.7.4,26.8)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "ae2"
+mandatory = true
+versionRange = "[15.267.4,15.268)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.gtohjs]]
+modId = "configuration"
+mandatory = true
+versionRange = "[3.1.0,4)"
+ordering = "AFTER"
+side = "BOTH"

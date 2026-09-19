@@ -1,0 +1,90 @@
+# Gradle and ForgeGradle output
+.gradle/
+build/
+/outputs/
+out/
+bin/
+run/
+runs/
+
+# Local binary dependencies (keep Gradle Wrapper files tracked)
+/libs/*.jar
+
+# Java and JVM diagnostics
+*.class
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# IDE metadata
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Runtime logs and crash output
+logs/
+crash-reports/
+debug/
+*.log
+*.pid
+
+# Local configuration and temporary files
+.env
+.env.*
+local.properties
+.cache/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Scratch package tree created by local decompilation tools
+/com/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Codex-only local analysis and path-bearing working records
+*_codex.md
+**/*_codex.md
+/AGENT/READ_INDEX.md
+/AGENT/CURRENT_TASK_CHECKLIST.md
+/AGENT/*HANDOFF*.md
+/AGENT/
+/Agent cache/
+
+# Codex client metadata and local Gradle state
+/.codex/
+/.gradle-home/
+/.kotlin/
+
+# Workspace-specific documentation that may contain absolute local paths
+**/*local-paths*.md
+**/*workspace-paths*.md
+*_codex.md
+**/*_codex.md
+
+# Credentials, tokens, and machine-specific connection/configuration files
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.secret
+*.credentials
+credentials.json
+secrets.json
+tokens.json
+wsl.env
+**/wsl.env
