@@ -4,6 +4,8 @@
   documentation, privacy, commit messages and release packaging.
 - `../release/USAGE_zh-CN.txt`: public installation instructions included in
   release ZIPs and available to GitHub Actions packaging.
+- `../.github/workflows/release.yml`: manual Java 21 clean build, version and
+  changelog validation, release ZIP packaging, and GitHub prerelease publishing.
 
 - `58_ultra_high_amperage_templates.md`: wireless 256A+ terminal-template
   repair, energy/laser slot mapping and build/deployment evidence.

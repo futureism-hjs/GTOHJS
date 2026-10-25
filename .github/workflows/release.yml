@@ -1,0 +1,106 @@
+name: Build and publish prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to build and publish (must match gradle.properties and the newest changelog section)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Validate release version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$REQUESTED_VERSION" =~ ^[A-Za-z0-9][A-Za-z0-9._+-]*$ ]]; then
+            echo "Invalid version format" >&2
+            exit 1
+          fi
+          project_version="$(sed -n 's/^mod_version=//p' gradle.properties | head -n 1)"
+          changelog_version="$(sed -n 's/^## \([^ ]*\).*/\1/p' CHANGELOG.md | head -n 1)"
+          if [[ "$REQUESTED_VERSION" != "$project_version" || "$REQUESTED_VERSION" != "$changelog_version" ]]; then
+            echo "Requested, Gradle, and newest changelog versions must match" >&2
+            exit 1
+          fi
+
+      - name: Build with Gradle on Java 21
+        run: ./gradlew clean build
+
+      - name: Package release and extract notes
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import re
+          import shutil
+          import zipfile
+          from pathlib import Path
+
+          version = os.environ["RELEASE_VERSION"]
+          root = Path.cwd()
+          name = f"gtohjs-{version}"
+          jar = root / "build" / "libs" / f"{name}.jar"
+          chapters = root / "chapters"
+          usage = root / "release" / "USAGE_zh-CN.txt"
+          if not jar.is_file() or not chapters.is_dir() or not any(chapters.rglob("*")) or not usage.is_file():
+              raise SystemExit("Required release JAR, chapters, or usage guide is missing")
+
+          package_root = root / "release-package"
+          package = package_root / name
+          if package_root.exists():
+              shutil.rmtree(package_root)
+          (package / "chapters").mkdir(parents=True)
+          shutil.copy2(jar, package / jar.name)
+          shutil.copytree(chapters, package / "chapters", dirs_exist_ok=True)
+          shutil.copy2(usage, package / "使用方法.txt")
+
+          archive = root / f"{name}.zip"
+          with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as output:
+              for path in sorted(package.rglob("*")):
+                  if path.is_file():
+                      output.write(path, path.relative_to(package_root).as_posix())
+
+          lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
+          headings = [index for index, line in enumerate(lines) if re.match(r"^## ", line)]
+          if not headings or not lines[headings[0]].startswith(f"## {version} "):
+              raise SystemExit("Newest changelog section does not match release version")
+          end = headings[1] if len(headings) > 1 else len(lines)
+          notes = "\n".join(lines[headings[0]:end]).rstrip() + "\n"
+          Path(os.environ["RUNNER_TEMP"], "release-notes.md").write_text(notes, encoding="utf-8")
+          PY
+
+      - name: Publish GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_VERSION" "gtohjs-${RELEASE_VERSION}.zip" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$RELEASE_VERSION" \
+            --notes-file "$RUNNER_TEMP/release-notes.md" \
+            --prerelease

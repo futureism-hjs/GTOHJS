@@ -23,10 +23,10 @@ references; they do not expand or override the user's request.
 - Use Java 21 and an online clean Gradle build through IntelliJ IDEA MCP:
   `./gradlew clean build`. Stop if dependency resolution or network access
   fails; do not switch to offline mode or silently substitute dependencies.
-- The required third-party compile dependencies are intentionally excluded
-  from Git and described in `libs/README.md`. Build only when those exact,
-  legally obtained dependencies are available. Do not upload dependency JARs
-  or credentials to make a build pass.
+- The eight pinned build dependencies are tracked under `libs/` for reproducible
+  GitHub Actions and contributor builds, as described in `libs/README.md`.
+  They are not included in the GTOHJS release ZIP and remain subject to their
+  upstream terms. Never upload credentials or unrelated dependency JARs.
 - Keep build, package, deployment and client-validation evidence distinct.
   Do not deploy, launch, replace client files, or claim runtime acceptance
   unless the user requested and the evidence supports it.
@@ -54,8 +54,8 @@ Describe only changes actually included in that commit.
   logs, caches, backups, or private acceptance records.
 - Keep local AI instructions and private development notes under `.codex/`;
   this directory is ignored by Git. Do not stage or upload its contents.
-- Keep third-party dependency JARs under the ignored `libs/` directory and
-  untracked. Review the exact staged file list before each commit.
+- Keep only the eight documented, pinned dependency JARs in tracked `libs/`.
+  Review the exact staged file list before each commit.
 - Do not commit, push, tag or publish a GitHub Release unless the user
   explicitly requests that action. Never force-push.
 
@@ -70,6 +70,6 @@ Describe only changes actually included in that commit.
   Use the newest changelog section as GitHub Release notes and mark a published
   release as a pre-release.
 - The public installation guide is tracked so release tooling and GitHub
-  Actions can include it. A hosted build still requires a documented, approved
-  way to supply all ignored local dependencies; do not assume a GitHub runner
-  can build until that requirement is met.
+  Actions can include it. The manual hosted workflow uses the tracked pinned
+  dependencies, Java 21 and the Gradle wrapper, and publishes only the plugin
+  package.

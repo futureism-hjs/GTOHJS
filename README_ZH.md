@@ -29,7 +29,7 @@ The target source version is `5.6-spe1-for-gtocore-0.5.6-beta`. It retains the o
 | AE2 | The target pack uses 15.267.4; manifest range `[15.267.4,15.268)` |
 | Configuration | 3.1.0; supplies the in-game mod configuration screen |
 
-The Large Petal Apothecary also relies on the Botania, AppBot and related GTO integrations already supplied by the target modpack. Third-party mod JARs are not redistributed in the public source package. See [libs/README.md](libs/README.md) for local build dependency placement.
+The Large Petal Apothecary also relies on Botania, AppBot and related GTO integrations supplied by the target modpack. The eight pinned build dependency JARs are tracked for reproducible builds but are not included in the GTOHJS release ZIP; other runtime mods are supplied by the target modpack. See [libs/README.md](libs/README.md) for the exact build dependency list and upstream terms.
 
 ## Install and build
 

@@ -7,8 +7,7 @@ bin/
 run/
 runs/
 
-# Local binary dependencies (keep Gradle Wrapper files tracked)
-/libs/*.jar
+# Pinned compile/runtime dependencies are tracked for reproducible GitHub Actions builds.
 
 # Java and JVM diagnostics
 *.class
