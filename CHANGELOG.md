@@ -11,59 +11,59 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 - 新增七台多方块机器，结构来源为 GTL-EnhancedCore 2.8.3；同时加入对应的专属配方类型及铂系精炼、奇异增殖和超维度化工配方：
 
-  · 中子控制工厂（`gtocore:neutron_control_factory`）
+  · 中子控制工厂
 
-  · 铂系精炼矩阵（`gtocore:platinum_refining_matrix`）
+  · 铂系精炼矩阵
 
-  · 龙式场约束增殖核心（`gtocore:dragon_field_proliferation_core`）
+  · 龙式场约束增殖核心
 
-  · 磁流体约束等离子机床（`gtocore:plasma_machine_tool`）
+  · 磁流体约束等离子机床
 
-  · 强子流态催化精炼塔（`gtocore:hadron_catalytic_refinery`）
+  · 强子流态催化精炼塔
 
-  · 量子场质谱解离阵列（`gtocore:quantum_mass_spectrum_array`）
+  · 量子场质谱解离阵列
 
-  · 超导磁约束熔合组装器（`gtocore:superconducting_fusion_assembler`）
+  · 超导磁约束熔合组装器
 
 - 新增自适配电网系统，连接同一团队的电网终端与能源/激光仓室，通过频率在团队电网账本中传输电力。
 
   自适配电网相关方块：
 
-  · 自适配电网能源仓：接收团队电网传入的电力（`gtocore:adaptive_net_energy_input_hatch`）
+  · 自适配电网能源仓：接收团队电网传入的电力
 
-  · 自适配电网动力仓：向团队电网账本输入电力（`gtocore:adaptive_net_energy_output_hatch`）
+  · 自适配电网动力仓：向团队电网账本输入电力
 
-  · 自适配电网激光靶仓：接收团队电网传入的激光能量（`gtocore:adaptive_net_laser_target_hatch`）
+  · 自适配电网激光靶仓：接收团队电网传入的激光能量
 
-  · 自适配电网激光源仓：向团队电网账本输入激光能量（`gtocore:adaptive_net_laser_source_hatch`）
+  · 自适配电网激光源仓：向团队电网账本输入激光能量
 
   · 自适配电网系统终端：设置电网频率，配置动力、能源、激光源、激光靶四类模板，
-  查看账本输入、输出和净变化（`gtocore:adaptive_net_energy_terminal`）
+  查看账本输入、输出和净变化
 
   自适配电网相关物品：
 
-  · 网络配置闪存：在终端和仓室之间复制、设置或清除电网频率（`gtocore:net_data_stick`）
+  · 网络配置闪存：在终端和仓室之间复制、设置或清除电网频率
 
-  · 无限无线能量单元：用于构建无线电网塔结构，并保存塔内电量（`gtohjs:infinite_wireless_energy_storage_unit`）
+  · 无限无线能量单元：用于构建无线电网塔结构，并保存塔内电量
 
 - 新增三种生化标记，用于超维度生化工厂的对应配方，标记不会在加工时消耗：
 
-  · 生物提取机标记（`gtohjs:biochemical_extraction_marker`）
+  · 生物提取机标记
 
-  · 生化反应室标记（`gtohjs:biochemical_reaction_marker`）
+  · 生化反应室标记
 
-  · 大型培养缸标记（`gtohjs:incubator_marker`）
+  · 大型培养缸标记
 
   对应配方分别取自生物提取机、生化反应室和大型培养缸的 12、38、62 条原有配方；加工时间减半，EU/t 不变。生化反应与培养配方不再要求放射性条件。培养配方所需过滤等级由维护仓提供：普通 0 级，清洁、无菌、绝对洁净分别为 1、2、3 级。
 
 - 新增深度化学扭曲仪、超维度生化工厂，以及上述七台机器中除龙式场约束增殖核心外的六台机器的装配机或装配线获取配方；五种自适配电网部件、网络配置闪存和自动放射仓也新增获取配方。三种生化标记可在工作台制作，并加入相应任务书进度。
 
-- 新增原生激光焊接机（`laser_welder`）、拆包机（`unpacker`）、织布机（`loom`）、轧机（`rolling_mill`）和多辊式轧机（`cluster_mill`）配方。
+- 新增激光焊接机、拆包机、织布机、轧机和多辊式轧机配方。
 
 #### 更改
 
-- 磁流体约束等离子机床、强子流态催化精炼塔、量子场质谱解离阵列和超导磁约束熔合组装器，分别可通过控制器选择 11、11、10、5 种配方模式。机器允许使用原生物品输入仓、流体输入仓和双输入仓；`gtocore:me_catalyst_pattern_buffer` 不作为这些机器的输入仓。
-- `gtocore:chemical_distort` 增加普通能源仓输入。最高单个输入仓电压不高于 LuV 时并行
+- 磁流体约束等离子机床、强子流态催化精炼塔、量子场质谱解离阵列和超导磁约束熔合组装器，分别可通过控制器选择 11、11、10、5 种配方模式。机器允许使用普通物品输入仓、流体输入仓和双输入仓；ME 催化剂样板缓存仓不作为这些机器的输入仓。
+- 深度化学扭曲仪增加普通能源仓输入。最高单个输入仓电压不高于 LuV 时并行
   上限为 2000；高于 LuV 时读取可选并行仓设置，无并行仓则为 1。电压判断不乘电流，
   也不聚合多个能源仓的 EU/t。
 - 自适配电网的每个仓室分别保存频率、连接状态、模板配置和 0–4 级优先级；数字越大，在电力不足时越先获得团队账本的供电。终端可设置四类仓室模板的电压、电流和缓冲限制。无限无线能量单元容量为 `2^126−1 EU`，使用 MAX 电压等级，传输损耗为零；拆下并重新放置时通过物品数据保留电量。
@@ -73,13 +73,13 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 #### 修复
 
 - 修复自适配终端漏识别 256A–16777216A 激光能源仓模板的问题：无线激光源模板进入第 3
-  槽，激光靶模板进入第 4 槽；保留原生激光 ID 回退、安数校验和创造模式物品过滤。
-- 修复 `gtocore:me_super_wildcard_pattern_buffer` 与 `gtocore:net_data_stick` 缺少
+  槽，激光靶模板进入第 4 槽；保留原生激光仓识别、安数校验和创造模式物品过滤。
+- 修复 ME 超级通配符样板总成与网络配置闪存缺少
   GTOHJS 来源提示的问题，并统一无限无线能量单元的中英文显示名。
 
 #### 删除
 
-- 删除 Lightning Processor 机器及其配方支持。
+- 删除闪电处理机及其配方支持。
 
 验证：Java 21 在线清洁构建用于本次源码同步，耗时 12 秒（13 项任务，包括 9 项执行、
 4 项缓存）；重映射打包和优化契约检查通过。首个 5.6 构建曾通过进入新存档检查；后续
@@ -91,19 +91,19 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 - Added seven multiblock machines with structures sourced from GTL-EnhancedCore 2.8.3, their dedicated recipe types, and platinum refining, exotic proliferation, and hyperdimensional chemical recipes:
 
-  · Neutron Control Factory (`gtocore:neutron_control_factory`)
+  · Neutron Control Factory
 
-  · Platinum Refining Matrix (`gtocore:platinum_refining_matrix`)
+  · Platinum Refining Matrix
 
-  · Dragon-Field Proliferation Core (`gtocore:dragon_field_proliferation_core`)
+  · Dragon-Field Proliferation Core
 
-  · Magnetic Confinement Plasma Machine Tool (`gtocore:plasma_machine_tool`)
+  · Magnetic Confinement Plasma Machine Tool
 
-  · Hadron Flow Catalytic Refinery Tower (`gtocore:hadron_catalytic_refinery`)
+  · Hadron Flow Catalytic Refinery Tower
 
-  · Quantum Field Mass Spectrometry Dissociation Array (`gtocore:quantum_mass_spectrum_array`)
+  · Quantum Field Mass Spectrometry Dissociation Array
 
-  · Superconducting Magnetic Confinement Fusion Assembler (`gtocore:superconducting_fusion_assembler`)
+  · Superconducting Magnetic Confinement Fusion Assembler
 
 - Added an adaptive power-grid system that connects a team's grid terminal and
   energy/laser hatches. Matching frequencies transfer power through the team
@@ -112,49 +112,43 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
   Adaptive-grid blocks:
 
   · Adaptive Grid Energy Input Hatch: receives power from the team grid
-  (`gtocore:adaptive_net_energy_input_hatch`)
 
   · Adaptive Grid Power Output Hatch: sends power to the team grid ledger
-  (`gtocore:adaptive_net_energy_output_hatch`)
 
   · Adaptive Grid Laser Target Hatch: receives laser energy from the team grid
-  (`gtocore:adaptive_net_laser_target_hatch`)
 
   · Adaptive Grid Laser Source Hatch: sends laser energy to the team grid
-  (`gtocore:adaptive_net_laser_source_hatch`)
 
   · Adaptive Grid Terminal: sets grid frequency, configures power, energy,
   laser-source, and laser-target templates, and displays ledger input, output,
   and net flow
-  (`gtocore:adaptive_net_energy_terminal`)
 
   Adaptive-grid items:
 
   · Network Configuration Flash: copies, sets, or clears grid frequency between
-  the terminal and hatches (`gtocore:net_data_stick`)
+  the terminal and hatches
 
   · Infinite Wireless Energy Unit: forms the wireless-grid tower structure and
   stores its energy
-  (`gtohjs:infinite_wireless_energy_storage_unit`)
 
 - Added three nonconsumable markers for the matching Hyperdimensional Biochemical Factory recipes:
 
-  · Biological Extraction Machine Marker (`gtohjs:biochemical_extraction_marker`)
+  · Biological Extraction Machine Marker
 
-  · Biochemical Reaction Chamber Marker (`gtohjs:biochemical_reaction_marker`)
+  · Biochemical Reaction Chamber Marker
 
-  · Large Incubator Marker (`gtohjs:incubator_marker`)
+  · Large Incubator Marker
 
   The 12 biological extraction, 38 biochemical reaction, and 62 incubator source recipes run at half duration with unchanged EU/t. Reaction and incubator recipes no longer require radioactivity. Incubator filter tiers come from Maintenance Hatches: ordinary 0, cleaning 1, sterile 2, and absolute-clean 3.
 
 - Added Assembler or Assembly Line acquisition recipes for the Deep Chemical Distorter, Hyperdimensional Biochemical Factory, six of the seven multiblocks above (excluding the Dragon-Field Proliferation Core), five adaptive-grid parts, Network Configuration Flash, and Automatic Radiation Hatch. The three markers have crafting-table recipes and matching quest progression.
 
-- Added native Laser Welder (`laser_welder`), Unpacker (`unpacker`), Loom (`loom`), Rolling Mill (`rolling_mill`), and Cluster Mill (`cluster_mill`) recipes.
+- Added Laser Welder, Unpacker, Loom, Rolling Mill, and Cluster Mill recipes.
 
 #### Changed
 
-- The Plasma Machine Tool, Hadron Catalytic Refinery, Quantum Mass Spectrum Array, and Superconducting Fusion Assembler offer 11, 11, 10, and 5 controller-selectable recipe modes respectively. They accept native item, fluid, and dual-input hatches; `gtocore:me_catalyst_pattern_buffer` cannot serve as their input hatch.
-- `gtocore:chemical_distort` accepts ordinary energy hatches as well as laser
+- The Plasma Machine Tool, Hadron Catalytic Refinery, Quantum Mass Spectrum Array, and Superconducting Fusion Assembler offer 11, 11, 10, and 5 controller-selectable recipe modes respectively. They accept ordinary item, fluid, and dual-input hatches; the ME Catalyst Pattern Buffer cannot serve as their input hatch.
+- The Deep Chemical Distorter accepts ordinary energy hatches as well as laser
   input. At a highest individual input-hatch voltage of LuV or below, parallel
   is capped at 2000; above LuV, it uses the optional Parallel Hatch setting and
   defaults to 1 without that hatch. Voltage classification does not multiply
@@ -167,10 +161,10 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 - Fixed the adaptive terminal's missed 256A–16777216A laser-energy templates:
   wireless laser-source templates now populate slot 3 and laser-target
-  templates slot 4. Native laser-ID fallback, amperage validation, and creative
+  templates slot 4. Native laser-hatch recognition, amperage validation, and creative
   item exclusion remain in place.
 - Fixed missing GTOHJS attribution for
-  `gtocore:me_super_wildcard_pattern_buffer` and `gtocore:net_data_stick`, and
+  the ME Super Wildcard Pattern Buffer and Network Configuration Flash, and
   corrected the Chinese/English display name for the Infinite Wireless Energy Unit.
 
 #### Removed
