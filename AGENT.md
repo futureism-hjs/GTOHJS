@@ -46,7 +46,11 @@ these four categories, in this order:
 
 Keep all four headings; write `无` / `None` when a category has no entries.
 Use the same four labels, in the same order, in every commit message body.
-Describe only changes actually included in that commit.
+For every non-empty category, name the concrete items, machines, recipes, IDs,
+files, workflows, or dependencies changed and state the specific behavior or
+mechanism added, changed, fixed, or removed. Avoid broad summaries such as
+"updated machines" or "improved CI" without listing what changed. Describe
+only changes included in that commit; use `无` for an empty category.
 
 ## Privacy and Git
 
