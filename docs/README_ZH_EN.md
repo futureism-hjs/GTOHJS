@@ -1,5 +1,8 @@
 # GTOHJS Documentation Index
 
+- `../release/USAGE_zh-CN.txt`: public installation instructions included in
+  release ZIPs and available to GitHub Actions packaging.
+
 - `58_ultra_high_amperage_templates.md`: wireless 256A+ terminal-template
   repair, energy/laser slot mapping and build/deployment evidence.
 

@@ -1,0 +1,5 @@
+把 GTO HJS JAR 放进：
+版本根目录\mod
+
+把 chapters 整个目录放到：
+版本根目录\config\ftbquests\quests

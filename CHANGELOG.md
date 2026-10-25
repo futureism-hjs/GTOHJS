@@ -7,47 +7,76 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 ### 中文
 
-- 在保留旧版注册 ID 和配方语义的基础上，将 dev19 功能移植到 GTOCore
-  0.5.6-beta，并集中原生注册入口；新增七台 GTL 衍生多方块机器、对应结构和
-  专属配方类型，同时复用 0.5.6 原生配方类型接入激光焊接、拆包、织布机、
-  轧机和多辊式轧机配方。
-- 新增五个自适配无线电网仓室/终端、网络数据棒和无线电网无限能源单元，复用
-  0.5.6 团队电网账本，并加入频率、模板、并行、电压、电流、缓冲和传输速率校验。
-- 扩展现有配方注册目录：增加铂精炼、奇异增殖、超维度化学生产及生化配方；
-  更新机器配方来源、获取配方和并行/线程上限。新增自动辐射仓室时沿用原生
-  结构谓词与数量上限；四台加工机器改用控制器模式选择配方类型。
-- 更新 ME 样板缓冲与配方编辑器、机器模式界面、物品来源提示和 0.5.6 任务书章节；
-  同步结构、资源、英文开发说明和授权/第三方声明。
-- Java 21 在线清洁构建用于本次源码同步。5.6 首个构建曾通过进入新存档检查；
-  后续界面、无线传输和机器形成/处理等功能的逐项客户端验收仍以对应开发文档
-  记录的待测项为准。
+#### 新增
+
+- 新增七台 GTL 衍生多方块机器、结构和专属配方类型，并接入铂精炼、奇异增殖、
+  超维度化学生产及生化配方。
+- 新增五个自适配无线电网仓室/终端、网络数据棒和无线电网无限能源单元，以及
+  相应的频率、模板、并行、电压、电流、缓冲和传输速率管理。
+- 新增 0.5.6 任务书内容，以及原生激光焊接、拆包、织布机、轧机和多辊式轧机配方。
+
+#### 更改
+
+- 将 dev19 功能移植到 GTOCore 0.5.6-beta，保留旧注册 ID 和配方语义，并集中原生
+  注册入口；无线电网系统复用 0.5.6 团队电网账本。
+- 更新机器配方来源、获取配方和并行/线程上限。自动辐射仓室沿用原生结构谓词及
+  组合数量上限；四台加工机器改由控制器模式选择配方类型。
+- 更新 ME 样板缓冲与配方编辑器、机器模式界面、物品来源提示、结构、资源、英文
+  开发说明及授权/第三方声明。
+
+#### 修复
+
+- 修复无线终端对 256A 及以上无线模板的识别，并优化配方处理性能。
+
+#### 删除
+
+- 删除 Lightning Processor 机器及其配方支持。
+
+验证：Java 21 在线清洁构建用于本次源码同步，耗时 12 秒（13 项任务，包括 9 项执行、
+4 项缓存）；重映射打包和优化契约检查通过。首个 5.6 构建曾通过进入新存档检查；后续
+界面、无线传输、机器形成和处理等逐项客户端验收仍见对应开发文档中的待测记录。
 
 ### English
 
-- Ported the dev19 feature set to GTOCore 0.5.6-beta while retaining existing
-  registry IDs and recipe semantics and consolidating native registration
-  entry points. Added seven GTL-derived multiblocks and their structures and
-  recipe types, plus native 0.5.6 laser-welding, unpacking, loom, rolling-mill
-  and cluster-mill recipe support.
+#### Added
+
+- Added seven GTL-derived multiblocks, their structures and dedicated recipe
+  types, plus platinum refining, exotic proliferation, hyperdimensional
+  chemical and biochemical recipes.
 - Added five adaptive wireless hatches/terminal, a network data stick and an
-  Infinite Wireless Energy Unit. They reuse the 0.5.6 team energy ledger and
-  validate frequencies, templates, parallelism, voltage, amperage, buffers
-  and transfer rates.
-- Extended the existing recipe-source catalog with platinum refining,
-  exotic proliferation, hyperdimensional chemical and biochemical recipes;
-  updated machine recipe sources, acquisition recipes and parallel/thread
+  Infinite Wireless Energy Unit, with frequency, template, parallelism,
+  voltage, amperage, buffer and transfer-rate handling.
+- Added 0.5.6 quest content and native laser-welding, unpacking, loom,
+  rolling-mill and cluster-mill recipe support.
+
+#### Changed
+
+- Ported the dev19 feature set to GTOCore 0.5.6-beta, retaining existing
+  registry IDs and recipe semantics while consolidating native registration
+  entry points. The wireless grid reuses the 0.5.6 team energy ledger.
+- Updated machine recipe sources, acquisition recipes and parallel/thread
   limits. Automatic Radiation Hatches extend native structure predicates and
-  retain combined native quantity limits. Four processing machines select
-  recipe types through their controllers.
+  retain combined quantity limits. Four processing machines select recipe
+  types through their controllers.
 - Updated ME pattern buffers and the recipe editor, machine-mode UI, item
-  attribution and 0.5.6 quest chapters. Synchronized structures, resources,
-  English development notes and license/third-party notices.
-- The Java 21 online clean build passed in 12 seconds (13 actionable tasks,
-  including 9 executed tasks and 4 from cache); package reobfuscation and
-  optimization-contract verification passed. The first 5.6 build passed a
-  new-save entry check; feature-level client checks for later UI,
-  wireless-transfer, formation and processing changes remain tracked as
-  pending in their development documents.
+  attribution, structures, resources, English development notes and
+  license/third-party declarations.
+
+#### Fixed
+
+- Fixed wireless terminal recognition for 256A-and-higher wireless templates
+  and optimized recipe processing performance.
+
+#### Removed
+
+- Removed the Lightning Processor machine and its recipe support.
+
+Verification: The Java 21 online clean build used for this source sync passed
+in 12 seconds (13 actionable tasks, including 9 executed tasks and 4 from
+cache); package reobfuscation and optimization-contract verification passed.
+The first 5.6 build passed a new-save entry check. Feature-level checks for
+later UI, wireless-transfer, formation and processing changes remain pending
+in their development documents.
 
 ## 5.0per1 - 2026-09-08
 
