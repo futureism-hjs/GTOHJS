@@ -395,7 +395,7 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
             String className = generatedRecipeClassName(recipeId);
             String recipeTypeId = machine.recipeType.registryName.toString();
             StringBuilder source = new StringBuilder()
-                    .append("package com.gtohjs.gtrecipe;\n\n")
+                    .append("package com.gtohjs.recipes;\n\n")
                     .append("import com.gtohjs.api.GTRecipeSource;\n")
                     .append("import com.gtohjs.api.RecipeSourceSupport;\n")
                     .append("import com.gtolib.api.recipe.RecipeBuilder;\n")
@@ -538,7 +538,7 @@ public final class GTOHJSRecipeEditorBehavior implements IItemUIFactory {
 
             String className = generatedRecipeClassName(recipeId);
             StringBuilder source = new StringBuilder()
-                    .append("package com.gtohjs.gtrecipe;\n\n")
+                    .append("package com.gtohjs.recipes;\n\n")
                     .append("import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;\n")
                     .append("import com.gtohjs.api.CraftingRecipeSource;\n")
                     .append("import com.gtohjs.api.RecipeSourceSupport;\n")

@@ -1,5 +1,13 @@
 # GTO HJS
 
+The four processing machines accept any input hatch except the Catalyst Pattern
+Buffer, with recipe types selected independently on their controllers. The
+Hyperdimensional Biochemical Factory derives extraction, reaction and incubation
+recipes at half duration with unchanged EU/t and nonconsumable machine markers.
+Incubation filtering follows cleaning/sterile/absolute-clean maintenance tiers.
+See [the implementation record](docs/49_controller_inputs_and_biochemical_recipes.md)
+for the build, deployment and pending runtime verification.
+
 > [!WARNING]
 > This project contains code, documentation, textures and quest content generated or produced with AI assistance. They may contain errors, security issues, or incompatibilities with upstream APIs and licenses. Review and test them before use, modification, or redistribution; no accuracy, completeness, or fitness is guaranteed.
 
@@ -7,7 +15,7 @@
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The current source version is `4.0-per3-for-gtocore-0.5.6-beta`, which moves the HJS bulk ingot-to-dust recipes from the forge hammer to GTOCore's multi-roll/cluster-mill recipe type while retaining the existing Java registration ABI. The Java 21 network-enabled clean build and fixed-beta client test passed: the bulk recipes appear in the multi-roll/cluster mill and are absent from the forge hammer. The preceding clean-build baseline is `4.0-per2-for-gtocore-0.5.6-beta`. The source registers 22 `gtohjs` items, one standalone block, one `gtohjs` cover definition, 22 `gtocore` machine or part definitions and three new recipe types. The GTO-compatible ME Placement Tool port is a completely separate `ME Placement Tool for gto` Mod. It is not a GTOHJS dependency; GTOHJS no longer registers or references its tools, item IDs, UI, network channel or recipes, and either Mod can be installed without the other.
+The target source version is `5.6-spe1-for-gtocore-0.5.6-beta`. It retains the old HJS IDs and method-mode recipes, adds seven GTL-derived multiblocks, five adaptive wireless parts and an Infinite Energy Unit, and consolidates native registration ownership. The current source passes a Java 21 online clean build; the first 5.6 JAR passed a fresh 0.5.6-beta save-entry check. Feature-level client checks for later texture, UI, transfer-rate, tooltip, formation and processing changes remain pending. See [the port and architecture record](docs/45_dev19_to_056_port_and_architecture.md) for behavior and verification limits. The GTO-compatible ME Placement Tool remains a separate Mod and is not a GTOHJS dependency.
 
 ## Runtime and development dependencies
 
@@ -31,13 +39,13 @@ Use Java 21 and an online Gradle build by default:
 
 ```powershell
 $env:JAVA_HOME = '<JDK 21 path>'
-.\gradlew.bat build --stacktrace
+.\gradlew.bat clean build
 ```
 
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-4.0-per2-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-5.6-spe1-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.

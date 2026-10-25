@@ -34,6 +34,20 @@ import java.util.Set;
 public final class LargePetalApothecaryRecipeType extends com.gtolib.api.recipe.RecipeType {
     public static final long EU_PER_TICK = 16L;
     public static final int DURATION_TICKS = 100;
+    private static final ClassValue<Method> REAGENT_GETTERS = getters("getReagent");
+    private static final ClassValue<Method> CATEGORY_GETTERS = getters("getCategoryMap");
+
+    private static ClassValue<Method> getters(String name) {
+        return new ClassValue<>() {
+            @Override protected Method computeValue(Class<?> type) {
+                try {
+                    return type.getMethod(name);
+                } catch (NoSuchMethodException error) {
+                    throw new IllegalStateException("Missing " + name + " on " + type.getName(), error);
+                }
+            }
+        };
+    }
 
     private final net.minecraft.world.item.crafting.RecipeType<?> proxyType;
     private volatile int representativeRecipeCount;
@@ -180,7 +194,7 @@ public final class LargePetalApothecaryRecipeType extends com.gtolib.api.recipe.
     @SuppressWarnings("unchecked")
     private void removeMainCategoryEntry() {
         try {
-            Method getter = getClass().getMethod("getCategoryMap");
+            Method getter = CATEGORY_GETTERS.get(getClass());
             Object rawMap = getter.invoke(this);
             if (!(rawMap instanceof Map<?, ?>)) {
                 throw new IllegalStateException("GT recipe category map has an unexpected type");
@@ -249,7 +263,7 @@ public final class LargePetalApothecaryRecipeType extends com.gtolib.api.recipe.
     private static Ingredient getReagent(Recipe<?> recipe) {
         ResourceLocation id = recipe.getId();
         try {
-            Method method = recipe.getClass().getMethod("getReagent");
+            Method method = REAGENT_GETTERS.get(recipe.getClass());
             if (method.getParameterCount() != 0 ||
                     !Ingredient.class.isAssignableFrom(method.getReturnType())) {
                 throw new IllegalStateException("Invalid getReagent signature on " +

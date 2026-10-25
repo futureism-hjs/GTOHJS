@@ -40,4 +40,4 @@ Structures can normally form without an optional maintenance or acceleration hat
 
 ## Laser machines
 
-When modeling a machine on `gtocore:nano_forge`, check `PartAbility.INPUT_LASER`, the laser hatch's tier and energy interface, the controller's recipe-tier calculation, thread and overclock hatches, and tier frames together. You cannot replace ordinary `INPUT_ENERGY` with `INPUT_LASER` and continue to use a regular electric controller.
+When modeling a machine on `gtocore:nano_forge`, check `PartAbility.INPUT_LASER`, the laser hatch's tier and energy interface, the controller's recipe-tier calculation, thread and overclock hatches, and tier frames together. A predicate change alone does not prove controller energy compatibility. Document 47 verifies the exact 0.5.6 checked-coil controller's native energy aggregation. GTO's 256A..16777216A wireless inputs also use INPUT_LASER, so they share the Deep Chemical Distorter's two laser-target positions without another whitelist.

@@ -83,7 +83,7 @@ Crafting-table recipes do not use GTO's `RecipeBuilder`; they continue to call `
 
 The per-recipe CoreMod fragments in earlier sections are historical examples.
 Current code uses `RecipeSourceCatalog` and providers in
-`com.gtohjs.gtrecipe`. The CoreMod emits one indexed runtime loop after
+`com.gtohjs.recipes`. The CoreMod emits one indexed runtime loop after
 `RecipeFilter.init()`: it gets the indexed `RecipeType` and raw ID, invokes
 `recipeBuilder`, lets Java configure the already-created builder, then invokes
 the literal `RecipeBuilder.save()` instruction and validates the returned

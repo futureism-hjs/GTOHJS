@@ -51,7 +51,7 @@ public final class MEInputAssemblyRegistration {
                     inputDefinition,
                     stockingInputDefinition,
                     GTCEu.id("block/machine/part/me_pattern_buffer"));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             inputDefinition = null;
             stockingInputDefinition = null;

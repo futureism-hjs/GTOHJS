@@ -13,11 +13,13 @@ import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.utils.register.MachineRegisterUtils;
 import com.gtohjs.machine.HyperdimensionalPatternResources;
+import com.gtohjs.machine.HyperdimensionalBiochemicalRecipeSupport;
 import com.gtohjs.util.ModLog;
 import com.gtolib.GTOCore;
 import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.machine.multiblock.CoilCrossRecipeMultiblockMachine;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 
@@ -50,6 +52,7 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                     throw new IllegalStateException("Existing machine is not a multiblock: " + MACHINE_ID);
                 }
                 definition = multiblock;
+                HyperdimensionalBiochemicalRecipeSupport.install(multiblock);
                 validate(multiblock, false);
                 state = State.REGISTERED;
                 return;
@@ -64,6 +67,9 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                     .coilParallelTooltips()
                     .laserTooltips()
                     .multipleRecipesTooltips()
+                    .tooltips(Component.translatable("gtohjs.machine.hyperdimensional_biochemical.recipes"),
+                            Component.translatable("gtohjs.machine.hyperdimensional_biochemical.conditions"),
+                            Component.translatable("gtohjs.machine.hyperdimensional_biochemical.filters"))
                     .block(() -> HyperdimensionalPatternResources.block("gtceu:clean_machine_casing"))
                     .multiblockPreviewRenderer(true, true)
                     .pattern(machine -> HyperdimensionalPatternResources.apply(
@@ -119,6 +125,7 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                             GTOCore.id("block/multiblock/general0"))
                     .register();
 
+            HyperdimensionalBiochemicalRecipeSupport.install(definition);
             if (GTRegistries.MACHINES.get(MACHINE_ID) != definition) {
                 throw new IllegalStateException("GT registry entry does not match: " + MACHINE_ID);
             }
@@ -128,7 +135,7 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                             "servicePositions={}, cupronickelCoils={}, previews=true, nativeChemicalComplexRuntime=true",
                     MACHINE_ID, HyperdimensionalBiochemicalRecipeTypeRegistration.definition(),
                     EXPECTED_SERVICE_POSITIONS, EXPECTED_COIL_POSITIONS);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional biochemical factory registration failed", error);
@@ -160,11 +167,13 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                 !candidate.isRenderXEIPreview()) {
             throw new IllegalStateException("Hyperdimensional biochemical factory renderer/preview is missing");
         }
-        if (!(candidate instanceof MultiblockDefinition gtoDefinition) ||
-                gtoDefinition.getPatterns() == null || gtoDefinition.getPatterns().length < 1) {
-            if (buildPattern) {
-                throw new IllegalStateException("Hyperdimensional biochemical factory cached pattern is missing");
-            }
+        if (!(candidate instanceof MultiblockDefinition gtoDefinition)) {
+            throw new IllegalStateException("Hyperdimensional biochemical factory is not a native GTO definition");
+        }
+        // Native preview shapes are lazy; the factory above proves buildability.
+        // Match the already verified steam/rare-earth/chemical-factory contract.
+        if (gtoDefinition.getPatterns() != null && gtoDefinition.getPatterns().length < 1) {
+            throw new IllegalStateException("Hyperdimensional biochemical factory cached pattern is empty");
         }
     }
 
@@ -178,7 +187,7 @@ public final class HyperdimensionalBiochemicalFactoryRegistration {
                             "cupronickelCoils={}, nativeChemicalComplexRuntime=true",
                     MACHINE_ID, HyperdimensionalBiochemicalRecipeTypeRegistration.definition(),
                     EXPECTED_SERVICE_POSITIONS, EXPECTED_COIL_POSITIONS);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded hyperdimensional biochemical factory validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

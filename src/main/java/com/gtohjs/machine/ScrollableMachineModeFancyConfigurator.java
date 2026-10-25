@@ -11,12 +11,8 @@ import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
 import com.lowdragmc.lowdraglib.gui.texture.ResourceBorderTexture;
 import com.lowdragmc.lowdraglib.gui.texture.TextTexture;
 import com.lowdragmc.lowdraglib.gui.widget.ButtonWidget;
-import com.lowdragmc.lowdraglib.gui.widget.DraggableScrollableWidgetGroup;
 import com.lowdragmc.lowdraglib.gui.widget.ImageWidget;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
-import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /** A row-snapping version of GTCEu's recipe-mode page with a five-row viewport. */
 public final class ScrollableMachineModeFancyConfigurator extends MachineModeFancyConfigurator {
@@ -42,7 +38,7 @@ public final class ScrollableMachineModeFancyConfigurator extends MachineModeFan
         page.setBackground(GuiTextures.BACKGROUND_INVERSE);
 
         var scrollArea = new RowSnappingScrollGroup(
-                PADDING, PADDING, PAGE_WIDTH - PADDING * 2, viewportHeight);
+                PADDING, PADDING, PAGE_WIDTH - PADDING * 2, viewportHeight, ROW_HEIGHT);
         scrollArea.setYScrollBarWidth(SCROLLBAR_WIDTH);
         scrollArea.setYBarStyle(GuiTextures.SLIDER_BACKGROUND_VERTICAL, GuiTextures.BUTTON);
         scrollArea.setDraggable(false);
@@ -69,39 +65,4 @@ public final class ScrollableMachineModeFancyConfigurator extends MachineModeFan
         return page;
     }
 
-    private static final class RowSnappingScrollGroup extends DraggableScrollableWidgetGroup {
-        private RowSnappingScrollGroup(int x, int y, int width, int height) {
-            super(x, y, width, height);
-        }
-
-        @Override
-        @OnlyIn(Dist.CLIENT)
-        public boolean mouseWheelMove(double mouseX, double mouseY, double wheelDelta) {
-            if (!isMouseOverElement(mouseX, mouseY) || !isScrollable() || wheelDelta == 0) {
-                return super.mouseWheelMove(mouseX, mouseY, wheelDelta);
-            }
-
-            int maxOffset = Math.max(0, getMaxHeight() - getSize().height);
-            if (maxOffset == 0) {
-                return super.mouseWheelMove(mouseX, mouseY, wheelDelta);
-            }
-
-            int direction = wheelDelta > 0 ? -1 : 1;
-            setScrollYOffset(Mth.clamp(
-                    getScrollYOffset() + direction * ROW_HEIGHT,
-                    0,
-                    maxOffset));
-            return true;
-        }
-
-        @Override
-        @OnlyIn(Dist.CLIENT)
-        public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            boolean handled = super.mouseReleased(mouseX, mouseY, button);
-            int maxOffset = Math.max(0, getMaxHeight() - getSize().height);
-            int snappedOffset = Math.round(getScrollYOffset() / (float) ROW_HEIGHT) * ROW_HEIGHT;
-            setScrollYOffset(Mth.clamp(snappedOffset, 0, maxOffset));
-            return handled;
-        }
-    }
 }

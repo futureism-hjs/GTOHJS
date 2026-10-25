@@ -46,7 +46,7 @@ public final class RecipeDraftWriter {
                 "// Target machine: " + machineId + "\n" +
                 "// Recipe type: " + recipeTypeId + "\n" +
                 "// Recipe id: " + recipeId + "\n" +
-                "// Copy this complete class to src/main/java/com/gtohjs/gtrecipe before rebuilding.\n\n" +
+                "// Copy this complete class to src/main/java/com/gtohjs/recipes before rebuilding.\n\n" +
                 source.strip() + "\n";
 
         Path temporary = Files.createTempFile(outputDirectory, ".gtohjs-recipe-", ".tmp");

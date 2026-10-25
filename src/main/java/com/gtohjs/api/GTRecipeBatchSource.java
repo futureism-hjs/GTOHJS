@@ -13,6 +13,9 @@ import net.minecraft.resources.ResourceLocation;
  * {@code RecipeFilter.init()}.</p>
  */
 public interface GTRecipeBatchSource {
+    /** Derived families wait until native classified recipes have been generated. */
+    default boolean afterNativeRecipes() { return false; }
+
     void begin();
 
     int recipeCount();

@@ -112,7 +112,7 @@ public final class OneStopRareEarthProcessingPlantRegistration {
                             "isostaticPressAbilities=true, renderWorldPreview={}, renderXEIPreview={}",
                     MACHINE_ID, OneStopRareEarthRecipeTypeRegistration.definition(),
                     definition.isRenderWorldPreview(), definition.isRenderXEIPreview());
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("One-stop rare-earth processing plant registration failed", error);
@@ -153,7 +153,7 @@ public final class OneStopRareEarthProcessingPlantRegistration {
                     gtoDefinition.getPatterns() != null ? gtoDefinition.getPatterns().length : -1;
             ModLog.info("Validated loaded {}; structure=8x10x7, patternBuilt=true, cachedPatterns={}",
                     MACHINE_ID, cachedPatterns);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded rare-earth processing plant validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

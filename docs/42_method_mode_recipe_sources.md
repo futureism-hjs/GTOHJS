@@ -4,13 +4,13 @@
 
 Version `5.0per1` replaces the per-recipe ASM builder fragments with one
 method-mode catalog. Recipe source code is packaged in
-`src/main/java/com/gtohjs/gtrecipe`; shared discovery, GT execution, crafting
+`src/main/java/com/gtohjs/recipes`; shared discovery, GT execution, crafting
 execution, generator support, and the Large Petal proxy type are in
 `src/main/java/com/gtohjs/api`.
 
 This is not a datagen system. Source classes are compiled into the normal mod
 JAR. The in-game editor writes a complete Java source class for manual review
-and copying into `com.gtohjs.gtrecipe`, followed by a normal JAR rebuild.
+and copying into `com.gtohjs.recipes`, followed by a normal JAR rebuild.
 
 ## GT Lifecycle
 
@@ -59,13 +59,33 @@ unchanged.
 
 ## Discovery And Ordering
 
+### Native-derived families
+
+`HyperdimensionalBiochemicalRecipes` uses the same deferred native snapshot
+stage as Chemical Distorter, copying extraction/reaction/incubation recipes
+without replacing their native definitions. Details and marker/filter semantics
+are in `49_controller_inputs_and_biochemical_recipes.md`.
+
+`GTRecipeBatchSource.afterNativeRecipes()` defaults to false. The Deep Chemical
+Distorter overrides it to defer its `begin()` snapshot until native classified
+recipes exist. The existing CoreMod emits the same catalog builder/save loop
+twice: after RecipeFilter.init() for established sources, and immediately before
+RecipeBuilder.finish() for deferred sources. Java providers never call save().
+The catalog retains both stages, checks IDs across stages, and validates all
+definitions in both final tables after finish. See document 47 for the native
+module-3 copy, nanite filtering and tier transformation contract.
+
 `RecipeSourceDiscovery` scans only direct, top-level public classes in
-`com.gtohjs.gtrecipe` from either the development class directory or the final
+`com.gtohjs.recipes` from either the development class directory or the final
 JAR. It instantiates only the requested source-interface type and orders
 sources by binary class name. This creates deterministic registration order
 without a separate generated registry Java file.
 
 ## Recipe Editor Output
+
+The 2026-10-25 package migration preserves all method-mode interfaces and ASM
+stages. `verifyRecipePackages` rejects stale main sources in the former package;
+update old external drafts to `com.gtohjs.recipes` before copying. See document 56.
 
 The editor writes generated source to:
 
@@ -73,7 +93,7 @@ The editor writes generated source to:
 <Minecraft version directory>/gtohjs/recipe/<PublicClassName>.java
 ```
 
-Every generated class declares `package com.gtohjs.gtrecipe;`, implements the
+Every generated class declares `package com.gtohjs.recipes;`, implements the
 proper method-mode interface, and has a filename equal to its public class
 name. The class-name suffix encodes the exact recipe path so punctuation
 normalization cannot cause a collision. Existing generated source is never
@@ -88,11 +108,15 @@ their semantics cannot be represented safely by a simple editor grid.
 
 ## Current Migration Inventory
 
+- The later approved acquisition family adds 15 finite GT recipes and three
+  single-cell shaped machine-to-marker recipes. It reuses the catalog and
+  native IO matching for its server-start conflict audit; see documents 51/52.
 - 2 ME assembly recipes.
 - 4 imported chemical recipes.
 - 3 imported directory recipes.
 - 3 one-stop rare-earth recipes.
-- 1 platinum-group sludge electrolysis recipe.
+- 1 one-stop platinum-group sludge recipe, now exclusive to the platinum
+  refining matrix (see `46_platinum_refining_matrix.md`).
 - 254 fragment-world recipes.
 - Dynamic bulk cluster-mill recipes for every eligible material.
 - 22 established shaped crafting recipes.

@@ -89,7 +89,7 @@ public final class SteamArrayRegistration {
             }
             validate(definition, false);
             ModLog.info("Registered {}; storageLimit={}, pattern=3x3x3", MACHINE_ID, STORAGE_LIMIT);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             definition = null;
             ModLog.error("Steam array registration failed", error);
         }

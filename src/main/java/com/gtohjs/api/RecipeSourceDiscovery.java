@@ -12,9 +12,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.jar.JarFile;
 
-/** Deterministically discovers public no-argument recipe sources in {@code com.gtohjs.gtrecipe}. */
+/** Deterministically discovers public no-argument recipe sources in {@code com.gtohjs.recipes}. */
 final class RecipeSourceDiscovery {
-    static final String PACKAGE_NAME = "com.gtohjs.gtrecipe";
+    static final String PACKAGE_NAME = "com.gtohjs.recipes";
     private static final String PACKAGE_PATH = PACKAGE_NAME.replace('.', '/');
 
     private RecipeSourceDiscovery() {

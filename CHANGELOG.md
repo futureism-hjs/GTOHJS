@@ -1,5 +1,54 @@
 # GTO HJS 更新日志 / Changelog
 
+## 5.6-spe1-for-gtocore-0.5.6-beta - 2026-10-25
+
+Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
+(published 2026-09-12):
+
+### 中文
+
+- 在保留旧版注册 ID 和配方语义的基础上，将 dev19 功能移植到 GTOCore
+  0.5.6-beta，并集中原生注册入口；新增七台 GTL 衍生多方块机器、对应结构和
+  专属配方类型，同时复用 0.5.6 原生配方类型接入激光焊接、拆包、织布机、
+  轧机和多辊式轧机配方。
+- 新增五个自适配无线电网仓室/终端、网络数据棒和无线电网无限能源单元，复用
+  0.5.6 团队电网账本，并加入频率、模板、并行、电压、电流、缓冲和传输速率校验。
+- 扩展现有配方注册目录：增加铂精炼、奇异增殖、超维度化学生产及生化配方；
+  更新机器配方来源、获取配方和并行/线程上限。新增自动辐射仓室时沿用原生
+  结构谓词与数量上限；四台加工机器改用控制器模式选择配方类型。
+- 更新 ME 样板缓冲与配方编辑器、机器模式界面、物品来源提示和 0.5.6 任务书章节；
+  同步结构、资源、英文开发说明和授权/第三方声明。
+- Java 21 在线清洁构建用于本次源码同步。5.6 首个构建曾通过进入新存档检查；
+  后续界面、无线传输和机器形成/处理等功能的逐项客户端验收仍以对应开发文档
+  记录的待测项为准。
+
+### English
+
+- Ported the dev19 feature set to GTOCore 0.5.6-beta while retaining existing
+  registry IDs and recipe semantics and consolidating native registration
+  entry points. Added seven GTL-derived multiblocks and their structures and
+  recipe types, plus native 0.5.6 laser-welding, unpacking, loom, rolling-mill
+  and cluster-mill recipe support.
+- Added five adaptive wireless hatches/terminal, a network data stick and an
+  Infinite Wireless Energy Unit. They reuse the 0.5.6 team energy ledger and
+  validate frequencies, templates, parallelism, voltage, amperage, buffers
+  and transfer rates.
+- Extended the existing recipe-source catalog with platinum refining,
+  exotic proliferation, hyperdimensional chemical and biochemical recipes;
+  updated machine recipe sources, acquisition recipes and parallel/thread
+  limits. Automatic Radiation Hatches extend native structure predicates and
+  retain combined native quantity limits. Four processing machines select
+  recipe types through their controllers.
+- Updated ME pattern buffers and the recipe editor, machine-mode UI, item
+  attribution and 0.5.6 quest chapters. Synchronized structures, resources,
+  English development notes and license/third-party notices.
+- The Java 21 online clean build passed in 12 seconds (13 actionable tasks,
+  including 9 executed tasks and 4 from cache); package reobfuscation and
+  optimization-contract verification passed. The first 5.6 build passed a
+  new-save entry check; feature-level client checks for later UI,
+  wireless-transfer, formation and processing changes remain tracked as
+  pending in their development documents.
+
 ## 5.0per1 - 2026-09-08
 
 ### 中文

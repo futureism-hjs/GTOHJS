@@ -12,14 +12,14 @@ var MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
 var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
 var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
 
-function buildCatalogGTRecipes(recipeIndexLocal) {
+function buildCatalogGTRecipes(recipeIndexLocal, beginMethod) {
     var instructions = new InsnList();
     var check = new LabelNode();
     var end = new LabelNode();
 
     instructions.add(ASMAPI.buildMethodCall(
         'com/gtohjs/api/RecipeSourceCatalog',
-        'beginGTRegistration',
+        beginMethod || 'beginGTRegistration',
         '()V',
         ASMAPI.MethodType.STATIC
     ));
@@ -183,8 +183,270 @@ function buildCustomRecipes(recipeIndexLocal) {
     return instructions;
 }
 
+// Use the established Forge CoreMod path; the 0.5.6 native Mixin extension
+// filters external mixins targeting GTO/GTCEu/GTMThings classes.
+function appendInfiniteTowerHook(method, owner, name, withText, expectedReturns) {
+    var nodes = method.instructions.toArray();
+    var returns = 0;
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].getOpcode() !== Opcodes.RETURN) continue;
+        var hook = new InsnList();
+        hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        if (withText) hook.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        hook.add(ASMAPI.buildMethodCall(owner, name,
+            '(Lcom/gtocore/common/machine/multiblock/storage/WirelessEnergySubstationMachine;' +
+                (withText ? 'Ljava/util/List;' : '') + ')V', ASMAPI.MethodType.STATIC));
+        method.instructions.insertBefore(nodes[i], hook);
+        returns++;
+    }
+    if (returns !== expectedReturns) {
+        throw new Error('GTOHJS infinite tower ' + method.name + ' expected ' + expectedReturns +
+            ' returns, found ' + returns);
+    }
+    method.maxStack = Math.max(method.maxStack, 2);
+    ASMAPI.log('INFO', 'GTOHJS infinite tower hook: ' + method.name + ' -> ' + name + ', returns=' + returns);
+    return method;
+}
+
 function initializeCoreMod() {
     return {
+        'gtohjs_auto_radiation_value': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.part.RadiationHatchPartMachine',
+                'methodName': 'getRadioactivity',
+                'methodDesc': '()I'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var count = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].getOpcode() === Opcodes.IRETURN) {
+                        var hook = new InsnList();
+                        hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        hook.add(ASMAPI.buildMethodCall('com/gtohjs/machine/AutomaticRadiationSupport',
+                            'radioactivity', '(ILcom/gtocore/common/machine/multiblock/part/RadiationHatchPartMachine;)I',
+                            ASMAPI.MethodType.STATIC));
+                        method.instructions.insertBefore(nodes[i], hook);
+                        count++;
+                    }
+                }
+                if (count !== 1) throw new Error('Automatic radiation getter anchor mismatch: ' + count);
+                method.maxStack = Math.max(method.maxStack, 2);
+                ASMAPI.log('INFO', 'GTOHJS installed automatic radiation fuel/value adapter');
+                return method;
+            }
+        },
+        'gtohjs_auto_radiation_calibration': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.trait.RadioactivityTrait',
+                'methodName': 'getRecipeRadioactivity',
+                'methodDesc': '()I'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var count = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].getOpcode() === Opcodes.IRETURN) {
+                        var hook = new InsnList();
+                        hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        hook.add(new FieldInsnNode(Opcodes.GETFIELD,
+                            'com/gtocore/common/machine/trait/RadioactivityTrait', 'radiationHatchPartMachines', 'Ljava/util/Set;'));
+                        hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        hook.add(new FieldInsnNode(Opcodes.GETFIELD,
+                            'com/gtocore/common/machine/trait/RadioactivityTrait', 'recipeRadioactivity', 'I'));
+                        hook.add(ASMAPI.buildMethodCall('com/gtohjs/machine/AutomaticRadiationSupport',
+                            'calibrate', '(ILjava/util/Set;I)I', ASMAPI.MethodType.STATIC));
+                        method.instructions.insertBefore(nodes[i], hook);
+                        count++;
+                    }
+                }
+                if (count !== 1) throw new Error('Automatic radiation calibration anchor mismatch: ' + count);
+                method.maxStack = Math.max(method.maxStack, 4);
+                ASMAPI.log('INFO', 'GTOHJS installed automatic radiation requirement adapter');
+                return method;
+            }
+        },
+        'gtohjs_auto_radiation_display': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.part.RadiationHatchPartMachine',
+                'methodName': 'addDisplayText',
+                'methodDesc': '(Ljava/util/List;)V'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var count = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.GETFIELD
+                            && node.owner === 'com/gtocore/common/machine/multiblock/part/RadiationHatchPartMachine'
+                            && node.name === 'radioactivity' && node.desc === 'I') {
+                        method.instructions.set(node, new MethodInsnNode(Opcodes.INVOKEVIRTUAL,
+                            node.owner, 'getRadioactivity', '()I', false));
+                        count++;
+                    }
+                }
+                if (count !== 1) throw new Error('Automatic radiation UI anchor mismatch: ' + count);
+                ASMAPI.log('INFO', 'GTOHJS installed automatic radiation UI value adapter');
+                return method;
+            }
+        },
+        'gtohjs_jade_providers_before_sort': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'snownee.jade.Jade',
+                'methodName': 'loadComplete',
+                'methodDesc': '()V'
+            },
+            'transformer': function(method) {
+                method.instructions.insert(ASMAPI.buildMethodCall(
+                    'com/gtohjs/adaptivenet/GTOHJSJadePlugin', 'registerBeforeSort', '()V', ASMAPI.MethodType.STATIC));
+                ASMAPI.log('INFO', 'GTOHJS injected Kotlin Jade provider registration before native sorting');
+                return method;
+            }
+        },
+        'gtohjs_infinite_tower_load': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine',
+                'methodName': 'loadContainer',
+                'methodDesc': '()V'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var tierReads = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (node.getOpcode() === Opcodes.INVOKEVIRTUAL &&
+                        node.owner === 'com/gtocore/common/block/WirelessEnergyUnitBlock' &&
+                        node.name === 'getTier' && node.desc === '()I') {
+                        if (tierReads === 0) {
+                            method.instructions.set(node, ASMAPI.buildMethodCall(
+                                'com/gtohjs/adaptivenet/InfiniteWirelessEnergyLifecycle', 'capacityGlassTier',
+                                '(Lcom/gtocore/common/block/WirelessEnergyUnitBlock;)I', ASMAPI.MethodType.STATIC));
+                        }
+                        tierReads++;
+                    }
+                }
+                if (tierReads !== 2) throw new Error('GTOHJS infinite tower expected two tier reads, found ' + tierReads);
+                return appendInfiniteTowerHook(method, 'com/gtohjs/adaptivenet/InfiniteWirelessEnergyLifecycle',
+                    'apply', false, 4);
+            }
+        },
+        'gtohjs_infinite_tower_invalidation': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine',
+                'methodName': 'onStructureInvalid',
+                'methodDesc': '()V'
+            },
+            'transformer': function(method) {
+                var hook = new InsnList();
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                hook.add(ASMAPI.buildMethodCall('com/gtohjs/adaptivenet/InfiniteWirelessEnergyLifecycle', 'release',
+                    '(Lcom/gtocore/common/machine/multiblock/storage/WirelessEnergySubstationMachine;)V',
+                    ASMAPI.MethodType.STATIC));
+                method.instructions.insert(hook);
+                ASMAPI.log('INFO', 'GTOHJS infinite tower hook: onStructureInvalid -> release');
+                return method;
+            }
+        },
+        'gtohjs_infinite_tower_text': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine',
+                'methodName': 'customText',
+                'methodDesc': '(Ljava/util/List;)V'
+            },
+            'transformer': function(method) {
+                return appendInfiniteTowerHook(method, 'com/gtohjs/adaptivenet/InfiniteEnergyPresentation',
+                    'updateTowerText', true, 3);
+            }
+        },
+        'gtohjs_infinite_tower_unit_count': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine',
+                'methodName': 'lambda$customText$0',
+                'methodDesc': '(Ljava/util/List;ILjava/lang/Integer;)V'
+            },
+            'transformer': function(method) {
+                var nativeGroup = new LabelNode();
+                var hook = new InsnList();
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                hook.add(new FieldInsnNode(Opcodes.GETFIELD,
+                    'com/gtocore/common/machine/multiblock/storage/WirelessEnergySubstationMachine',
+                    'wirelessEnergyUnitPositions', 'Lcom/google/common/collect/Multimap;'));
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                hook.add(new VarInsnNode(Opcodes.ILOAD, 2));
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 3));
+                hook.add(ASMAPI.buildMethodCall('com/gtohjs/adaptivenet/InfiniteEnergyPresentation', 'splitUnitCount',
+                    '(Lcom/gtocore/common/machine/multiblock/storage/WirelessEnergySubstationMachine;' +
+                    'Lcom/google/common/collect/Multimap;Ljava/util/List;ILjava/lang/Integer;)Z',
+                    ASMAPI.MethodType.STATIC));
+                hook.add(new JumpInsnNode(Opcodes.IFEQ, nativeGroup));
+                hook.add(new InsnNode(Opcodes.RETURN));
+                hook.add(nativeGroup);
+                method.instructions.insert(hook);
+                method.maxStack = Math.max(method.maxStack, 5);
+                ASMAPI.log('INFO', 'GTOHJS infinite tower hook: native MAX group -> splitUnitCount');
+                return method;
+            }
+        },
+        'gtohjs_infinite_tower_rate': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.hepdd.gtmthings.common.item.WirelessEnergyBindingToolBehavior',
+                'methodName': 'getRate',
+                'methodDesc': '(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)J'
+            },
+            'transformer': function(method) {
+                var nativeRate = new LabelNode();
+                var hook = new InsnList();
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                hook.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                hook.add(ASMAPI.buildMethodCall('com/gtohjs/adaptivenet/InfiniteWirelessEnergyLifecycle', 'hasInfiniteTower',
+                    '(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z', ASMAPI.MethodType.STATIC));
+                hook.add(new JumpInsnNode(Opcodes.IFEQ, nativeRate));
+                hook.add(new FieldInsnNode(Opcodes.GETSTATIC, 'java/lang/Long', 'MAX_VALUE', 'J'));
+                hook.add(new InsnNode(Opcodes.LRETURN));
+                hook.add(nativeRate);
+                method.instructions.insert(hook);
+                method.maxStack = Math.max(method.maxStack, 2);
+                ASMAPI.log('INFO', 'GTOHJS infinite tower hook: binding-tool rate -> Long.MAX_VALUE');
+                return method;
+            }
+        },
+        'gtohjs_after_wireless_tower_registration': {
+            'target': {
+                'type': 'METHOD',
+                'class': 'com.gtocore.common.data.machines.MultiBlockG',
+                'methodName': '<clinit>',
+                'methodDesc': '()V'
+            },
+            'transformer': function(method) {
+                var nodes = method.instructions.toArray();
+                var injected = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].getOpcode() === Opcodes.RETURN) {
+                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
+                            'com/gtohjs/adaptivenet/AdaptiveTowerStructure',
+                            'install',
+                            '()V',
+                            ASMAPI.MethodType.STATIC
+                        ));
+                        injected++;
+                    }
+                }
+                if (injected === 0) {
+                    throw new Error('GTOHJS could not find MultiBlockG registration return');
+                }
+                return method;
+            }
+        },
         'gtohjs_universal_steam_factory_display_modes': {
             'target': {
                 'type': 'METHOD',
@@ -331,26 +593,8 @@ function initializeCoreMod() {
                 for (var i = 0; i < nodes.length; i++) {
                     if (nodes[i].getOpcode() === Opcodes.RETURN) {
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/OneStopRareEarthRecipeTypeRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalBiochemicalRecipeTypeRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/LargePetalApothecaryRecipeTypeRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/FragmentWorldCollectionRecipeTypeRegistration',
-                            'register',
+                            'com/gtohjs/bootstrap/GTOHJSRegistration',
+                            'recipeTypes',
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
@@ -491,86 +735,8 @@ function initializeCoreMod() {
                 for (var i = 0; i < nodes.length; i++) {
                     if (nodes[i].getOpcode() === Opcodes.RETURN) {
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/UniversalSteamFactoryRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/OneStopRareEarthProcessingPlantRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalForgeRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalSteamFurnaceRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalSmelterRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalChemicalFactoryRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/HyperdimensionalBiochemicalFactoryRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/AdvancedGeneratorArrayRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/SteamArrayRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/AdvancedSteamArrayRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/AdvancedAlchemyCauldronRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/LargePetalApothecaryRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/FragmentWorldCollectionMachineRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/ThermalAndIntakeHatchRegistration',
-                            'register',
+                            'com/gtohjs/bootstrap/GTOHJSRegistration',
+                            'machines',
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
@@ -601,20 +767,8 @@ function initializeCoreMod() {
                 for (var i = 0; i < nodes.length; i++) {
                     if (nodes[i].getOpcode() === Opcodes.RETURN) {
                         method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/MEInputAssemblyRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/MESuperPatternBufferRegistration',
-                            'register',
-                            '()V',
-                            ASMAPI.MethodType.STATIC
-                        ));
-                        method.instructions.insertBefore(nodes[i], ASMAPI.buildMethodCall(
-                            'com/gtohjs/bootstrap/MESuperWildcardPatternBufferRegistration',
-                            'register',
+                            'com/gtohjs/bootstrap/GTOHJSRegistration',
+                            'aeMachines',
                             '()V',
                             ASMAPI.MethodType.STATIC
                         ));
@@ -693,6 +847,8 @@ function initializeCoreMod() {
                         node.owner === 'com/gtolib/api/recipe/RecipeBuilder' &&
                         node.name === 'finish' &&
                         node.desc === '()V') {
+                        method.instructions.insertBefore(node,
+                            buildCatalogGTRecipes(recipeIndexLocal, 'beginLateGTRegistration'));
                         var validations = new InsnList();
                         validations.add(ASMAPI.buildMethodCall(
                             'com/gtohjs/api/RecipeSourceCatalog',

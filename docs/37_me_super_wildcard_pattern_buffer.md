@@ -11,6 +11,11 @@
 
 ## Verification
 
+The 2026-10-25 revision uses Kotlin-managed cooperative server work and a bounded
+session cache. Source-slot isolation, ambiguity rejection and AE priority remain.
+Changes temporarily withdraw derived patterns until a complete current result
+is published. See document 56 for budgets, signatures and verification limits.
+
 - Java 21 toolchain with Java 17 target bytecode.
 - `gradlew build --no-daemon`: passed on 2026-07-30.
 - JAR resources contain valid `en_us.json` and `zh_cn.json` entries for the new machine and configuration.

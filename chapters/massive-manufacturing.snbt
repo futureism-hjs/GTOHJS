@@ -1,0 +1,382 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "diamond"
+	default_quest_size: 2.0d
+	filename: "massive-manufacturing"
+	group: "5EEE1B83CA094132"
+	icon: "gtceu:large_autoclave"
+	id: "2FEC174CBFBA1A0F"
+	images: [{
+		height: 2.0d
+		image: "gtocore:item/circuit/suprachronal_iv"
+		rotation: 0.0d
+		width: 2.0d
+		x: -9.54d
+		y: -3.5d
+	}]
+	order_index: 0
+	quest_links: [ ]
+	quests: [
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "7B2376D1BA2E8AC7"
+			tasks: [{
+				id: "6585841355A8909F"
+				item: "gtceu:large_mixer"
+				type: "item"
+			}]
+			x: -3.0d
+			y: 1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "3B0D809F89920D82"
+			tasks: [{
+				id: "21C31BC7D27105E4"
+				item: "gtceu:large_arc_smelter"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "4A7A37030547101B"
+			tasks: [{
+				id: "04C9976EE4CD23EB"
+				item: "gtceu:large_circuit_assembler"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "4CEF044392FBDEAE"
+			tasks: [{
+				id: "3EF56CD9435B1813"
+				item: "gtceu:large_brewer"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "5F9CE0ED4E3EAECF"
+			tasks: [{
+				id: "2DDF47E09B70CD5B"
+				item: "gtceu:large_extruder"
+				type: "item"
+			}]
+			x: -3.0d
+			y: -1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "2B64A3B35E4E6DF6"
+			tasks: [{
+				id: "36765B4AFB48E88C"
+				item: "gtceu:large_extractor"
+				type: "item"
+			}]
+			x: -1.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "4A4638CE661F0BF7"
+			size: 2.0d
+			tasks: [{
+				id: "742E30A173FC1836"
+				item: "gtceu:large_distillery"
+				type: "item"
+			}]
+			x: -5.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "61B7DAE867CAA8B0"
+			tasks: [{
+				id: "02491239315D6352"
+				item: "gtceu:large_material_press"
+				type: "item"
+			}]
+			x: -5.0d
+			y: -1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "77B1246B6EC796D0"
+			tasks: [{
+				id: "22C409F67EA92F16"
+				item: "gtceu:large_autoclave"
+				type: "item"
+			}]
+			x: -3.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "0FC83A6169319AA1"
+			tasks: [{
+				id: "17F5F0167D318EA0"
+				item: "gtceu:large_engraving_laser"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "600F9E99063F2D81"
+			tasks: [{
+				id: "3A79D19BA15051C4"
+				item: "gtceu:large_assembler"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "21B75F2CFEBAE95C"
+			tasks: [{
+				id: "0C132DEA324CE42B"
+				item: "gtceu:large_packer"
+				type: "item"
+			}]
+			x: -2.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "01AD7E70780877B8"
+			tasks: [{
+				id: "371028F0214291F3"
+				item: "gtceu:large_electrolyzer"
+				type: "item"
+			}]
+			x: -3.0d
+			y: -7.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "47F6752A55D14B96"
+			shape: "diamond"
+			size: 2.0d
+			tasks: [{
+				id: "0897328A59F1A7F6"
+				item: "gtocore:large_pyrolyse_oven"
+				type: "item"
+			}]
+			x: -13.0d
+			y: -3.0d
+		}
+		{
+			description: [
+				"喜欢吗？多方块可是GT的拿手好戏，请&9IV&r再来探索吧！"
+				""
+				"这里所有的机器都可以安装&6能量升级模块&r和&6速度升级模块&r，除了左边这两台"
+			]
+			id: "68C24A1ED361D607"
+			tasks: [{
+				id: "7A37E1C952905A4C"
+				title: "大批量加工"
+				type: "checkmark"
+			}]
+			x: -10.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "2510E26AFA17D9D2"
+			tasks: [{
+				id: "4A06444C10923F13"
+				item: "gtocore:large_rolling"
+				type: "item"
+			}]
+			x: -1.0d
+			y: -5.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "557CFB96C2718583"
+			tasks: [{
+				id: "6E0B7C671FF2ADA0"
+				item: "gtocore:large_bender"
+				type: "item"
+			}]
+			x: -5.0d
+			y: -5.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "084ED0FBA0FB08A6"
+			tasks: [{
+				id: "334B8999E921C3E3"
+				item: "gtocore:large_arc_generator"
+				type: "item"
+			}]
+			x: -1.0d
+			y: -7.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "434CCC3EA5C499FE"
+			tasks: [{
+				id: "50AD2972B3CAD6A9"
+				item: "gtceu:large_electromagnet"
+				type: "item"
+			}]
+			x: -5.0d
+			y: -7.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "6812580C8FEAC5DE"
+			tasks: [{
+				id: "0BD9D947150F8373"
+				item: "gtceu:large_cutter"
+				type: "item"
+			}]
+			x: -4.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "30AE29CB311B4CC3"
+			tasks: [{
+				id: "3FF56528645C92A8"
+				item: "gtocore:large_forming"
+				type: "item"
+			}]
+			x: -1.0d
+			y: -1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "3A78A866BBC1110E"
+			tasks: [{
+				id: "5F402A0A489F169C"
+				item: "gtceu:large_solidifier"
+				type: "item"
+			}]
+			x: -7.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "7A899EEE6BCDBF14"
+			tasks: [{
+				id: "4E7D702EE07F7D7D"
+				item: "gtceu:large_chemical_bath"
+				type: "item"
+			}]
+			x: 1.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "5EAFCA61AC0AD758"
+			tasks: [{
+				id: "7638065B5AC11231"
+				item: "gtceu:large_centrifuge"
+				type: "item"
+			}]
+			x: -4.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "0154020B9702F8B6"
+			tasks: [{
+				id: "33D7F3D121CD7858"
+				item: "gtceu:large_maceration_tower"
+				type: "item"
+			}]
+			x: -5.0d
+			y: 1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "421BC6C9C08319D8"
+			tasks: [{
+				id: "089032DDB9C6ED4D"
+				item: "gtocore:large_laser_welder"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "060A1BA22304D786"
+			tasks: [{
+				id: "50F2C279C434E4C1"
+				item: "gtocore:large_laminator"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "55061224FFCE8F80"
+			tasks: [{
+				id: "5712DCFE938C1947"
+				item: "gtceu:large_wiremill"
+				type: "item"
+			}]
+			x: -3.0d
+			y: -5.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "249E74B8EBF66D22"
+			tasks: [{
+				id: "5D1A2EA872817959"
+				item: "gtceu:large_sifting_funnel"
+				type: "item"
+			}]
+			x: -2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "6AB05A6FDF9A1CE4"
+			tasks: [{
+				id: "683F27253A9400FB"
+				item: "gtocore:large_crusher"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 1.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "4411803FE6CA4998"
+			tasks: [{
+				id: "739E2D403EE76F22"
+				item: "gtocore:large_rock_crusher"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			id: "30D7B88E23D53A43"
+			tasks: [{
+				id: "5C2091FB5DB89506"
+				item: "gtocore:vacuum_drying_furnace"
+				type: "item"
+			}]
+			x: -15.0d
+			y: -3.0d
+		}
+	]
+	subtitle: ["Massive Manufacturing"]
+	title: "大批量加工"
+}

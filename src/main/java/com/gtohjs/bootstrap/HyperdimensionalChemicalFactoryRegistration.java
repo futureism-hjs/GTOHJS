@@ -139,7 +139,7 @@ public final class HyperdimensionalChemicalFactoryRegistration {
                     EXPECTED_FORBIDDEN_ROTOR_POSITIONS,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_PARALLEL,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_THREAD);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional chemical factory registration failed", error);
@@ -185,7 +185,7 @@ public final class HyperdimensionalChemicalFactoryRegistration {
                     MACHINE_ID, Arrays.toString(EXPECTED_RECIPE_TYPES),
                     HyperdimensionalCoilMachine.MAX_CUSTOM_PARALLEL,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_THREAD);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded hyperdimensional chemical factory validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

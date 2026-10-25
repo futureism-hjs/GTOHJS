@@ -60,7 +60,7 @@ public final class HyperdimensionalBiochemicalRecipeTypeRegistration {
             state = State.REGISTERED;
             ModLog.info("Registered recipe type {}; itemIO={}/{}, fluidIO={}/{}",
                     RECIPE_TYPE_ID, ITEM_INPUTS, ITEM_OUTPUTS, FLUID_INPUTS, FLUID_OUTPUTS);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional biochemical recipe type registration failed", error);

@@ -143,7 +143,7 @@ public final class HyperdimensionalSmelterRegistration {
                     EXPECTED_FORBIDDEN_ROTOR_POSITIONS,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_PARALLEL,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_THREAD);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional smelter registration failed", error);
@@ -199,7 +199,7 @@ public final class HyperdimensionalSmelterRegistration {
                     MACHINE_ID, Arrays.toString(EXPECTED_RECIPE_TYPES),
                     HyperdimensionalCoilMachine.MAX_CUSTOM_PARALLEL,
                     HyperdimensionalCoilMachine.MAX_CUSTOM_THREAD);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded hyperdimensional smelter validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

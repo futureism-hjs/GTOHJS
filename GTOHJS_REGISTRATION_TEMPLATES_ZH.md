@@ -734,12 +734,12 @@ When air/space positions may contain arbitrary blocks, use `.where(' ', Predicat
 
 ## 5.7 Method-Mode Recipe Sources (5.0per1)
 
-新配方 Java 文件放在 `src/main/java/com/gtohjs/gtrecipe`。不要再为每个
+新配方 Java 文件放在 `src/main/java/com/gtohjs/recipes`。不要再为每个
 配方编写 CoreMod ASM 片段，也不要在普通 Java 方法中调用 `RecipeBuilder.save()`。
 
 - 单个 GT 配方实现 `GTRecipeSource`；配方族实现 `GTRecipeBatchSource`；材料动态族实现
   `MaterialRecipeSource`；工作台配方实现 `CraftingRecipeSource`。
-- `RecipeSourceCatalog` 发现 `com.gtohjs.gtrecipe` 中的来源并在运行时排序、检查 raw/final
+- `RecipeSourceCatalog` 发现 `com.gtohjs.recipes` 中的来源并在运行时排序、检查 raw/final
   ID 重复。GT builder 的 `recipeBuilder(...)` 和 `save()` 仍由 `Data.commonInit()` 中、
   `RecipeFilter.init()` 之后的唯一 ASM 循环执行。
 - Java 来源只配置已经由 ASM 创建的 builder，并保留标签、`MaterialEntry`、NBT、机会产物、
@@ -747,7 +747,7 @@ When air/space positions may contain arbitrary blocks, use `.where(' ', Predicat
 - 工作台来源在相同窗口中调用 `VanillaRecipeHelper`；验证时使用
   `gtohjs:shaped/<path>` 最终 ID。
 - 游戏内配方生成器输出完整 Java 类到版本目录根部的 `gtohjs/recipe`。手动复制该文件到
-  项目 `com.gtohjs.gtrecipe` 后重建 JAR；文件名必须等于 public 类名。
+  项目 `com.gtohjs.recipes` 后重建 JAR；文件名必须等于 public 类名。
 
 完整英文契约、代理边界和生成器字段覆盖见
 `docs/42_method_mode_recipe_sources.md`。

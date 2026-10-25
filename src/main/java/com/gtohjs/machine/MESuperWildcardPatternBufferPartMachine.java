@@ -80,7 +80,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import com.gtohjs.machine.wildcard.*;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.resources.ResourceLocation;
+import java.io.*;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -98,8 +105,9 @@ import static com.lowdragmc.lowdraglib.gui.util.DrawerHelper.drawItemStack;
  */
 public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapablePatternBufferPartMachine {
 
-    private List<IPatternDetails> cachedPatterns;
-    private boolean dirty = true;
+    private PublishedPatterns published = PublishedPatterns.EMPTY;
+    private final WildcardRebuildCoordinator rebuildCoordinator;
+    private boolean loaded;
     private boolean lock = false;
     private int scannedPatterns = 0;
     @SaveToDisk
@@ -125,9 +133,12 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
     private final SearchRecipeHandlerUnit searchHolder = new SearchRecipeHandlerUnit();
     private final RecipeHandlerUnit[] sharedSearchHandlers;
     private final Map<IPatternDetails, Integer> sourceSlotHints = new HashMap<>();
-    private final Map<IPatternDetails, Integer> generatedPatternSlots = new IdentityHashMap<>();
-    private final Map<IPatternDetails, Integer> equivalentGeneratedPatternSlots = new HashMap<>();
-    private final Set<IPatternDetails> ambiguousGeneratedPatterns = new HashSet<>();
+    private record PublishedPatterns(
+            List<IPatternDetails> patterns,
+            PatternRoutes<IPatternDetails> routes) {
+        private static final PublishedPatterns EMPTY =
+                new PublishedPatterns(List.of(), new PatternRoutes<>());
+    }
 
     public MESuperWildcardPatternBufferPartMachine(@NotNull MetaMachineBlockEntity holder) {
         super(holder, MEPatternBufferConfig.wildcardPatternCount());
@@ -158,8 +169,28 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
                         slot.circuitInventory, slot.shareInventory, slot.shareTank,
                         circuitInventorySimulated, shareInventory, shareTank))
                 .toArray(RecipeHandlerUnit[]::new);
+        rebuildCoordinator = new WildcardRebuildCoordinator(new WildcardRebuildCoordinator.Driver() {
+            @Override public boolean isAttached() { return loaded && !isRemote(); }
+            @Override public WildcardRebuildCoordinator.Task createTask(long revision, long epoch) {
+                if (getGrid() == null) return null;
+                var patterns = sourcePatterns();
+                return new RebuildTask(patterns, revision, epoch);
+            }
+            @Override public void clearPublished() {
+                published = PublishedPatterns.EMPTY;
+                scannedPatterns = 0;
+                if (loaded) ICraftingProvider.requestUpdate(getMainNode());
+            }
+            @Override public void rebuildFailed(Exception error) {
+                GTOCore.LOGGER.error("Wildcard pattern rebuild failed at {}; retrying with backoff", getPos(), error);
+            }
+            @Override public void published() {
+                ICraftingProvider.requestUpdate(getMainNode());
+            }
+        }, WildcardRebuildScheduler.HOST);
     }
 
+    @Override
     public int getPatternPriority() {
         return patternPriority;
     }
@@ -196,7 +227,40 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
     @Override
     public void onLoad() {
         super.onLoad();
+        loaded = true;
         loadBlacklistData();
+    }
+
+    @Override
+    public void onUnload() {
+        loaded = false;
+        rebuildCoordinator.detach();
+        super.onUnload();
+    }
+
+    @Override
+    public void onMachineRemoved() {
+        loaded = false;
+        rebuildCoordinator.detach();
+        super.onMachineRemoved();
+    }
+
+    @Override
+    public void removedFromController(@NotNull IMultiController controller) {
+        super.removedFromController(controller);
+        requestPatternUpdate();
+    }
+
+    @Override
+    public void setRecipeType(GTRecipeType type) {
+        super.setRecipeType(type);
+        requestPatternUpdate();
+    }
+
+    @Override
+    public void setAvailableRecipeTypes(GTRecipeType[] types) {
+        super.setAvailableRecipeTypes(types);
+        requestPatternUpdate();
     }
 
     @Override
@@ -217,21 +281,24 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
     }
 
     private void requestPatternUpdate() {
-        if (lock) return;
+        // Native constructors may invoke an override before subclass initialization.
+        if (lock || rebuildCoordinator == null || isRemote()) return;
         lock = true;
-        this.dirty = true;
-        ICraftingProvider.requestUpdate(getMainNode());
-        lock = false;
+        try {
+            rebuildCoordinator.request();
+        } finally {
+            lock = false;
+        }
     }
 
     @Override
     public boolean pushPattern(@NotNull IPatternDetails patternDetails, KeyCounter @NotNull [] inputHolder) {
+        rebuildCoordinator.ensureCurrent();
+        if (!rebuildCoordinator.isPublished()) return false;
         try {
             lock = true;
-            Integer sourceIndex = generatedPatternSlots.get(patternDetails);
-            if (sourceIndex == null && !ambiguousGeneratedPatterns.contains(patternDetails)) {
-                sourceIndex = equivalentGeneratedPatternSlots.get(patternDetails);
-            }
+            var snapshot = published;
+            Integer sourceIndex = snapshot.routes.source(patternDetails);
             if (sourceIndex != null && sourceIndex >= 0 && sourceIndex < getInternalInventory().length) {
                 return getInternalInventory()[sourceIndex].pushPattern(patternDetails, inputHolder);
             }
@@ -302,99 +369,202 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
         requestPatternUpdate();
     }
 
-    /**
-     * 开销大约为1.5ms~2ms每次调用
-     */
-    private void rebuildCacheIfNeeded(List<IPatternDetails> patterns) {
-        if (dirty || cachedPatterns == null) {
-            dirty = false;
-            // profiler start
-            long nanos = System.nanoTime();
-            AtomicLong substitutingIngredients = new AtomicLong();
-            AtomicLong validatingPatterns = new AtomicLong();
-
-            // var patterns = super.getAvailablePatterns();
-            var newPatterns = new ArrayList<IPatternDetails>();
-            generatedPatternSlots.clear();
-            equivalentGeneratedPatternSlots.clear();
-            ambiguousGeneratedPatterns.clear();
-            var templates = new WildcardPatternTemplate[patterns.size()];
-            var templateSlots = new int[patterns.size()];
-            var searchContext = new SearchContext();
-
-            long startSubstituting = System.nanoTime();
-            for (int i = 0; i < patterns.size(); i++) {
-                var p = patterns.get(i);
-                if (p instanceof AEProcessingPattern processingPattern) {
-                    templates[i] = new WildcardPatternTemplate(processingPattern);
-                    var sourceSlot = getDetailsSlotMap().get(p);
-                    var hintedSlot = sourceSlotHints.get(p);
-                    templateSlots[i] = sourceSlot != null ? sourceSlot.index : hintedSlot == null ? -1 : hintedSlot;
-                }
-            }
-            substitutingIngredients.addAndGet(System.nanoTime() - startSubstituting);
-
-            GTCEuAPI.materialManager.getRegisteredMaterials().forEach(material -> {
-                if (blacklistedMaterialSet.contains(material)) return;
-                for (int i = 0; i < patterns.size(); i++) {
-                    var template = templates[i];
-                    if (template == null || templateSlots[i] < 0 || templateSlots[i] >= getInternalInventory().length) continue;
-
-                    long startSubstituting1 = System.nanoTime();
-                    var inputMap = template.tryBuildSearchMap(material, searchContext, templateSlots[i]);
-                    var output = template.tryResolveOutputs(material);
-                    substitutingIngredients.addAndGet(System.nanoTime() - startSubstituting1);
-                    if (inputMap == null || output == null) continue;
-
-                    long startValidating1 = System.nanoTime();
-                    var detail = validatePattern(inputMap, output);
-                    if (detail != null) {
-                        var sourceIndex = Math.max(0, Math.min(templateSlots[i], getInternalInventory().length - 1));
-                        var converted = IParallelPatternDetails.of(convertPattern(detail, sourceIndex), getLevel(), 1);
-                        newPatterns.add(converted);
-                        generatedPatternSlots.put(converted, sourceIndex);
-                        rememberEquivalentPatternRoute(converted, sourceIndex);
-                    }
-                    validatingPatterns.addAndGet(System.nanoTime() - startValidating1);
-                }
-            });
-            cachedPatterns = newPatterns;
-            scannedPatterns = cachedPatterns.size();
-            if (GTOConfig.INSTANCE.devMode.aeLog) {
-                GTOCore.LOGGER.info("MESuperWildcardPatternBufferPartMachine recalculated patterns: {} patterns in {} ms",
-                        scannedPatterns, (System.nanoTime() - nanos) / 1_000_000.0);
-                GTOCore.LOGGER.info("  substituting ingredients took {} ms ({})%",
-                        substitutingIngredients.get() / 1_000_000.0, substitutingIngredients.get() * 100.0 / (System.nanoTime() - nanos));
-                GTOCore.LOGGER.info("  validating patterns took {} ms ({})%",
-                        validatingPatterns.get() / 1_000_000.0, validatingPatterns.get() * 100.0 / (System.nanoTime() - nanos));
-            }
-            // profiler end
-        }
-    }
-
-    private void rememberEquivalentPatternRoute(IPatternDetails pattern, int sourceIndex) {
-        if (ambiguousGeneratedPatterns.contains(pattern)) {
-            return;
-        }
-        Integer existingIndex = equivalentGeneratedPatternSlots.putIfAbsent(pattern, sourceIndex);
-        if (existingIndex != null && existingIndex != sourceIndex) {
-            equivalentGeneratedPatternSlots.remove(pattern);
-            ambiguousGeneratedPatterns.add(pattern);
-        }
+    private List<IPatternDetails> sourcePatterns() {
+        var patterns = super.getAvailablePatterns();
+        return patterns.isEmpty() ? readInv() : patterns;
     }
 
     @Override
     public @NotNull List<@NotNull IPatternDetails> getAvailablePatterns() {
-        var patterns = super.getAvailablePatterns();
-        if (patterns.isEmpty()) {
-            patterns = readInv();
-            if (patterns.isEmpty()) {
-                scannedPatterns = 0;
-                return patterns;
+        if (rebuildCoordinator == null || !loaded) return List.of();
+        rebuildCoordinator.ensureCurrent();
+        return rebuildCoordinator.isPublished() ? published.patterns : List.of();
+    }
+
+    private static byte[] encodeTag(CompoundTag tag) throws IOException {
+        var bytes = new ByteArrayOutputStream();
+        NbtIo.write(tag, new DataOutputStream(bytes));
+        return bytes.toByteArray();
+    }
+
+    private static CompoundTag decodeTag(byte[] bytes) throws IOException {
+        return NbtIo.read(new DataInputStream(new ByteArrayInputStream(bytes)));
+    }
+
+    private static ListTag fluidSignature(CustomFluidTank[] tanks) {
+        var tag = new ListTag();
+        for (var tank : tanks) tag.add(tank.serializeNBT());
+        return tag;
+    }
+
+    /** Item serialization intentionally omits locked catalysts; read active handlers. */
+    private WildcardCacheKey cacheKey() throws IOException {
+        var tag = new CompoundTag();
+        tag.put("patterns", getPatternInventory().serializeNBT());
+        tag.put("sharedItems", shareInventory.storage.serializeNBT());
+        tag.put("sharedCircuit", circuitInventorySimulated.storage.serializeNBT());
+        tag.put("sharedFluids", fluidSignature(shareTank.getStorages()));
+        var slots = new ListTag();
+        for (var slot : getInternalInventory()) {
+            var contents = new CompoundTag();
+            contents.put("circuit", slot.circuitInventory.storage.serializeNBT());
+            contents.put("items", slot.shareInventory.storage.serializeNBT());
+            contents.put("fluids", fluidSignature(slot.shareTank.getStorages()));
+            slots.add(contents);
+        }
+        tag.put("privateSlots", slots);
+        tag.put("materialItems", blacklistedItems.serializeNBT());
+        tag.put("materialFluids", fluidSignature(blacklistedFluids));
+        tag.put("alternativeMachines", blacklistedAltProcessableMachines.serializeNBT());
+        tag.putInt("itemOutputLimit", maxItemsOutput);
+        tag.putInt("fluidOutputLimit", maxFluidsOutput);
+        tag.putInt("capacity", getInternalInventory().length);
+        tag.putLong("epoch", WildcardRebuildScheduler.epoch());
+        tag.putString("selectedType", recipeType == null ? "" : recipeType.registryName.toString());
+        var types = new ListTag();
+        for (var type : getRecipeTypes()) types.add(StringTag.valueOf(type.registryName.toString()));
+        tag.put("availableTypes", types);
+        return new WildcardCacheKey(encodeTag(tag));
+    }
+
+    /** One source slot/material pair, or one cached pattern restoration, per step. */
+    private final class RebuildTask implements WildcardRebuildCoordinator.Task {
+        private final long revision;
+        private final long epoch;
+        private final WildcardCacheKey key;
+        private final SearchContext context = new SearchContext();
+        private final WildcardPatternTemplate[] templates;
+        private final int[] templateSlots;
+        private final Iterator<Material> materials;
+        private final List<IPatternDetails> result = new ArrayList<>();
+        private final PatternRoutes<IPatternDetails> routes = new PatternRoutes<>();
+        private final List<EncodedWildcardPattern> encoded = new ArrayList<>();
+        private final @Nullable WildcardCacheEntry hit;
+        private final long started = System.nanoTime();
+        private Material material;
+        private int slot;
+        private int restored;
+        private long payloadBytes;
+        private boolean cacheable = true;
+        private boolean cancelled;
+
+        private RebuildTask(List<IPatternDetails> patterns, long revision, long epoch) {
+            this.revision = revision;
+            this.epoch = epoch;
+            try {
+                key = cacheKey();
+            } catch (IOException error) {
+                throw new UncheckedIOException(error);
+            }
+            context.selectedType = recipeType;
+            context.availableTypes = List.copyOf(getRecipeTypes());
+            hit = WildcardRebuildScheduler.cached(key);
+            templates = new WildcardPatternTemplate[patterns.size()];
+            templateSlots = new int[patterns.size()];
+            for (int i = 0; i < patterns.size(); i++) {
+                var pattern = patterns.get(i);
+                if (pattern instanceof AEProcessingPattern processing) {
+                    templates[i] = new WildcardPatternTemplate(processing);
+                    var source = getDetailsSlotMap().get(pattern);
+                    templateSlots[i] = source != null ? source.index : sourceSlotHints.getOrDefault(pattern, -1);
+                } else {
+                    templateSlots[i] = -1;
+                }
+            }
+            materials = GTCEuAPI.materialManager.getRegisteredMaterials().iterator();
+            if (hit != null && hit.getSelectedType() != null) {
+                var selectedId = ResourceLocation.tryParse(hit.getSelectedType());
+                if (selectedId == null) throw new IllegalStateException("Invalid cached recipe type id");
+                context.selectedType = GTRegistries.RECIPE_TYPES.get(selectedId);
+                if (context.selectedType == null) throw new IllegalStateException("Cached recipe type no longer exists");
             }
         }
-        rebuildCacheIfNeeded(patterns);
-        return cachedPatterns;
+
+        @Override public boolean advance() {
+            if (cancelled || !rebuildCoordinator.isCurrent(revision, epoch)) return false;
+            try {
+                if (hit != null) {
+                    if (restored < hit.getPatterns().size()) {
+                        var cached = hit.getPatterns().get(restored++);
+                        var definition = AEItemKey.fromTag(decodeTag(cached.payload()));
+                        if (definition == null) throw new IllegalStateException("Invalid cached AE pattern");
+                        addPattern(new AEProcessingPattern(definition), cached.getSourceSlot(), false);
+                        return false;
+                    }
+                    return publish();
+                }
+                if (templates.length == 0) return publish();
+                if (material == null) {
+                    if (!materials.hasNext()) return publish();
+                    material = materials.next();
+                    context.tagKeys.clear();
+                    slot = 0;
+                    // Skips still consume a queue visit and its elapsed-time budget.
+                    if (blacklistedMaterialSet.contains(material)) {
+                        material = null;
+                        return false;
+                    }
+                }
+                int current = slot++;
+                var template = templates[current];
+                int sourceSlot = templateSlots[current];
+                if (template != null && sourceSlot >= 0 && sourceSlot < getInternalInventory().length) {
+                    var input = template.tryBuildSearchMap(material, context, sourceSlot);
+                    var output = template.tryResolveOutputs(material, context);
+                    if (input != null && output != null) {
+                        var raw = validatePattern(input, output, context);
+                        if (raw != null) addPattern(raw, sourceSlot, true);
+                    }
+                }
+                if (slot == templates.length) material = null;
+                return false;
+            } catch (IOException error) {
+                throw new UncheckedIOException(error);
+            }
+        }
+
+        private void addPattern(AEProcessingPattern raw, int sourceSlot, boolean encode) throws IOException {
+            if (sourceSlot < 0 || sourceSlot >= getInternalInventory().length) {
+                throw new IllegalStateException("Invalid wildcard source slot: " + sourceSlot);
+            }
+            var converted = IParallelPatternDetails.of(convertPattern(raw, sourceSlot), getLevel(), 1);
+            result.add(converted);
+            routes.add(converted, sourceSlot);
+            if (encode && cacheable) {
+                byte[] payload = encodeTag(raw.getDefinition().toTag());
+                if (encoded.size() >= WildcardResultCache.MAX_PATTERNS ||
+                        payloadBytes + payload.length + key.getSize() > WildcardResultCache.MAX_BYTES) {
+                    cacheable = false;
+                    encoded.clear();
+                } else {
+                    encoded.add(new EncodedWildcardPattern(sourceSlot, payload));
+                    payloadBytes += payload.length;
+                }
+            }
+        }
+
+        private boolean publish() {
+            if (!rebuildCoordinator.isCurrent(revision, epoch)) return false;
+            recipeType = context.selectedType;
+            published = new PublishedPatterns(Collections.unmodifiableList(result), routes);
+            scannedPatterns = result.size();
+            // Do not spread a possibly early empty result to other providers.
+            if (hit == null && cacheable && !encoded.isEmpty()) {
+                WildcardRebuildScheduler.remember(key, new WildcardCacheEntry(
+                        Collections.unmodifiableList(encoded),
+                        context.selectedType == null ? null : context.selectedType.registryName.toString(),
+                        payloadBytes));
+            }
+            if (GTOConfig.INSTANCE.devMode.aeLog) {
+                GTOCore.LOGGER.info("Wildcard rebuild at {}: patterns={}, cacheHit={}, elapsedMs={}",
+                        getPos(), result.size(), hit != null, (System.nanoTime() - started) / 1_000_000.0);
+            }
+            return true;
+        }
+
+        @Override public void cancel() {
+            cancelled = true;
+        }
     }
 
     @Override
@@ -458,15 +628,15 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
 
     // ========== Pattern Validation ==========
 
-    private AEProcessingPattern validatePattern(IntLongMap inputMap, GenericStack[] sparseOutput) {
+    private AEProcessingPattern validatePattern(IntLongMap inputMap, GenericStack[] sparseOutput, SearchContext context) {
         ObjHolder<GTRecipeDefinition> valid = new ObjHolder<>();
-        if (recipeType == null) {
-            if (!getRecipeTypes().isEmpty()) {
-                for (var rt : getRecipeTypes()) {
+        if (context.selectedType == null) {
+            if (!context.availableTypes.isEmpty()) {
+                for (var rt : context.availableTypes) {
                     if (searchRecipe(rt, inputMap, (u, r) -> {
                         if (checkProb(r)) {
                             valid.value = r;
-                            recipeType = r.recipeType;
+                            context.selectedType = r.recipeType;
                             return true;
                         }
                         return false;
@@ -474,7 +644,7 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
                 }
             }
         } else {
-            searchRecipe(recipeType, inputMap, (u, r) -> {
+            searchRecipe(context.selectedType, inputMap, (u, r) -> {
                 if (checkProb(r)) {
                     valid.value = r;
                     return true;
@@ -482,7 +652,14 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
                 return false;
             });
         }
-        var outPattern = MyPatternDetailsHelper.convertFromGTRecipe(valid.value, maxItemsOutput, maxFluidsOutput);
+        if (valid.value == null) return null;
+        AEProcessingPattern outPattern;
+        if (context.converted.containsKey(valid.value)) {
+            outPattern = context.converted.get(valid.value);
+        } else {
+            outPattern = MyPatternDetailsHelper.convertFromGTRecipe(valid.value, maxItemsOutput, maxFluidsOutput);
+            context.converted.put(valid.value, outPattern);
+        }
         // outPattern的output 需要包含 sparseOutput的所有东西
         if (outPattern != null) {
             var outSparse = outPattern.getSparseOutputs();
@@ -579,6 +756,15 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
 
         private final Reference2ObjectOpenHashMap<GTRecipeType, IntLongMap[]> sharedInputCache = new Reference2ObjectOpenHashMap<>();
         private final IntLongMap workingInput = new IntLongMap();
+        private final Map<GTRecipeDefinition, AEProcessingPattern> converted = new IdentityHashMap<>();
+        private final Map<TagPrefixKey, AEKey> tagKeys = new HashMap<>();
+        private @Nullable GTRecipeType selectedType;
+        private List<GTRecipeType> availableTypes = List.of();
+
+        private @Nullable AEKey resolve(TagPrefixKey prefix, Material material) {
+            if (!tagKeys.containsKey(prefix)) tagKeys.put(prefix, prefix.getFromMaterial(material));
+            return tagKeys.get(prefix);
+        }
 
         private IntLongMap prepareWorkingInput(GTRecipeType type, IntLongMap wildcardInput, int slotIndex) {
             workingInput.clear();
@@ -644,14 +830,14 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
         }
 
         private @Nullable IntLongMap tryBuildSearchMap(Material material, SearchContext context, int sourceIndex) {
-            var activeType = getCurrentSearchType();
+            var activeType = getCurrentSearchType(context);
             if (activeType == null) {
                 return null;
             }
             var wildcardInput = fixedInputCache.computeIfAbsent(activeType, this::buildFixedInputMap);
             var working = context.prepareWorkingInput(activeType, wildcardInput, sourceIndex);
             for (var requirement : tagInputs) {
-                var what = requirement.key.getFromMaterial(material);
+                var what = context.resolve(requirement.key, material);
                 if (what == null) {
                     return null;
                 }
@@ -660,10 +846,10 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
             return working;
         }
 
-        private @Nullable GenericStack[] tryResolveOutputs(Material material) {
+        private @Nullable GenericStack[] tryResolveOutputs(Material material, SearchContext context) {
             for (int i = 0; i < tagOutputs.length; i++) {
                 var requirement = tagOutputs[i];
-                var what = requirement.key.getFromMaterial(material);
+                var what = context.resolve(requirement.key, material);
                 if (what == null) {
                     return null;
                 }
@@ -681,12 +867,9 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
         }
     }
 
-    private @Nullable GTRecipeType getCurrentSearchType() {
-        if (recipeType != null) {
-            return recipeType;
-        }
-        var recipeTypes = getRecipeTypes();
-        return recipeTypes.isEmpty() ? null : recipeTypes.get(0);
+    private @Nullable GTRecipeType getCurrentSearchType(SearchContext context) {
+        if (context.selectedType != null) return context.selectedType;
+        return context.availableTypes.isEmpty() ? null : context.availableTypes.get(0);
     }
 
     // ========== UI Widget ==========
@@ -777,7 +960,7 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
                                     blacklistedItems.setStackInSlot(finalIndex, ItemStack.EMPTY);
                                     loadBlacklistData();
                                 } else if (materialSlot == GTMaterials.NULL) {   // slot is empty
-                                    if (!blacklistedMaterials.containsValue(materialHeld)) {
+                                    if (!blacklistedMaterialSet.contains(materialHeld)) {
                                         // held is not empty and item not in other slot
                                         // -> add to slot
                                         fillPhantomSlot(slot, stackHeld);
@@ -788,7 +971,7 @@ public final class MESuperWildcardPatternBufferPartMachine extends MEOutputCapab
                                 } else {
                                     if (materialSlot != materialHeld) {
                                         // slot item not equal to held item
-                                        if (!blacklistedMaterials.containsValue(materialHeld)) {
+                                        if (!blacklistedMaterialSet.contains(materialHeld)) {
                                             // item not in other slot
                                             // -> change the slot
                                             fillPhantomSlot(slot, stackHeld);

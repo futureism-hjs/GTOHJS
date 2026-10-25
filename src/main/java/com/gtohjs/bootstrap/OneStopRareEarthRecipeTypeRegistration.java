@@ -69,7 +69,7 @@ public final class OneStopRareEarthRecipeTypeRegistration {
             ModLog.info("Registered recipe type {}; itemIO={}/{}, fluidIO={}/{}, slotsPerRow={}",
                     RECIPE_TYPE_ID, ITEM_INPUTS, ITEM_OUTPUTS, FLUID_INPUTS, FLUID_OUTPUTS,
                     SLOTS_PER_ROW);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("One-stop rare-earth recipe type registration failed", error);

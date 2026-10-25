@@ -1,0 +1,1023 @@
+{
+	autofocus_id: "3D4EDD8BE3A2AA8E"
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "wireless-energy"
+	group: "33C930DBAB246BE3"
+	icon: "gtocore:max_wireless_output_hatch"
+	id: "28A33BAEFFB14C7B"
+	images: [
+		{
+			height: 1.0d
+			image: "gtocore:item/circuit/suprachronal_ev"
+			rotation: 0.0d
+			width: 1.0d
+			x: -11.0d
+			y: 2.5d
+		}
+		{
+			height: 1.0d
+			image: "gtocore:item/circuit/suprachronal_iv"
+			rotation: 0.0d
+			width: 1.0d
+			x: 1.0d
+			y: 2.5d
+		}
+		{
+			height: 2.0d
+			image: "gtocore:item/circuit/suprachronal_mv"
+			rotation: 0.0d
+			width: 2.0d
+			x: -4.0d
+			y: 3.5d
+		}
+		{
+			height: 1.0d
+			image: "gtocore:item/circuit/suprachronal_hv"
+			rotation: 0.0d
+			width: 1.0d
+			x: -7.25d
+			y: 1.0d
+		}
+		{
+			height: 1.0d
+			image: "gtocore:item/circuit/suprachronal_hv"
+			rotation: 0.0d
+			width: 1.0d
+			x: -6.5d
+			y: -0.5d
+		}
+	]
+	order_index: 1
+	quest_links: [ ]
+	quests: [
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"给单方块机器使用的覆盖板，每台机器只能安装一个"
+				""
+				"可以安装到电池箱上"
+			]
+			hide_dependency_lines: false
+			id: "1506E8C5572770A3"
+			size: 1.5d
+			tasks: [{
+				id: "00A4A37C9E34568B"
+				item: {
+					Count: 1
+					id: "itemfilters:id_regex"
+					tag: {
+						value: "wireless_energy_receive_cover"
+					}
+				}
+				title: "任意无线能源接收器"
+				type: "item"
+			}]
+			x: -4.5d
+			y: -0.75d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"&6无线能源接口&r负责接收发电机器的电力并发送至电网"
+				""
+				"通过&6无线能源接口&r输入电网的电量有&210%&r的能量损失"
+				""
+				" 只有无法使用无线动力仓的发电设施（比如单方块发电机）才需要使用这个"
+			]
+			hide_dependency_lines: false
+			id: "7110B5380C2104C2"
+			size: 1.5d
+			tasks: [{
+				id: "4C047DD372F1B05C"
+				item: "gtmthings:wireless_energy_interface"
+				type: "item"
+			}]
+			x: -2.25d
+			y: 1.5d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"顾名思义，用来监控无线电网的运行状态"
+				""
+				"监控器的界面主要显示的信息："
+				""
+				"·能源总量：由&6无线能源塔&r的&6能量单元&r&e等级和数量&r决定"
+				"·单次传输上限：由&6电池箱&r或&6蓄能变电站&r的&e传输上限&r决定"
+				"·净功率"
+				"    ·正净功率：表示系统在发电，电能流入电网"
+				"    ·负净功率：表示系统在用电，电能流出电网"
+				""
+				"&6监控器电网组件&r和&6无线能源终端&r也可以用来查看无线电网的状态"
+			]
+			hide_dependency_lines: false
+			id: "4E01E0067B9825F8"
+			min_width: 250
+			size: 1.5d
+			tasks: [{
+				id: "43A62D6EBF7B7DA0"
+				item: "gtmthings:wireless_energy_monitor"
+				type: "item"
+			}]
+			x: -3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0828014567C613E1"]
+			description: [
+				"在拥有&6蓄能变电站&r之前，你只能用&6电池箱&r作为无线电网的&e传输控制器&r"
+				""
+				"电池箱内的&e电池数量与等级&r决定了单次传输上限，每个电池可提供相当于其电压等级&b1A&r电流的功率。例如&e4x任意LV电池&r可提供&24*32=128 EU/t&r的单次传输上限"
+				""
+				"&n手持&6无线能源绑定工具&r&n对准&6电池箱&r&n右击进行容器绑定&r"
+			]
+			hide_dependency_lines: false
+			icon: "gtceu:lv_battery_buffer_4x"
+			id: "0EED467C2B883653"
+			size: 1.5d
+			tasks: [
+				{
+					id: "4FFE7AB103F69067"
+					item: {
+						Count: 1
+						id: "itemfilters:id_regex"
+						tag: {
+							value: "battery_buffer"
+						}
+					}
+					title: "任意电池箱"
+					type: "item"
+				}
+				{
+					id: "26BF2813D8EC0565"
+					item: "gtmthings:wireless_energy_binding_tool"
+					type: "item"
+				}
+			]
+			title: "电池箱"
+			x: -8.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["2386117F9423A54E"]
+			description: [
+				"得益于GTMThings提供的&e无线能源系统&r，格雷员工不再需要布置意大利面能源网络"
+				""
+				"一个功能完整的无线电网包含以下部分："
+				""
+				"- &b电力储存&r：&e无线能源塔"
+				""
+				"- &b单仓最大功率限制&r：&e电池箱 / 蓄能变电站"
+				""
+				"- &b输入能量&r：&e无线动力仓 / 无线能源接口"
+				""
+				"- &b输出能量&r：&e无线能源仓 / 无线能源接收器"
+				""
+				"简单来说：先放一个&6无线能源塔&r，然后放一个&6电池箱&r，&e装满电池&r，用&6无线能源绑定工具&r右击你的电池箱，将其设为&e传输控制器&r。&r你放置的所有&6无线动力仓/无线能源仓&r都会默认绑定到你的能源塔上。"
+			]
+			icon: "gtmthings:wireless_energy_binding_tool"
+			id: "20B8E68273D7D0DE"
+			shape: "gear"
+			size: 2.0d
+			tasks: [
+				{
+					id: "271419441861A4D8"
+					title: "无线电网"
+					type: "checkmark"
+				}
+				{
+					id: "579B5443BABA389A"
+					item: "gtmthings:wireless_energy_binding_tool"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "512AD4A4F48A325D"
+					item: "gtmthings:wireless_energy_terminal"
+					optional_task: true
+					type: "item"
+				}
+			]
+			x: -4.5d
+			y: 1.5d
+		}
+		{
+			dependencies: ["2F9D9F9271159654"]
+			description: [
+				"&6无线能源塔&r的&e结构玻璃等级&r决定了其能够生效的&6能量单元&r，务必使用不低于你安装的&6能量单元&r等级的&6结构玻璃&r"
+				""
+				"&e总容量=&a生效的&r&e能量单元容量之和*单元数量/2&r&r"
+				""
+				"&d无线能源塔最高可以容纳30层能量单元&r"
+				""
+				"&7为了低成本地快速提升你的电网总容量，你可以堆很多的低级能量单元，但是这会使你需要替换大量低级单元才能降低损耗&r"
+			]
+			hide_dependency_lines: false
+			id: "50BD070E09091C9A"
+			shape: "gear"
+			size: 2.0d
+			tasks: [{
+				id: "2641F67732098539"
+				item: "gtocore:wireless_energy_substation"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["0828014567C613E1"]
+			description: [
+				"&6蓄能变电站&r是强大的传输控制器，其内部安装的&e兰波顿电容数量与等级&r决定了单次传输上限"
+				""
+				"&6蓄能变电站&r总传输上限为&e电容提供功率上限之和/4096&r"
+				""
+				"&d蓄能变电站最高可以容纳18层电容&r"
+				""
+				"&n手持&6无线能源绑定工具&r&n对准&6变电站&r&n右击进行容器绑定&r"
+			]
+			hide_dependency_lines: false
+			icon: "gtceu:power_substation"
+			id: "45A7EB99929CDBAD"
+			size: 1.5d
+			tasks: [
+				{
+					id: "7C74A22C4CD76C30"
+					item: "gtceu:power_substation"
+					type: "item"
+				}
+				{
+					id: "45AC1CCA670475B0"
+					item: "gtmthings:wireless_energy_binding_tool"
+					type: "item"
+				}
+			]
+			x: -10.5d
+			y: 3.0d
+		}
+		{
+			dependencies: ["50BD070E09091C9A"]
+			dependency_requirement: "one_started"
+			id: "0176EA6297ADDBA5"
+			tasks: [{
+				id: "77125ACB85858CA0"
+				item: "gtocore:lv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 4.5d
+		}
+		{
+			dependencies: ["0176EA6297ADDBA5"]
+			id: "282F5520C16A0AD4"
+			tasks: [{
+				id: "3D2593512B626590"
+				item: "gtocore:mv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["282F5520C16A0AD4"]
+			id: "665F09E60E684999"
+			tasks: [{
+				id: "101952265A3947BF"
+				item: "gtocore:hv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 6.5d
+		}
+		{
+			dependencies: ["665F09E60E684999"]
+			id: "0B364EABE31B52AA"
+			tasks: [{
+				id: "1059AF426F3568D0"
+				item: "gtocore:ev_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"无线电网的能源储存需要载体"
+				""
+				"&6无线能源塔&r和&6无线能量单元&r提供了相应功能，你只需要一座该结构"
+				""
+				"摆放多座该结构只会以最后一座成型的为准"
+			]
+			hide_dependency_lines: false
+			id: "2F9D9F9271159654"
+			tasks: [{
+				id: "4BD04FF65BD21046"
+				title: "储能上限"
+				type: "checkmark"
+			}]
+			x: -3.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"&6传输控制器&r为网络中的&e每一个接入点&r设定了独立的传输功率上限。"
+				""
+				"对于&6发电端&r（如无线动力仓）是单个接入点的输入功率上限，而对于对&6用电端&r（如无线能源仓）是单个接入点的输出功率上限。"
+				""
+				"提醒：传输控制器&c不需要&r真的输入电，它只是一个用于确定&e当前科技等级&r的&6载体&r，而不是一个用电器"
+			]
+			hide_dependency_lines: false
+			id: "0828014567C613E1"
+			subtitle: "不是整个电网的传输上限！！"
+			tasks: [{
+				id: "31AC0A1F7D0AE71F"
+				title: "传输速率上限"
+				type: "checkmark"
+			}]
+			x: -6.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["0B364EABE31B52AA"]
+			id: "2B77562676391204"
+			tasks: [{
+				id: "5C7560E37186FABE"
+				item: "gtocore:iv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 8.5d
+		}
+		{
+			dependencies: ["2B77562676391204"]
+			id: "6FBD3F8B4E37AED4"
+			tasks: [{
+				id: "7415A2329FD674E6"
+				item: "gtocore:luv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["6FBD3F8B4E37AED4"]
+			id: "1D100002CD949C67"
+			tasks: [{
+				id: "7353A05620103D0E"
+				item: "gtocore:zpm_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 10.5d
+		}
+		{
+			dependencies: ["1D100002CD949C67"]
+			id: "54FC10BE213D3BC2"
+			tasks: [{
+				id: "7313188475E982CC"
+				item: "gtocore:uv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 11.5d
+		}
+		{
+			dependencies: ["54FC10BE213D3BC2"]
+			id: "1AF1CD29B062BDC5"
+			tasks: [{
+				id: "132A093C45DFCEDE"
+				item: "gtocore:uhv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 12.5d
+		}
+		{
+			dependencies: ["1AF1CD29B062BDC5"]
+			id: "3486369D6C962771"
+			tasks: [{
+				id: "275544FC51D4A4FF"
+				item: "gtocore:uev_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 13.5d
+		}
+		{
+			dependencies: ["3486369D6C962771"]
+			id: "3060B7C2DF85F03E"
+			tasks: [{
+				id: "7DA1831F04FBC2CA"
+				item: "gtocore:uiv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 14.5d
+		}
+		{
+			dependencies: ["3060B7C2DF85F03E"]
+			id: "6527438EE35447BB"
+			tasks: [{
+				id: "0261507B74F7D37F"
+				item: "gtocore:uxv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 15.5d
+		}
+		{
+			dependencies: ["6527438EE35447BB"]
+			id: "745C93E0268A1C65"
+			tasks: [{
+				id: "2940123299A0E7C7"
+				item: "gtocore:opv_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 16.5d
+		}
+		{
+			dependencies: ["745C93E0268A1C65"]
+			id: "16EF84614DD467E0"
+			tasks: [{
+				id: "5813047DAA53B4A1"
+				item: "gtocore:max_wireless_energy_unit"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 17.5d
+		}
+		{
+			dependencies: ["50BD070E09091C9A"]
+			id: "2AA11A35F86CDE3E"
+			tasks: [{
+				id: "7B071C6881CBE3E6"
+				item: "gtceu:tempered_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 5.5d
+		}
+		{
+			dependencies: ["2AA11A35F86CDE3E"]
+			id: "5A8A6E7C4557E4C7"
+			tasks: [{
+				id: "6E27C120E674BA4A"
+				item: "gtocore:borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 6.5d
+		}
+		{
+			dependencies: ["5A8A6E7C4557E4C7"]
+			id: "026534812D57BE7E"
+			tasks: [{
+				id: "1538BE434094814B"
+				item: "gtocore:titanium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 7.5d
+		}
+		{
+			dependencies: ["026534812D57BE7E"]
+			id: "1358894FA10260E9"
+			tasks: [{
+				id: "2A6D994FBEA18E68"
+				item: "gtocore:tungsten_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 8.5d
+		}
+		{
+			dependencies: ["1358894FA10260E9"]
+			id: "56DCD3C94086C019"
+			tasks: [{
+				id: "366D385928BF2E1C"
+				item: "gtocore:hsss_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 9.5d
+		}
+		{
+			dependencies: ["56DCD3C94086C019"]
+			id: "4A6384D83CDEAC94"
+			tasks: [{
+				id: "58D7607064B97FDB"
+				item: "gtocore:naquadah_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 10.5d
+		}
+		{
+			dependencies: ["4A6384D83CDEAC94"]
+			id: "1A6690D2BAF0C2F0"
+			tasks: [{
+				id: "119C2ED1A3B195CB"
+				item: "gtocore:tritanium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 11.5d
+		}
+		{
+			dependencies: ["1A6690D2BAF0C2F0"]
+			id: "790B78C43DB30DBE"
+			tasks: [{
+				id: "5D5278D122A25442"
+				item: "gtocore:amprosium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 12.5d
+		}
+		{
+			dependencies: ["790B78C43DB30DBE"]
+			id: "1B17006F05B404AE"
+			tasks: [{
+				id: "2AE3417CB08DB2FC"
+				item: "gtocore:enderium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 13.5d
+		}
+		{
+			dependencies: ["1B17006F05B404AE"]
+			id: "1351463A42A9C8BD"
+			tasks: [{
+				id: "6C7B1C2C71CE9239"
+				item: "gtocore:taranium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 14.5d
+		}
+		{
+			dependencies: ["1351463A42A9C8BD"]
+			id: "4B7B85DAF6F3C2DC"
+			tasks: [{
+				id: "589C999382B1C2D0"
+				item: "gtocore:quarks_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 15.5d
+		}
+		{
+			dependencies: ["4B7B85DAF6F3C2DC"]
+			id: "1D2D2DAF52BAF731"
+			tasks: [{
+				id: "6FDF5D28C11E24D6"
+				item: "gtocore:draconium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 16.5d
+		}
+		{
+			dependencies: ["1D2D2DAF52BAF731"]
+			id: "59AFFB171795AC58"
+			tasks: [{
+				id: "6F03A13A4C6FFFF4"
+				item: "gtocore:cosmic_neutronium_borosilicate_glass"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 17.5d
+		}
+		{
+			dependencies: ["3D4EDD8BE3A2AA8E"]
+			description: ["安装于无线能源塔，根据电网当前电量/总容量百分比发出强度为0-15的红石信号"]
+			hide_dependency_lines: false
+			id: "5E2410977FB75894"
+			tasks: [{
+				id: "37EF2728622010D5"
+				item: "gtceu:energy_detector_cover"
+				type: "item"
+			}]
+			x: -5.5d
+			y: 6.0d
+		}
+		{
+			dependencies: ["5E2410977FB75894"]
+			description: ["安装于无线能源塔，根据电网电量百分比/绝对值和设定的最大、最小阈值发出红石信号，带有RS锁存功能"]
+			hide_dependency_lines: false
+			id: "27743BDBF0CBE1A3"
+			tasks: [{
+				id: "48BB2EC4D2B72AB1"
+				item: "gtceu:advanced_energy_detector_cover"
+				type: "item"
+			}]
+			x: -4.5d
+			y: 7.5d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"得益于新无线电网机制的改动，你可以通过无线电网主动发出的红石信号来控制电网&e供给侧/需求侧&r机器的&d启停&r"
+				""
+				"在相当程度上可以实现&d智能化发电和生产&r，减少资源浪费！"
+				""
+				"&e在无线能源塔主方块上安装能量探测覆盖板，可以根据无线电网电量百分比发出红石信号&r"
+			]
+			hide_dependency_lines: false
+			id: "3D4EDD8BE3A2AA8E"
+			tasks: [{
+				id: "75AB1838C9224FC9"
+				title: "自动化控制"
+				type: "checkmark"
+			}]
+			x: -4.5d
+			y: 4.5d
+		}
+		{
+			dependencies: ["3D4EDD8BE3A2AA8E"]
+			dependency_requirement: "one_completed"
+			description: ["控制机器的启停"]
+			hide_dependency_lines: false
+			id: "7E2275FC1B83A924"
+			tasks: [{
+				id: "16800E57F134A1B7"
+				item: "gtceu:machine_controller_cover"
+				type: "item"
+			}]
+			x: -3.5d
+			y: 6.0d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"&6无线动力仓&r可以直接向无线电网推送电力"
+				""
+				"同样受到单次传输上限的限制"
+			]
+			hide_dependency_lines: false
+			icon: "gtocore:iv_wireless_output_hatch"
+			id: "7A4094388C4089A2"
+			size: 1.5d
+			tasks: [{
+				id: "2F182317D1B2244F"
+				item: {
+					Count: 1
+					id: "itemfilters:id_regex"
+					tag: {
+						value: "wireless_output_hatch"
+					}
+				}
+				title: "任意无线动力仓"
+				type: "item"
+			}]
+			x: -6.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["20B8E68273D7D0DE"]
+			description: [
+				"&6无线能源仓&r能直接从无线电网拉取电力"
+				""
+				"同样受到单次传输上限的限制"
+			]
+			hide_dependency_lines: false
+			icon: "gtocore:iv_wireless_input_hatch"
+			id: "6AB84D44D2BB0EB7"
+			size: 1.5d
+			tasks: [{
+				id: "173149AC2F7F455A"
+				item: {
+					Count: 1
+					id: "itemfilters:id_regex"
+					tag: {
+						value: "wireless_input_hatch"
+					}
+				}
+				title: "任意无线能源仓"
+				type: "item"
+			}]
+			x: -6.75d
+			y: 1.5d
+		}
+		{
+			dependencies: ["45A7EB99929CDBAD"]
+			id: "50F67F67A5E59B5B"
+			tasks: [{
+				id: "2C23220A0E6873A9"
+				item: "gtceu:ev_lapotronic_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 7.5d
+		}
+		{
+			dependencies: ["50F67F67A5E59B5B"]
+			id: "157F503546F7D8CB"
+			tasks: [{
+				id: "1429EEA958B81BDC"
+				item: "gtceu:iv_lapotronic_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 8.5d
+		}
+		{
+			dependencies: ["703240F0D7D482D5"]
+			id: "05D51C88BCAD19C3"
+			tasks: [{
+				id: "3EE33FA2B3FE3C61"
+				item: "gtceu:zpm_lapotronic_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 10.5d
+		}
+		{
+			dependencies: ["05D51C88BCAD19C3"]
+			id: "7572B4E594ECC3D2"
+			tasks: [{
+				id: "58AD85D6745568E1"
+				item: "gtceu:uv_lapotronic_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 11.5d
+		}
+		{
+			dependencies: ["157F503546F7D8CB"]
+			id: "703240F0D7D482D5"
+			tasks: [{
+				id: "146F9D62A4633DE4"
+				item: "gtceu:luv_lapotronic_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 9.5d
+		}
+		{
+			dependencies: ["0EED467C2B883653"]
+			id: "7D6A32081389AE1F"
+			tasks: [{
+				id: "091910597069A4BB"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/lv"
+					}
+				}
+				title: "任意LV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 4.5d
+		}
+		{
+			dependencies: ["7D6A32081389AE1F"]
+			id: "486D2BB03EF54FAC"
+			tasks: [{
+				id: "400345EA8DD698C0"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/mv"
+					}
+				}
+				title: "任意MV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["486D2BB03EF54FAC"]
+			id: "3811F63C452BEB60"
+			tasks: [{
+				id: "5062B8748D028CD1"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/hv"
+					}
+				}
+				title: "任意HV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 6.5d
+		}
+		{
+			dependencies: ["3811F63C452BEB60"]
+			id: "3F2F4457AFB979D4"
+			tasks: [{
+				id: "275E0A8D6097203D"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/ev"
+					}
+				}
+				title: "任意EV电池"
+				type: "item"
+			}]
+			x: -8.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["3F2F4457AFB979D4"]
+			id: "5596AFE6C77BAE4C"
+			tasks: [{
+				id: "1B038B9ED726FD02"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/iv"
+					}
+				}
+				title: "任意IV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 8.5d
+		}
+		{
+			dependencies: ["5596AFE6C77BAE4C"]
+			id: "4B4707A956452CE8"
+			tasks: [{
+				id: "2908F2CEFB6A5D8E"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/luv"
+					}
+				}
+				title: "任意LuV电池"
+				type: "item"
+			}]
+			x: -8.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["4B4707A956452CE8"]
+			id: "123E0C7AFEFD1359"
+			tasks: [{
+				id: "401D3F4C156A727E"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/zpm"
+					}
+				}
+				title: "任意ZPM电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 10.5d
+		}
+		{
+			dependencies: ["123E0C7AFEFD1359"]
+			id: "4D0131D8645447A1"
+			tasks: [{
+				id: "0A04BF211F8EF3BE"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/uv"
+					}
+				}
+				title: "任意UV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 11.5d
+		}
+		{
+			dependencies: ["4D0131D8645447A1"]
+			id: "5124B46987115110"
+			tasks: [{
+				id: "6B6FEB8645BF7FCF"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "gtceu:batteries/uhv"
+					}
+				}
+				title: "任意UHV电池"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 12.5d
+		}
+		{
+			dependencies: ["5124B46987115110"]
+			id: "0A5ABF594AA715BC"
+			tasks: [{
+				id: "04C47686770E52D4"
+				item: "gtocore:really_max_battery"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 13.5d
+		}
+		{
+			dependencies: ["0A5ABF594AA715BC"]
+			icon: "gtocore:transcendent_max_battery"
+			id: "181D2204D1D7F850"
+			tasks: [{
+				id: "162BF1115EDF2A2D"
+				item: "gtocore:transcendent_max_battery"
+				type: "item"
+				weak_nbt_match: true
+			}]
+			x: -8.0d
+			y: 14.5d
+		}
+		{
+			dependencies: ["181D2204D1D7F850"]
+			id: "605054F6F2EB3A20"
+			tasks: [{
+				id: "2998181588976F2E"
+				item: "gtocore:extremely_max_battery"
+				type: "item"
+			}]
+			x: -8.0d
+			y: 15.5d
+		}
+		{
+			dependencies: ["605054F6F2EB3A20"]
+			id: "52B57D7FC6C47C0A"
+			tasks: [{
+				id: "3271E9A131066FFC"
+				item: "gtocore:insanely_max_battery"
+				type: "item"
+			}]
+			x: -8.0d
+			y: 16.5d
+		}
+		{
+			dependencies: ["52B57D7FC6C47C0A"]
+			id: "65B06F5F33E6E861"
+			tasks: [{
+				id: "586A660F74C3CA27"
+				item: "gtocore:mega_max_battery"
+				type: "item"
+			}]
+			x: -8.0d
+			y: 17.5d
+		}
+		{
+			dependencies: ["7572B4E594ECC3D2"]
+			id: "6A240FCBF655AE7F"
+			tasks: [{
+				id: "28AC991DE36BB8DE"
+				item: "gtceu:uhv_ultimate_battery"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 12.5d
+		}
+		{
+			dependencies: ["50BD070E09091C9A"]
+			description: [
+				"跨维度传无线电"
+				""
+				"注意搭建时需要在&e每个&r需要无线电的维度都搭建一个（除了无线能源塔所在的维度），能够使用的&e最高电压&r取决于其上安装的&6整体框架&r"
+				""
+				"&o&7如果你需要一些哭泣的黑曜石，可以去看看黑曜石的tooltips"
+			]
+			id: "10D7BCC3E0E404A5"
+			shape: "circle"
+			size: 1.5d
+			subtitle: "终于不需要在外星放发电机了"
+			tasks: [{
+				id: "47C30586E08158D9"
+				item: "gtocore:wireless_dimension_repeater"
+				type: "item"
+			}]
+			x: 1.5d
+			y: 3.0d
+		}
+	]
+	subtitle: ["Wireless Energy Net"]
+	title: "无线电网"
+}

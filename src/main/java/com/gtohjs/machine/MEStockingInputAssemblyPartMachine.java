@@ -49,6 +49,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.function.ObjLongConsumer;
 
 @ParametersAreNonnullByDefault
@@ -202,6 +204,7 @@ public final class MEStockingInputAssemblyPartMachine extends MEInputAssemblyPar
     }
 
     private void refreshAutoItems(AEKeyMap<AEKey> network, MEStorage storage) {
+        Set<AEKey> occupied = configuredKeysInOtherParts(false);
         PriorityQueue<GenericStack> largest = new PriorityQueue<>(
                 CONFIG_SIZE, Comparator.comparingLong(GenericStack::amount));
         for (var entry : network) {
@@ -209,7 +212,7 @@ public final class MEStockingInputAssemblyPartMachine extends MEInputAssemblyPar
                 continue;
             }
             GenericStack stack = new GenericStack(entry.getKey(), entry.getLongValue());
-            if (!testConfiguredInOtherPart(stack, false)) {
+            if (!occupied.contains(stack.what())) {
                 offerLargest(largest, stack);
             }
         }
@@ -217,6 +220,7 @@ public final class MEStockingInputAssemblyPartMachine extends MEInputAssemblyPar
     }
 
     private void refreshAutoFluids(AEKeyMap<AEKey> network, MEStorage storage) {
+        Set<AEKey> occupied = configuredKeysInOtherParts(true);
         PriorityQueue<GenericStack> largest = new PriorityQueue<>(
                 CONFIG_SIZE, Comparator.comparingLong(GenericStack::amount));
         for (var entry : network) {
@@ -224,7 +228,7 @@ public final class MEStockingInputAssemblyPartMachine extends MEInputAssemblyPar
                 continue;
             }
             GenericStack stack = new GenericStack(entry.getKey(), entry.getLongValue());
-            if (!testConfiguredInOtherPart(stack, true)) {
+            if (!occupied.contains(stack.what())) {
                 offerLargest(largest, stack);
             }
         }
@@ -285,27 +289,38 @@ public final class MEStockingInputAssemblyPartMachine extends MEInputAssemblyPar
     }
 
     boolean testConfiguredInOtherPart(GenericStack config, boolean fluid) {
+        if (config == null || config.amount() <= 0) return false;
+        return configuredKeysInOtherParts(fluid).contains(config.what());
+    }
+
+    private Set<AEKey> configuredKeysInOtherParts(boolean fluid) {
+        Set<AEKey> keys = new HashSet<>();
         if (!isFormed()) {
-            return false;
+            return keys;
         }
         for (IMultiController controller : getControllers()) {
             for (IMultiPart part : controller.getParts()) {
-                if (!(part instanceof MEStockingInputAssemblyPartMachine other) || other == this) {
-                    if (part instanceof IMEStockingPart stocking &&
-                            stocking.getSlotList().hasStackInConfig(config, false)) {
-                        return true;
+                if (part == this) continue;
+                if (part instanceof MEStockingInputAssemblyPartMachine other) {
+                    if (fluid) {
+                        for (var slot : other.fluidHandler.getInventory()) {
+                            if (slot.getConfig() != null) keys.add(slot.getConfig().what());
+                        }
+                    } else {
+                        for (var slot : other.itemHandler.getInventory()) {
+                            if (slot.getConfig() != null) keys.add(slot.getConfig().what());
+                        }
                     }
-                    continue;
-                }
-                boolean found = fluid ?
-                        other.fluidHandler.hasStackInConfig(config, false) :
-                        other.itemHandler.hasStackInConfig(config, false);
-                if (found) {
-                    return true;
+                } else if (part instanceof IMEStockingPart stocking) {
+                    var slots = stocking.getSlotList();
+                    for (int i = 0; i < slots.getConfigurableSlots(); i++) {
+                        var config = slots.getConfigurableSlot(i).getConfig();
+                        if (config != null) keys.add(config.what());
+                    }
                 }
             }
         }
-        return false;
+        return keys;
     }
 
     @Override

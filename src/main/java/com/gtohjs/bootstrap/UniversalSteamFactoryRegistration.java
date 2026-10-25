@@ -165,7 +165,7 @@ public final class UniversalSteamFactoryRegistration {
                     MAX_RECIPE_EUT, LOCKED_RECIPE_DURATION,
                     definition.isRenderWorldPreview(), definition.isRenderXEIPreview(),
                     GTCEu.id("block/multiblock/steam_oven"));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Universal steam factory registration failed", error);
@@ -228,7 +228,7 @@ public final class UniversalSteamFactoryRegistration {
                     MACHINE_ID, Arrays.toString(EXPECTED_RECIPE_TYPES), PATTERN_NAME,
                     MAX_RECIPE_EUT, LOCKED_RECIPE_DURATION,
                     definition.isRenderWorldPreview(), definition.isRenderXEIPreview(), cachedPatterns);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded universal steam factory validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

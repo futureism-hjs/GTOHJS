@@ -1,0 +1,1200 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "gto_hjs"
+	group: ""
+	icon: "gtocore:adaptive_net_energy_terminal"
+	id: "45E73D637256188D"
+	order_index: 5
+	quest_links: [ ]
+	quests: [
+		{
+			description: [
+				"欢迎来到 &6GTO HJS&r。普通设备查 tooltip 和 JEI，本章只补充新增功能与特殊机制。"
+				""
+				"项目反馈：https://github.com/futureism-hjs/GTOHJS"
+			]
+			icon: "gtocore:universal_steam_factory"
+			id: "53EE8FECEA7B132C"
+			tasks: [{
+				id: "66B1B347079797E9"
+				title: "GTO HJS"
+				type: "checkmark"
+			}]
+			title: "GTO HJS"
+			x: 0.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["7100250000000040"]
+			icon: "gtceu:bronze_machine_casing"
+			id: "16BE54B5D2F2C8EC"
+			tasks: [{
+				id: "387876D433EDED8D"
+				title: "蒸汽时代"
+				type: "checkmark"
+			}]
+			title: "蒸汽时代"
+			x: 3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["49693CEC8DD868B6"]
+			icon: "gtceu:lv_machine_hull"
+			id: "4F89ED74B220FDF0"
+			tasks: [{
+				id: "4C6E6861661F295B"
+				title: "LV"
+				type: "checkmark"
+			}]
+			title: "LV"
+			x: 9.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			id: "1925DFA0513025E8"
+			tasks: [{
+				id: "7428DD5B0DD64135"
+				item: "gtocore:universal_steam_factory"
+				type: "item"
+			}]
+			title: "通用蒸汽厂"
+			x: 3.0d
+			y: 10.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			icon: "gtceu:steam_input_hatch"
+			id: "4AC28562C9EBFB66"
+			rewards: [
+				{
+					count: 64
+					id: "6A382737138AA11B"
+					item: "gtceu:steam_input_hatch"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "3EAECEAB76B4A418"
+					item: "gtceu:steam_input_bus"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "513DF6910DEDC37B"
+					item: "gtceu:steam_output_bus"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "0F29D63A524F3313"
+					item: "gtocore:steam_fluid_input_hatch"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "395ED7B5448C4372"
+					item: "gtocore:steam_fluid_output_hatch"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "71DA508931AEDE9B"
+					item: "gtocore:steam_vent_hatch"
+					type: "item"
+				}
+			]
+			tasks: [{
+				id: "1A760E3614615C61"
+				title: "蒸汽仓室补给"
+				type: "checkmark"
+			}]
+			title: "蒸汽仓室补给"
+			x: 3.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			id: "3CB995CB0F3DD402"
+			rewards: [{
+				count: 64
+				id: "7575AD0862E9F3F8"
+				item: "gtceu:bronze_ingot"
+				type: "item"
+			}]
+			tasks: [{
+				id: "463AA98A43FE137F"
+				item: "gtceu:bronze_ingot"
+				type: "item"
+			}]
+			title: "青铜材料补给"
+			x: 3.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			icon: {
+				Count: 1
+				id: "gtocore:stainless_steel_jbk75_mining_hammer"
+				tag: {
+					GT.Tool: {
+						Damage: 0
+					}
+				}
+			}
+			id: "6A0F971A52C8E5D6"
+			rewards: [{
+				id: "4931ACCB02ACB3DA"
+				item: "gtohjs:world_fragments_overworld"
+				type: "item"
+			}]
+			tasks: [{
+				id: "0F6066C86686661D"
+				title: "探索与冒险"
+				type: "checkmark"
+			}]
+			title: "探索与冒险"
+			x: 0.0d
+			y: 28.0d
+		}
+		{
+			dependencies: ["4F89ED74B220FDF0"]
+			icon: "gtceu:mv_machine_hull"
+			id: "183F6A794567513B"
+			tasks: [{
+				id: "54D5DA41180D1A6A"
+				title: "MV"
+				type: "checkmark"
+			}]
+			title: "MV"
+			x: 12.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["7A21AC03B456FB3C"]
+			icon: "gtceu:ev_machine_hull"
+			id: "4FF42C6E0F879D2F"
+			tasks: [{
+				id: "6FA43416906611A6"
+				title: "EV"
+				type: "checkmark"
+			}]
+			title: "EV"
+			x: 18.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			description: ["HJS 的一步铂系矿泥分离已从电解机迁到&6铂系精炼矩阵&r，旧样板需要重新编码。"]
+			icon: "gtceu:platinum_group_sludge_dust"
+			id: "24C3CB6A5568FBB3"
+			tasks: [{
+				id: "02E225C8BCDD78AE"
+				title: "铂族处理路线"
+				type: "checkmark"
+			}]
+			title: "铂族处理路线"
+			x: 18.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["183F6A794567513B"]
+			icon: "gtceu:hv_machine_hull"
+			id: "7A21AC03B456FB3C"
+			tasks: [{
+				id: "2675E74F0852BF08"
+				title: "HV"
+				type: "checkmark"
+			}]
+			title: "HV"
+			x: 15.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			icon: {
+				Count: 1
+				id: "botania:lexicon"
+				tag: {
+					"botania:elven_unlock": 1b
+				}
+			}
+			id: "5D668CD5DB2DC753"
+			tasks: [{
+				id: "50CF88F7188E2329"
+				title: "魔法线"
+				type: "checkmark"
+			}]
+			title: "魔法线"
+			x: 0.0d
+			y: 20.0d
+		}
+		{
+			dependencies: ["5D668CD5DB2DC753"]
+			hide_dependency_lines: true
+			id: "382B596234DB8EA9"
+			rewards: [{
+				count: 64
+				id: "7F3A103D72A5D9EE"
+				item: "botania:livingrock"
+				type: "item"
+			}]
+			tasks: [{
+				id: "085DEDA15CDD0280"
+				item: "botania:livingrock"
+				type: "item"
+			}]
+			title: "活石材料补给"
+			x: 12.0d
+			y: 20.0d
+		}
+		{
+			dependencies: ["5D668CD5DB2DC753"]
+			hide_dependency_lines: true
+			id: "1B7858DF01C9C6A8"
+			tasks: [{
+				id: "0BA133D14BDCCCE5"
+				item: "gtocore:large_petal_apothecary"
+				type: "item"
+			}]
+			title: "大型花药台"
+			x: 3.0d
+			y: 20.0d
+		}
+		{
+			dependencies: ["5D668CD5DB2DC753"]
+			hide_dependency_lines: true
+			id: "3C6CDEE0E378B99B"
+			tasks: [{
+				id: "2CAF469135A9B64D"
+				item: "gtocore:advanced_alchemy_cauldron"
+				type: "item"
+			}]
+			title: "高级炼金锅"
+			x: 6.0d
+			y: 20.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			icon: "gtocore:hyperdimensional_steam_furnace"
+			id: "55E692DF1C5CAA3B"
+			tasks: [{
+				id: "29F8EE899A69C62C"
+				item: "gtocore:hyperdimensional_steam_furnace"
+				type: "item"
+			}]
+			title: "超维度蒸汽熔炉"
+			x: 3.0d
+			y: 14.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			description: ["不需要 EU 或蒸汽，但配方中的煤炭等材料仍会消耗。"]
+			id: "5FFD6451CAFACDE0"
+			tasks: [{
+				id: "16AA36A5C2A5FF4C"
+				item: "gtocore:hyperdimensional_forge"
+				type: "item"
+			}]
+			title: "超维度锻炉"
+			x: 3.0d
+			y: 12.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			id: "331EB9460C21339E"
+			tasks: [{
+				id: "6754253B66F43BDE"
+				item: "gtocore:one_stop_rare_earth_processing_plant"
+				type: "item"
+			}]
+			title: "一站式稀土处理厂"
+			x: 18.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			icon: "gtceu:iv_machine_hull"
+			id: "592E4E80608E5CE8"
+			tasks: [{
+				id: "1DD13B4AA67D513A"
+				title: "IV"
+				type: "checkmark"
+			}]
+			title: "IV"
+			x: 21.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			icon: "gtceu:ulv_machine_hull"
+			id: "49693CEC8DD868B6"
+			tasks: [{
+				id: "15CD0242A79B1AF5"
+				title: "ULV"
+				type: "checkmark"
+			}]
+			title: "ULV"
+			x: 6.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["592E4E80608E5CE8"]
+			description: ["并行与线程乘积过大时，保留最后修改的一项，自动降低另一项。"]
+			id: "3CBC2C78EE1F3560"
+			tasks: [{
+				id: "52D92D34F234584C"
+				item: "gtocore:hyperdimensional_smelter"
+				type: "item"
+			}]
+			title: "超维度熔炼炉"
+			x: 21.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["592E4E80608E5CE8"]
+			description: ["并行与线程乘积过大时，保留最后修改的一项，自动降低另一项。"]
+			id: "46A4EB169108D5B5"
+			tasks: [{
+				id: "3CDF188EF4CAD9E7"
+				item: "gtocore:hyperdimensional_chemical_factory"
+				type: "item"
+			}]
+			title: "超维度化学厂"
+			x: 21.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["5D668CD5DB2DC753"]
+			hide_dependency_lines: true
+			id: "2F82A29CA6835B0B"
+			tasks: [{
+				id: "371422E8C29380DB"
+				item: "appbot:fluix_mana_pool"
+				type: "item"
+			}]
+			title: "福鲁伊克斯魔力池"
+			x: 9.0d
+			y: 20.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			icon: "ae2:energy_acceptor"
+			id: "08E6F71578EF5369"
+			tasks: [{
+				id: "2094FADFB95008D5"
+				title: "AE"
+				type: "checkmark"
+			}]
+			title: "AE"
+			x: 0.0d
+			y: 16.0d
+		}
+		{
+			can_repeat: true
+			dependencies: ["08E6F71578EF5369"]
+			hide_dependency_lines: true
+			icon: "ae2:blank_pattern"
+			id: "4ADBC6B7E17306BB"
+			rewards: [{
+				count: 256
+				id: "59C33D87BCE7E6D0"
+				item: "ae2:blank_pattern"
+				type: "item"
+			}]
+			tasks: [{
+				id: "2A147E152783959D"
+				title: "空白样板补给"
+				type: "checkmark"
+			}]
+			title: "空白样板补给"
+			x: 18.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			description: [
+				"主要负责人、多方块结构：HJS"
+				""
+				"代码支持：GPT，DeepSeek，GTL增强版，GTL"
+			]
+			icon: {
+				Count: 1
+				id: "gtocore:order"
+				tag: { }
+			}
+			id: "26AF7C2761A236E1"
+			size: 3.0d
+			tasks: [{
+				id: "1E6F4E3F97871BA3"
+				title: "贡献者与鸣谢"
+				type: "checkmark"
+			}]
+			title: "贡献者与鸣谢"
+			x: -4.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			hide_dependency_lines: true
+			id: "2F056547A22EAF73"
+			tasks: [{
+				id: "0488A6C0E452EECA"
+				item: "gtocore:me_input_assembly"
+				type: "item"
+			}]
+			title: "ME 输入总成"
+			x: 3.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["592E4E80608E5CE8"]
+			icon: "gtceu:luv_machine_hull"
+			id: "2F1E32827A4DB384"
+			tasks: [{
+				id: "3300760050CB7CB0"
+				title: "LuV"
+				type: "checkmark"
+			}]
+			title: "LuV"
+			x: 24.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			hide_dependency_lines: true
+			id: "1065ABBCE38457E4"
+			tasks: [{
+				id: "60A416D973D5EBF2"
+				item: "gtocore:me_stocking_input_assembly"
+				type: "item"
+			}]
+			title: "ME 库存输入总成"
+			x: 6.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			description: [
+				"用于加速 GTO 配方的独立模组。"
+				""
+				"项目地址：https://github.com/futureism-hjs/GTOFast"
+			]
+			icon: {
+				Count: 1
+				id: "minecraft:clock"
+				tag: { }
+			}
+			id: "24DB735EFE0D1F4D"
+			size: 3.0d
+			tasks: [{
+				id: "53AE523615BCA43D"
+				title: "GTO Fast：相关项目"
+				type: "checkmark"
+			}]
+			title: "GTO Fast：相关项目"
+			x: -9.0d
+			y: 1.5d
+		}
+		{
+			dependencies: ["16BE54B5D2F2C8EC"]
+			id: "3DB8652D5737CF3C"
+			tasks: [{
+				id: "1626D422BB4E2B4B"
+				item: "gtocore:steam_array"
+				type: "item"
+			}]
+			title: "蒸汽阵列"
+			x: 3.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["3DB8652D5737CF3C"]
+			id: "469688C357D93BED"
+			tasks: [{
+				id: "318D5CC47C5F0D1F"
+				item: "gtocore:advanced_steam_array"
+				type: "item"
+			}]
+			title: "进阶蒸汽阵列"
+			x: 3.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["6A0F971A52C8E5D6"]
+			description: [
+				"第一枚主世界碎片从本章“探索与冒险”奖励取得。"
+				""
+				"采集通常不消耗碎片，世界转换可能消耗碎片与燃料。"
+			]
+			hide_dependency_lines: true
+			icon: "gtocore:ulv_fragment_world_collection_machine"
+			id: "76B86FAC6D67B92F"
+			tasks: [{
+				id: "61FB0818F933D0F5"
+				type: "checkmark"
+			}]
+			title: "碎片世界采集入门"
+			x: 3.0d
+			y: 28.0d
+		}
+		{
+			dependencies: ["6A0F971A52C8E5D6"]
+			hide_dependency_lines: true
+			id: "52235E3F065F9DD7"
+			rewards: [{
+				count: 5
+				id: "3F276E8E4185F36A"
+				item: "gtocore:ulv_fragment_world_collection_machine"
+				type: "item"
+			}]
+			tasks: [{
+				id: "3DEA70DCF9212BB8"
+				item: "gtocore:ulv_fragment_world_collection_machine"
+				type: "item"
+			}]
+			title: "ULV 碎片世界采集器"
+			x: 6.0d
+			y: 28.0d
+		}
+		{
+			dependencies: ["6A0F971A52C8E5D6"]
+			description: ["基础耗时为原配方的 &61/4&r，基础 EU/t 为原配方的 &6256 倍&r，再计算并行。"]
+			hide_dependency_lines: true
+			id: "079E7AB14D931CF9"
+			tasks: [{
+				id: "5A58397886C6BE9E"
+				item: "gtocore:large_fragment_world_collection_machine"
+				type: "item"
+			}]
+			title: "大型碎片世界采集器"
+			x: 9.0d
+			y: 28.0d
+		}
+		{
+			dependencies: ["421BEC2EDACF148B"]
+			hide_dependency_lines: true
+			hide_until_deps_complete: true
+			id: "31DBE3D7B97DB781"
+			tasks: [{
+				id: "7BF2FC0E59117105"
+				item: {
+					Count: 1
+					id: "meplacementtool:me_placement_tool"
+					tag: {
+						internalCurrentPower: 1600000.0d
+					}
+				}
+				type: "item"
+			}]
+			title: "ME 放置工具：基础工具"
+			x: 3.0d
+			y: 32.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			id: "421BEC2EDACF148B"
+			invisible: true
+			tasks: [{
+				id: "5976F3F0E40F36CF"
+				modid: "meplacementtool"
+				title: "开发与工具"
+				type: "gtocore:mod"
+			}]
+			title: "开发与工具"
+			x: 0.0d
+			y: 32.0d
+		}
+		{
+			dependencies: ["421BEC2EDACF148B"]
+			hide_dependency_lines: true
+			hide_until_deps_complete: true
+			id: "560FD1B7593F09F2"
+			tasks: [
+				{
+					id: "79BC4F5E106454D3"
+					item: {
+						Count: 1
+						id: "meplacementtool:multiblock_placement_tool"
+						tag: {
+							internalCurrentPower: 3200000.0d
+						}
+					}
+					type: "item"
+				}
+				{
+					id: "7F2E73621472AAD3"
+					item: {
+						Count: 1
+						id: "meplacementtool:me_cable_placement_tool"
+						tag: {
+							internalCurrentPower: 1600000.0d
+						}
+					}
+					type: "item"
+				}
+			]
+			title: "ME 放置工具：结构与线缆"
+			x: 6.0d
+			y: 32.0d
+		}
+		{
+			dependencies: ["183F6A794567513B"]
+			id: "38FC903CCD24F740"
+			tasks: [{
+				id: "4F281122E2D3AF25"
+				item: "gtocore:advanced_infinite_intake_hatch"
+				type: "item"
+			}]
+			title: "进阶无限进气仓"
+			x: 12.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["183F6A794567513B"]
+			description: ["&c仓室切换为独立形态会中断关联配方，并销毁仓内物品和流体。&r"]
+			id: "779832386CCA7A95"
+			tasks: [{
+				id: "409D1F7682740C88"
+				item: "gtocore:electromagnetic_thermal_control_hatch"
+				type: "item"
+			}]
+			title: "电磁热力控制仓"
+			x: 12.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			id: "50E8F30CFFB327EF"
+			tasks: [{
+				id: "7D0ECDBDE35171F1"
+				item: "gtocore:ultimate_infinite_intake_hatch"
+				type: "item"
+			}]
+			title: "终极无限进气仓"
+			x: 18.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["49693CEC8DD868B6"]
+			id: "067A3A565DAC3108"
+			tasks: [{
+				id: "3FABC88D37434F22"
+				item: "gtohjs:vacuum_cover"
+				type: "item"
+			}]
+			title: "真空覆盖"
+			x: 6.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			hide_dependency_lines: true
+			icon: {
+				Count: 1
+				id: "gtohjs:normal_ae_component_pack"
+				tag: {
+					internalCurrentPower: 20000.0d
+				}
+			}
+			id: "339CC4489AEE11DD"
+			rewards: [{
+				id: "22A6513AB6221C8F"
+				item: {
+					Count: 1
+					id: "gtohjs:normal_ae_component_pack"
+					tag: {
+						internalCurrentPower: 20000.0d
+					}
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "5717C6D7B909FB37"
+				type: "checkmark"
+			}]
+			title: "普通 AE 元件包"
+			x: 21.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			hide_dependency_lines: true
+			icon: {
+				Count: 1
+				id: "gtohjs:super_ae_component_pack"
+				tag: {
+					internalCurrentPower: 20000.0d
+				}
+			}
+			id: "7F3CC565E6496DD3"
+			rewards: [{
+				id: "202785086918E49D"
+				item: {
+					Count: 1
+					id: "gtohjs:super_ae_component_pack"
+					tag: {
+						internalCurrentPower: 20000.0d
+					}
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "6D141352296814AD"
+				title: "超级 AE 元件包"
+				type: "checkmark"
+			}]
+			title: "超级 AE 元件包"
+			x: 24.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			description: [
+				"优先读取样板总成的机器配置；指定了确切机器时，一律按该机器执行。"
+				""
+				"设为“组合模式”时，读取各样板中的机器配置执行。"
+				""
+				"普通输入类仓室按机器自身的配置执行。"
+			]
+			icon: "gtocore:plasma_machine_tool"
+			id: "7100250000000002"
+			tasks: [{
+				id: "7100250000000003"
+				title: "综合加工：模式与工序"
+				type: "checkmark"
+			}]
+			title: "综合加工：模式与工序"
+			x: 18.0d
+			y: 10.0d
+		}
+		{
+			dependencies: ["7100250000000002"]
+			icon: "gtocore:plasma_machine_tool"
+			id: "7100250000000004"
+			tasks: [{
+				id: "7100250000000005"
+				item: "gtocore:plasma_machine_tool"
+				type: "item"
+			}]
+			title: "磁流体约束等离子机床"
+			x: 18.0d
+			y: 12.0d
+		}
+		{
+			dependencies: ["7100250000000002"]
+			icon: "gtocore:hadron_catalytic_refinery"
+			id: "7100250000000006"
+			tasks: [{
+				id: "7100250000000007"
+				item: "gtocore:hadron_catalytic_refinery"
+				type: "item"
+			}]
+			title: "强子流态催化精炼塔"
+			x: 21.0d
+			y: 12.0d
+		}
+		{
+			dependencies: ["7100250000000002"]
+			icon: "gtocore:quantum_mass_spectrum_array"
+			id: "7100250000000008"
+			tasks: [{
+				id: "7100250000000009"
+				item: "gtocore:quantum_mass_spectrum_array"
+				type: "item"
+			}]
+			title: "量子场质谱解离阵列"
+			x: 24.0d
+			y: 12.0d
+		}
+		{
+			dependencies: ["7100250000000002"]
+			icon: "gtocore:superconducting_fusion_assembler"
+			id: "710025000000000A"
+			tasks: [{
+				id: "710025000000000B"
+				item: "gtocore:superconducting_fusion_assembler"
+				type: "item"
+			}]
+			title: "超导磁约束熔合组装器"
+			x: 27.0d
+			y: 12.0d
+		}
+		{
+			dependencies: ["7A21AC03B456FB3C"]
+			description: ["降级配方基础 EU/t 为原来的 &61/64&r，耗时不变。"]
+			icon: "gtocore:chemical_distort"
+			id: "710025000000000C"
+			tasks: [{
+				id: "710025000000000D"
+				item: "gtocore:chemical_distort"
+				type: "item"
+			}]
+			title: "深度化学扭曲仪"
+			x: 15.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["4FF42C6E0F879D2F"]
+			icon: "gtocore:platinum_refining_matrix"
+			id: "710025000000000E"
+			tasks: [{
+				id: "710025000000000F"
+				item: "gtocore:platinum_refining_matrix"
+				type: "item"
+			}]
+			title: "铂系精炼矩阵"
+			x: 18.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["592E4E80608E5CE8"]
+			description: [
+				"整批 EU/t = JEI 标注的 keV/t × 2000 × 2048；例如 1 keV/t 需要 &64096000 EU/t&r。"
+				""
+				"不足完整批次时不运行，不会自动减小批量。"
+			]
+			icon: "gtocore:neutron_control_factory"
+			id: "7100250000000010"
+			tasks: [{
+				id: "7100250000000011"
+				item: "gtocore:neutron_control_factory"
+				type: "item"
+			}]
+			title: "中子控制工厂"
+			x: 21.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["2F1E32827A4DB384"]
+			description: [
+				"免除提取机额外供液流程，不免除配方明列的流体。"
+				""
+				"培养过滤只取维护仓提供的等级，&6外部洁净室不能替代&r。"
+			]
+			icon: "gtocore:hyperdimensional_biochemical_factory"
+			id: "7100250000000012"
+			tasks: [{
+				id: "7100250000000013"
+				item: "gtocore:hyperdimensional_biochemical_factory"
+				type: "item"
+			}]
+			title: "超维度生化工厂"
+			x: 24.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["7100250000000012"]
+			icon: "gtohjs:biochemical_extraction_marker"
+			id: "7100250000000016"
+			subtitle: "代表生物提取机的标记"
+			tasks: [{
+				id: "7100250000000017"
+				item: "gtohjs:biochemical_extraction_marker"
+				type: "item"
+			}]
+			title: "生化提取标记"
+			x: 26.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["7100250000000012"]
+			icon: "gtohjs:biochemical_reaction_marker"
+			id: "7100250000000018"
+			subtitle: "代表生化反应室的标记"
+			tasks: [{
+				id: "7100250000000019"
+				item: "gtohjs:biochemical_reaction_marker"
+				type: "item"
+			}]
+			title: "生化反应标记"
+			x: 28.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["7100250000000012"]
+			icon: "gtohjs:incubator_marker"
+			id: "710025000000001A"
+			subtitle: "代表大型培养机的标记"
+			tasks: [{
+				id: "710025000000001B"
+				item: "gtohjs:incubator_marker"
+				type: "item"
+			}]
+			title: "培养标记"
+			x: 30.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			description: [
+				"终端设置频率和各方向模板，仓室绑定同一频率后使用。"
+				""
+				"&6不同频率仍共用队伍的原生能量账本&r，不是独立储能账户。"
+				""
+				"模板决定配置上限，实际传输仍受塔速率、余额和剩余容量限制。"
+			]
+			icon: "gtocore:adaptive_net_energy_terminal"
+			id: "710025000000001C"
+			tasks: [{
+				id: "710025000000001D"
+				title: "无线电网"
+				type: "checkmark"
+			}]
+			title: "无线电网"
+			x: 0.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			description: ["堆叠模板增加安培数，不提高模板电压等级。"]
+			hide_dependency_lines: true
+			icon: "gtocore:adaptive_net_energy_terminal"
+			id: "710025000000001E"
+			tasks: [{
+				id: "710025000000001F"
+				item: "gtocore:adaptive_net_energy_terminal"
+				type: "item"
+			}]
+			title: "自适配电网终端"
+			x: 3.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			hide_dependency_lines: true
+			icon: "gtocore:adaptive_net_energy_input_hatch"
+			id: "7100250000000020"
+			tasks: [{
+				id: "7100250000000021"
+				item: "gtocore:adaptive_net_energy_input_hatch"
+				type: "item"
+			}]
+			title: "自适配电网能源输入仓"
+			x: 9.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			hide_dependency_lines: true
+			icon: "gtocore:adaptive_net_energy_output_hatch"
+			id: "7100250000000022"
+			tasks: [{
+				id: "7100250000000023"
+				item: "gtocore:adaptive_net_energy_output_hatch"
+				type: "item"
+			}]
+			title: "自适配电网动力输出仓"
+			x: 12.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			hide_dependency_lines: true
+			icon: "gtocore:adaptive_net_laser_target_hatch"
+			id: "7100250000000024"
+			tasks: [{
+				id: "7100250000000025"
+				item: "gtocore:adaptive_net_laser_target_hatch"
+				type: "item"
+			}]
+			title: "自适配电网激光靶仓"
+			x: 15.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			hide_dependency_lines: true
+			icon: "gtocore:adaptive_net_laser_source_hatch"
+			id: "7100250000000026"
+			tasks: [{
+				id: "7100250000000027"
+				item: "gtocore:adaptive_net_laser_source_hatch"
+				type: "item"
+			}]
+			title: "自适配电网激光源仓"
+			x: 18.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			description: [
+				"右键终端复制频率，Shift + 右键仓室写入，Shift + 空中右键清除。"
+				""
+				"只复制频率，不复制模板、优先级或队伍归属。"
+			]
+			hide_dependency_lines: true
+			icon: "gtocore:net_data_stick"
+			id: "7100250000000028"
+			tasks: [{
+				id: "7100250000000029"
+				item: "gtocore:net_data_stick"
+				type: "item"
+			}]
+			title: "电网配置数据棒"
+			x: 6.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["710025000000001C"]
+			description: [
+				"容量为 &62^126 − 1 EU&r，多枚不会按数量叠加账本容量。"
+				""
+				"暂无生存制造配方。"
+			]
+			hide_dependency_lines: true
+			icon: "gtohjs:infinite_wireless_energy_storage_unit"
+			id: "710025000000002A"
+			tasks: [{
+				id: "710025000000002B"
+				title: "无限无线能量单元：机制介绍"
+				type: "checkmark"
+			}]
+			title: "无限无线能量单元：机制介绍"
+			x: 21.0d
+			y: 24.0d
+		}
+		{
+			dependencies: ["7100250000000012"]
+			icon: "gtocore:auto_radiation_hatch"
+			id: "710025000000002C"
+			tasks: [{
+				id: "710025000000002D"
+				item: "gtocore:auto_radiation_hatch"
+				type: "item"
+			}]
+			title: "自动放射仓"
+			x: 24.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["2F1E32827A4DB384"]
+			description: ["适用于 LuV 至 UEV 五级原生聚变，&6不包含狂飙一号&r。"]
+			icon: "gtceu:luv_fusion_reactor"
+			id: "710025000000002E"
+			tasks: [{
+				id: "710025000000002F"
+				title: "原生聚变扩展"
+				type: "checkmark"
+			}]
+			title: "聚变机器支持并行仓"
+			x: 24.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["7A21AC03B456FB3C"]
+			icon: "gtocore:advanced_generator_array"
+			id: "7100250000000030"
+			tasks: [{
+				id: "7100250000000031"
+				item: "gtocore:advanced_generator_array"
+				type: "item"
+			}]
+			title: "进阶发电阵列"
+			x: 15.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			description: [
+				"样板容量可配置，最大 &618 列 × 10 行 × 10 页，共 1800 个&r。"
+				""
+				"支持物品与流体输出；网络暂时接收不了的产物保留在缓存中。"
+				""
+				"配置修改后重启生效；缩容时超出容量的样板及槽位数据会销毁。"
+			]
+			hide_dependency_lines: true
+			icon: "gtocore:me_super_pattern_buffer"
+			id: "7100250000000032"
+			tasks: [{
+				id: "7100250000000033"
+				item: "gtocore:me_super_pattern_buffer"
+				type: "item"
+			}]
+			title: "ME 超级样板总成"
+			x: 9.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			description: ["绑定超级样板总成后，支持物品与流体输出，共用目标总成的输出缓存。"]
+			hide_dependency_lines: true
+			icon: "gtocore:me_super_pattern_buffer_proxy"
+			id: "7100250000000034"
+			tasks: [{
+				id: "7100250000000035"
+				item: "gtocore:me_super_pattern_buffer_proxy"
+				type: "item"
+			}]
+			title: "ME 超级样板总成镜像"
+			x: 12.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["08E6F71578EF5369"]
+			description: [
+				"单页容量可配置，最大 &68 × 8，共 64 个&r。"
+				""
+				"支持物品与流体输出。"
+				""
+				"配置修改后重启生效；缩容时超出容量的模板及槽位数据会销毁。"
+			]
+			hide_dependency_lines: true
+			icon: "gtocore:me_super_wildcard_pattern_buffer"
+			id: "7100250000000036"
+			tasks: [{
+				id: "7100250000000037"
+				item: "gtocore:me_super_wildcard_pattern_buffer"
+				type: "item"
+			}]
+			title: "ME 超级通配符样板总成"
+			x: 15.0d
+			y: 16.0d
+		}
+		{
+			dependencies: ["421BEC2EDACF148B"]
+			description: ["导出配方 Java 源码到 &6gtohjs/recipe&r，不会立即热加载配方。"]
+			hide_dependency_lines: true
+			icon: "gtohjs:recipe_editor"
+			id: "7100250000000038"
+			tasks: [{
+				id: "7100250000000039"
+				title: "配方编辑器：开发工具"
+				type: "checkmark"
+			}]
+			title: "配方编辑器：开发工具"
+			x: 9.0d
+			y: 32.0d
+		}
+		{
+			dependencies: ["421BEC2EDACF148B"]
+			description: ["捕获并导出开发用结构数据，不会直接注册或自动建造机器。"]
+			hide_dependency_lines: true
+			icon: "gtohjs:multiblock_structure_generator"
+			id: "710025000000003A"
+			tasks: [{
+				id: "710025000000003B"
+				title: "多方块结构生成器：开发工具"
+				type: "checkmark"
+			}]
+			title: "多方块结构生成器：开发工具"
+			x: 12.0d
+			y: 32.0d
+		}
+		{
+			dependencies: ["53EE8FECEA7B132C"]
+			icon: "gtceu:lv_machine_hull"
+			id: "7100250000000040"
+			tasks: [{
+				id: "7100250000000041"
+				title: "电压等级"
+				type: "checkmark"
+			}]
+			title: "电压等级"
+			x: 0.0d
+			y: 0.0d
+		}
+	]
+	title: "欢迎使用GTO HJS"
+}

@@ -18,7 +18,7 @@ import net.minecraft.server.MinecraftServer;
 /**
  * The only runtime catalog used by the CoreMod for GTOHJS recipes.
  *
- * <p>It discovers recipe classes packaged under {@code com.gtohjs.gtrecipe},
+ * <p>It discovers recipe classes packaged under {@code com.gtohjs.recipes},
  * orders them by class name, rejects duplicate raw/final IDs, and presents
  * compact indexed methods for the ASM loop. It deliberately never invokes
  * {@link RecipeBuilder#save()}.</p>
@@ -36,6 +36,11 @@ public final class RecipeSourceCatalog {
     private static List<MaterialRecipeSource> activeMaterialSources = List.of();
     private static List<GTRecipeDefinition> acceptedDefinitions = List.of();
     private static boolean gtRegistrationActive;
+    private static List<GTRecipeBatchSource> activeGtSources = List.of();
+    private static final List<GTEntry> allGtEntries = new ArrayList<>();
+    private static final List<GTRecipeDefinition> allGtDefinitions = new ArrayList<>();
+    private static boolean lateGtStage;
+    private static boolean lateGtCompleted;
 
     private RecipeSourceCatalog() {
     }
@@ -44,12 +49,32 @@ public final class RecipeSourceCatalog {
         if (gtRegistrationActive) {
             throw new IllegalStateException("GT recipe registration is already active");
         }
+        allGtEntries.clear();
+        allGtDefinitions.clear();
+        lateGtCompleted = false;
+        beginGTRegistration(false);
+    }
+
+    /** Reuses the same ASM builder/save loop immediately before native finish(). */
+    public static synchronized void beginLateGTRegistration() {
+        if (lateGtCompleted || allGtEntries.isEmpty()) {
+            throw new IllegalStateException("Late GT stage requires the completed initial stage");
+        }
+        beginGTRegistration(true);
+    }
+
+    private static void beginGTRegistration(boolean late) {
+        if (gtRegistrationActive) {
+            throw new IllegalStateException("GT recipe registration is already active");
+        }
         if (GT_SOURCES.isEmpty()) {
             throw new IllegalStateException("No GT recipe sources were discovered");
         }
 
         List<GTEntry> entries = new ArrayList<>();
-        for (GTRecipeBatchSource source : GT_SOURCES) {
+        activeGtSources = GT_SOURCES.stream().filter(source -> source.afterNativeRecipes() == late).toList();
+        lateGtStage = late;
+        for (GTRecipeBatchSource source : activeGtSources) {
             source.begin();
             int count = source.recipeCount();
             if (count <= 0) {
@@ -61,12 +86,14 @@ public final class RecipeSourceCatalog {
                 entries.add(new GTEntry(source, localIndex, rawId, recipeType));
             }
         }
-        validateGTIds(entries);
+        List<GTEntry> combinedEntries = new ArrayList<>(allGtEntries);
+        combinedEntries.addAll(entries);
+        validateGTIds(combinedEntries);
         activeGtEntries = List.copyOf(entries);
         acceptedDefinitions = new ArrayList<>();
         gtRegistrationActive = true;
         ModLog.info("Beginning method-mode GT registration; sources={}, recipes={}",
-                GT_SOURCES.stream().map(source -> source.getClass().getName()).toList(), entries.size());
+                activeGtSources.stream().map(source -> source.getClass().getName()).toList(), entries.size());
     }
 
     public static synchronized int gtRecipeCount() {
@@ -111,20 +138,23 @@ public final class RecipeSourceCatalog {
             throw new IllegalStateException("GT recipe registration incomplete: accepted=" +
                     acceptedDefinitions.size() + ", expected=" + activeGtEntries.size());
         }
-        for (GTRecipeBatchSource source : GT_SOURCES) {
+        for (GTRecipeBatchSource source : activeGtSources) {
             source.complete();
         }
+        allGtEntries.addAll(activeGtEntries);
+        allGtDefinitions.addAll(acceptedDefinitions);
+        if (lateGtStage) lateGtCompleted = true;
         gtRegistrationActive = false;
         ModLog.info("Registered {} method-mode GT recipes", acceptedDefinitions.size());
     }
 
     public static synchronized void validateGTFinalized() {
-        if (gtRegistrationActive || acceptedDefinitions.size() != activeGtEntries.size()) {
+        if (gtRegistrationActive || !lateGtCompleted || allGtDefinitions.size() != allGtEntries.size()) {
             throw new IllegalStateException("GT recipes were not completely registered");
         }
-        for (int index = 0; index < activeGtEntries.size(); index++) {
-            GTEntry entry = activeGtEntries.get(index);
-            GTRecipeDefinition definition = acceptedDefinitions.get(index);
+        for (int index = 0; index < allGtEntries.size(); index++) {
+            GTEntry entry = allGtEntries.get(index);
+            GTRecipeDefinition definition = allGtDefinitions.get(index);
             validateGTDefinition(entry, definition);
             ResourceLocation finalId = RecipeBuilder.getTypeID(entry.rawId(), entry.recipeType());
             if (RecipeBuilder.get(finalId) != definition || entry.recipeType().recipes.get(finalId) != definition) {
@@ -134,7 +164,7 @@ public final class RecipeSourceCatalog {
         for (GTRecipeBatchSource source : GT_SOURCES) {
             source.validateFinalized();
         }
-        ModLog.info("Validated {} method-mode GT recipes after RecipeBuilder.finish()", acceptedDefinitions.size());
+        ModLog.info("Validated {} method-mode GT recipes after RecipeBuilder.finish()", allGtDefinitions.size());
     }
 
     /** Called by the CoreMod in Data.commonInit after GT recipe registration starts. */
@@ -179,7 +209,7 @@ public final class RecipeSourceCatalog {
     }
 
     public static synchronized int registeredGTRecipeCount() {
-        return acceptedDefinitions.size();
+        return allGtDefinitions.size();
     }
 
     /** Starts the per-material dynamic recipe family selected by an injected material callback. */

@@ -81,7 +81,7 @@ public final class LargePetalApothecaryRecipeTypeRegistration {
             ModLog.info("Registered recipe type {}; proxy={}; itemIO={}/{}; fluidIO={}/{}",
                     ID, BOTANIA_PROXY_ID, ITEM_INPUTS, ITEM_OUTPUTS,
                     FLUID_INPUTS, FLUID_OUTPUTS);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Large petal apothecary recipe type registration failed", error);

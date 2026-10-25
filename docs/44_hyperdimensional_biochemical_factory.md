@@ -1,5 +1,15 @@
 # Hyperdimensional Biochemical Factory
 
+## Current derived recipes and maintenance filtering
+
+The 2026-10-24 change adds the extraction, reaction and incubation recipe
+families to this existing independent type, with half duration, unchanged EU/t
+and one corresponding nonconsumable marker. Reaction/incubation radiation is
+removed; incubation filtering uses cleaning/sterile/absolute-clean maintenance
+at T1/T2/T3. Ordinary maintenance is tier zero. Native coil runtime and the
+structure remain intact. See `49_controller_inputs_and_biochemical_recipes.md`
+for the complete contract and verification boundary.
+
 ## Scope
 
 This change registers the user-authored `超维度生化工厂.litematic` as a new GTO multiblock machine. The controller marker in the supplied model is `gtocore:biochemical_extraction`, but the formal machine controller is the newly registered `gtocore:hyperdimensional_biochemical_factory`.

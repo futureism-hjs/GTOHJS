@@ -1,0 +1,1532 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "iv"
+	group: "2A1218851E38A2EE"
+	hide_quest_until_deps_visible: true
+	icon: "gtceu:assembly_line"
+	id: "3F8D9D2B382EE265"
+	images: [
+		{
+			height: 1.0d
+			image: "xtonesreworked:block/bitt/12"
+			rotation: 45.0d
+			width: 1.0d
+			x: 8.5d
+			y: -5.5d
+		}
+		{
+			color: 16711935
+			height: 1.0d
+			image: "ftbquests:block/barrier_open"
+			order: 1
+			rotation: 45.0d
+			width: 1.0d
+			x: 8.5d
+			y: -5.5d
+		}
+		{
+			color: 16711935
+			height: 1.0d
+			image: "ftbquests:block/barrier_open"
+			order: 1
+			rotation: 45.0d
+			width: 1.0d
+			x: 22.0d
+			y: -8.5d
+		}
+		{
+			height: 1.0d
+			image: "xtonesreworked:block/bitt/12"
+			rotation: 45.0d
+			width: 1.0d
+			x: 22.0d
+			y: -8.5d
+		}
+		{
+			height: 1.5d
+			image: "gtocore:block/spacetime_assembly_line_casing"
+			rotation: 45.0d
+			width: 1.5d
+			x: 20.0d
+			y: 0.0d
+		}
+		{
+			height: 1.5d
+			image: "gtocore:block/spacetime_assembly_line_casing"
+			rotation: 45.0d
+			width: 1.5d
+			x: 20.0d
+			y: -8.5d
+		}
+		{
+			height: 1.25d
+			image: "ftbquests:textures/shapes/diamond/outline.png"
+			rotation: 0.0d
+			width: 1.25d
+			x: 8.5d
+			y: -7.0d
+		}
+		{
+			height: 1.25d
+			image: "ftbquests:textures/shapes/circle/outline.png"
+			rotation: 0.0d
+			width: 1.25d
+			x: 18.0d
+			y: -12.5d
+		}
+		{
+			height: 1.25d
+			image: "ftbquests:textures/shapes/circle/outline.png"
+			rotation: 0.0d
+			width: 1.25d
+			x: 6.0d
+			y: -7.5d
+		}
+	]
+	order_index: 7
+	quest_links: [
+		{
+			id: "101D1D1E0461C66B"
+			linked_quest: "5F7635CC667AD219"
+			shape: "diamond"
+			x: 8.5d
+			y: -5.5d
+		}
+		{
+			id: "38BDC42D0E99D4AB"
+			linked_quest: "2F03D93AC7DBE58D"
+			shape: "gear"
+			size: 2.0d
+			x: 10.0d
+			y: -14.0d
+		}
+		{
+			id: "4D8B8B8FDEBF933B"
+			linked_quest: "689199DD0E42A571"
+			x: 10.0d
+			y: 0.0d
+		}
+		{
+			id: "3F42743475202D5D"
+			linked_quest: "5AED06E84B4278D6"
+			x: 14.0d
+			y: 2.0d
+		}
+		{
+			id: "46BA6E287A24F615"
+			linked_quest: "67E7B62710A78614"
+			x: 18.0d
+			y: 2.0d
+		}
+		{
+			id: "43CDE5FFABD04A23"
+			linked_quest: "56408F9F9ACD204D"
+			x: 16.0d
+			y: -1.5d
+		}
+		{
+			id: "1935EFBE9E74704F"
+			linked_quest: "58EC0AFA9742164A"
+			shape: "gear"
+			size: 2.0d
+			x: 18.0d
+			y: -14.0d
+		}
+	]
+	quests: [
+		{
+			dependencies: ["7E7B941FF52CC0F2"]
+			description: [
+				"和之前所有阶段不太一样，制造出IV马达对目前的你来说是一个巨大的挑战"
+				""
+				"你需要从&6稀土&r中获取生产&6石墨烯&r需要的&6钇&r元素"
+			]
+			id: "2F57CA424265C509"
+			tasks: [{
+				id: "50C1C5D97B9E5FA9"
+				item: "gtceu:rare_earth_dust"
+				type: "item"
+			}]
+			x: 7.5d
+			y: -10.0d
+		}
+		{
+			dependencies: [
+				"2F57CA424265C509"
+				"4EAFBB80247274E2"
+			]
+			dependency_requirement: "one_completed"
+			description: [
+				"与铂处类似，你无需此刻完成所有金属粉的产出"
+				""
+				"不过它们的处理方法都一模一样，为什么不一起做完呢"
+			]
+			id: "09C2AF1A68A06D69"
+			tasks: [{
+				id: "6E258384E1358ABE"
+				item: "gtocore:yttrium_oxide_dust"
+				type: "item"
+			}]
+			x: 7.5d
+			y: -8.5d
+		}
+		{
+			dependencies: ["09C2AF1A68A06D69"]
+			description: [
+				"为什么它的&6合金冶炼&r电压需求这么夸张？！或许我们要考虑&6电弧炉&r..."
+				""
+				"&o&7本质上还是化工产线"
+			]
+			id: "5CB9B68188A45C6B"
+			tasks: [{
+				id: "0F08286FDB0CAB60"
+				item: "gtceu:yttrium_barium_cuprate_ingot"
+				type: "item"
+			}]
+			x: 8.5d
+			y: -10.0d
+		}
+		{
+			dependencies: [
+				"5CB9B68188A45C6B"
+				"49CD464A77D897E3"
+			]
+			description: ["你必须研磨 化学气相沉积产出的&6石墨烯箔&r 来获得第一批石墨烯粉，此后你可以使用分子重组仪"]
+			id: "4A26D81CF8BCC810"
+			tasks: [{
+				id: "01A55F2E13AF0E7B"
+				item: "gtceu:graphene_foil"
+				type: "item"
+			}]
+			x: 8.5d
+			y: -8.5d
+		}
+		{
+			dependencies: ["4A26D81CF8BCC810"]
+			description: [
+				"强导压时代解锁了多方块版本的加工机器，它们具有更高的处理速度和更低的能耗！"
+				""
+				"现在你的目标是努力向&6IV能源仓&r和&6量子电路&r进发"
+			]
+			id: "2BD46F9D8A842B4A"
+			shape: "gear"
+			size: 1.5d
+			subtitle: "产能大爆发"
+			tasks: [{
+				id: "73AD4069223BAB1A"
+				item: "gtceu:iv_electric_motor"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["2BD46F9D8A842B4A"]
+			id: "61D19307E3E7118B"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "4F67BCEC62F95672"
+				item: "gtceu:iv_assembler"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -5.5d
+		}
+		{
+			dependencies: [
+				"2BD46F9D8A842B4A"
+				"5B98FF5DDD4B2629"
+			]
+			description: ["老规矩，制造&6IV电路组装机&r需要消耗两个昂贵的&6LuV级电路&r"]
+			id: "41BB6C297657D442"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "60DB688CB5AA53A5"
+				item: "gtceu:iv_circuit_assembler"
+				type: "item"
+			}]
+			x: 12.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["1E239C34C36FAD60"]
+			description: [
+				"为你的大机器提供并行！"
+				""
+				"允许机器一次性以多倍功率处理多个配方，某种意义下相当于提供无损超频。"
+			]
+			id: "156E62719405A609"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "0411523C4CDBE9D4"
+				item: "gtceu:iv_parallel_hatch"
+				type: "item"
+			}]
+			x: 20.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["5612C7735BC4F5BC"]
+			id: "7B0A6A5396DB2D20"
+			tasks: [{
+				id: "0DBCEA00C125E1E5"
+				item: "gtceu:hssg_ingot"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -1.5d
+		}
+		{
+			dependencies: [
+				"61D19307E3E7118B"
+				"7B0A6A5396DB2D20"
+			]
+			id: "23DB14B3093506B8"
+			tasks: [{
+				id: "7458B9627359C2AC"
+				item: "gtceu:hssg_coil_block"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -3.5d
+		}
+		{
+			dependencies: [
+				"0C41A1AD7CB90755"
+				"3E4FA9312C0DD6DE"
+				"41BB6C297657D442"
+			]
+			id: "76A2C71F8131E9BE"
+			shape: "hexagon"
+			subtitle: "更便宜的EV级电路"
+			tasks: [{
+				id: "2350A8896AB00AAB"
+				item: "gtceu:quantum_processor"
+				type: "item"
+			}]
+			title: "&a量子处理器"
+			x: 14.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["76A2C71F8131E9BE"]
+			id: "54AC456E31D64E42"
+			shape: "hexagon"
+			subtitle: "更便宜的IV级电路"
+			tasks: [{
+				id: "5BBE027B85572681"
+				item: "gtceu:quantum_processor_assembly"
+				type: "item"
+			}]
+			title: "&a量子处理器集群"
+			x: 16.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["54AC456E31D64E42"]
+			id: "72C2E41EC2ACF82E"
+			shape: "hexagon"
+			subtitle: "更便宜的LuV级电路"
+			tasks: [{
+				id: "50C5B60AA6C4846C"
+				item: "gtceu:quantum_processor_computer"
+				type: "item"
+			}]
+			title: "&a量子处理器超级计算机"
+			x: 18.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["72C2E41EC2ACF82E"]
+			id: "1D413C9604012CBA"
+			shape: "gear"
+			size: 2.0d
+			subtitle: "第一个ZPM电路"
+			tasks: [{
+				id: "16CF88CD1D82721D"
+				item: "gtceu:quantum_processor_mainframe"
+				type: "item"
+			}]
+			title: "&a量子处理器主机"
+			x: 18.0d
+			y: -10.5d
+		}
+		{
+			dependencies: ["6176A38AA179BAF5"]
+			id: "181E2839BFAF8F16"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "35DC9415740B24BC"
+				item: "gtocore:ozonation_purification_unit"
+				type: "item"
+			}]
+			x: 12.0d
+			y: -6.5d
+		}
+		{
+			dependencies: ["181E2839BFAF8F16"]
+			icon: "gtocore:ozone_water_bucket"
+			id: "4575638489699F4E"
+			tasks: [
+				{
+					id: "31AB9BCA0A1E04A7"
+					item: "gtocore:ozone_water_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "793BF5CA711507A0"
+					type: "checkmark"
+				}
+			]
+			x: 14.0d
+			y: -6.5d
+		}
+		{
+			dependencies: ["4575638489699F4E"]
+			id: "7797EB75FF74F43F"
+			tasks: [{
+				id: "6CD75C2A3AC05041"
+				item: "gtceu:hpic_chip"
+				type: "item"
+			}]
+			x: 16.0d
+			y: -6.5d
+		}
+		{
+			dependencies: [
+				"7797EB75FF74F43F"
+				"1E239C34C36FAD60"
+			]
+			id: "13FEF91314898EB1"
+			tasks: [{
+				id: "6A6FAA1E848B0CEE"
+				item: "gtceu:assembly_line_casing"
+				type: "item"
+			}]
+			x: 18.0d
+			y: -6.5d
+		}
+		{
+			dependencies: ["13FEF91314898EB1"]
+			description: [
+				"装配线最长17格，你可以切换EMI多方块结构中的P:0，P:1来查看最小和最大的装配线"
+				""
+				"装配线需要&e有序&r输入物品，你必须按照配方顺序给每个格子填充原料，离装配线主机&b最近&r的&6输入总线&r为配方中第一个材料"
+				""
+				"&o&7流体无需有序"
+			]
+			id: "251002F2103BDA84"
+			shape: "gear"
+			size: 2.0d
+			subtitle: "新的组装方式"
+			tasks: [{
+				id: "0D54C1EF7D500F32"
+				item: "gtceu:assembly_line"
+				type: "item"
+			}]
+			x: 20.0d
+			y: -6.5d
+		}
+		{
+			dependencies: ["7797EB75FF74F43F"]
+			id: "3EF9AF3171607009"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "02928908E7717B2D"
+				item: "gtceu:iv_energy_input_hatch"
+				type: "item"
+			}]
+			x: 16.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["23DB14B3093506B8"]
+			id: "57998756043629AD"
+			tasks: [{
+				id: "7CBBED9115CE04F9"
+				item: "gtceu:samarium_iron_arsenic_oxide_ingot"
+				type: "item"
+			}]
+			x: 12.0d
+			y: -2.5d
+		}
+		{
+			dependencies: [
+				"57998756043629AD"
+				"689199DD0E42A571"
+			]
+			id: "7BE738C0A5DC60F2"
+			tasks: [{
+				id: "15CB63E2631E5533"
+				item: "ad_astra:ostrum_ingot"
+				type: "item"
+			}]
+			x: 12.0d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"0C6A00536686D9F5"
+				"7BE738C0A5DC60F2"
+			]
+			description: [
+				"你现在能够前往T5星球"
+				""
+				"别忘了穿上&bT3&r器官，它需要你使用&6装配线&r制作&eLuV部件&r来合成"
+			]
+			icon: {
+				Count: 1
+				id: "ad_astra_rocketed:tier_5_rocket"
+				tag: {
+					BotariumData: {
+						StoredFluids: [{
+							Amount: 16000L
+							Fluid: "ad_astra:fuel"
+						}]
+					}
+				}
+			}
+			id: "4CD7E4E23FCD3D84"
+			shape: "gear"
+			size: 2.0d
+			tasks: [
+				{
+					id: "798857AC852D4E7D"
+					item: {
+						Count: 1
+						id: "ad_astra_rocketed:tier_5_rocket"
+						tag: {
+							BotariumData: {
+								StoredFluids: [{
+									Amount: 16000L
+									Fluid: "ad_astra:fuel"
+								}]
+							}
+						}
+					}
+					type: "item"
+				}
+				{
+					id: "58BBAD50F7E13345"
+					item: "gtocore:rocket_fuel_h8n4c2o4_bucket"
+					type: "item"
+				}
+			]
+			x: 14.0d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"57998756043629AD"
+				"1E239C34C36FAD60"
+			]
+			id: "0C6A00536686D9F5"
+			tasks: [{
+				id: "5770F8C1DEEF09C9"
+				item: "gtceu:iv_field_generator"
+				type: "item"
+			}]
+			x: 14.0d
+			y: -2.5d
+		}
+		{
+			dependencies: ["0C6A00536686D9F5"]
+			description: ["更高效的电力高炉，具有最高64并行，同时对你的能源供应也提出了更高的要求"]
+			id: "5244C8FF8BF3BCED"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "07CF20E52A0BCECB"
+				item: "gtocore:blaze_blast_furnace"
+				type: "item"
+			}]
+			x: 14.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["0C6A00536686D9F5"]
+			hide_dependency_lines: true
+			id: "5253C403ABF7BC59"
+			shape: "hexagon"
+			size: 1.5d
+			subtitle: "流体钻机的好帮手"
+			tasks: [{
+				id: "2E0FCF54D1C1103F"
+				item: "gtocore:drilling_control_center"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -6.0d
+		}
+		{
+			dependencies: [
+				"761587B546E4158C"
+				"652514A4AFAC187D"
+			]
+			description: ["能够获取高压蒸汽和超临界蒸汽用于发电，不过更重要的是获取核废料"]
+			id: "15C830BF6953ABA0"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "5B36CB3A91F5B36F"
+				item: "gtocore:fission_reactor"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["15C830BF6953ABA0"]
+			description: ["核电，搭配超临界蒸汽涡轮使用"]
+			id: "179099B4231CD171"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "06E1B3E084E954D1"
+				item: "gtocore:heat_exchanger"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["251002F2103BDA84"]
+			description: [
+				"根据游戏难度的不同有不同的调节范围，可以无条件地提升机器的速度和减慢发电机的燃料消耗速度！"
+				""
+				"&o&7所有的环境维护仓也有它们的可配置版本&r"
+			]
+			id: "56E262C94F46A592"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "093B61467591683D"
+				item: "gtocore:auto_configuration_maintenance_hatch"
+				type: "item"
+			}]
+			x: 20.0d
+			y: -8.5d
+		}
+		{
+			dependencies: [
+				"652514A4AFAC187D"
+				"3FEC35A36C296537"
+			]
+			id: "63481942850182B5"
+			tasks: [{
+				id: "6DEFF8533A114417"
+				item: "gtceu:rhodium_plated_palladium_ingot"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["15C830BF6953ABA0"]
+			description: ["可以产出些有趣的资源，包括你下个阶段会用到的&6钋&r"]
+			id: "0985154AE9169549"
+			tasks: [{
+				id: "77818E8F65241D2F"
+				item: "gtocore:nuclear_waste"
+				type: "item"
+			}]
+			x: 1.5d
+			y: -1.5d
+		}
+		{
+			dependencies: ["251002F2103BDA84"]
+			description: ["比一般的反应釜有线圈加成，还可以安装催化剂仓"]
+			id: "1B8F815BF14E7AE8"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "3CFFA00842C4D89D"
+				item: "gtocore:chemical_plant"
+				type: "item"
+			}]
+			x: 22.5d
+			y: -6.5d
+		}
+		{
+			dependencies: ["1E239C34C36FAD60"]
+			description: [
+				"如果你遇到了很慢的配方，可以试试这个"
+				""
+				"处理阵列可以安装&6激光仓&r来进行更多次数的&e超频&r，但处理阵列每次超频获得的&e耗时减免&r&b较少&r。你可以用&c高能耗&r作为代价来获得比大型机器更快的&e处理速度&r"
+			]
+			hide_dependency_lines: true
+			id: "7B8AFBA66325BE5F"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "41982A358055C833"
+				item: "gtocore:iv_processing_array"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -4.5d
+		}
+		{
+			dependencies: [
+				"3BF80AAF9945B144"
+				"1D413C9604012CBA"
+			]
+			id: "742DD1537D90A22A"
+			optional: true
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "56B5DB9849693514"
+				item: "gtocore:rocket_mega_turbine"
+				type: "item"
+			}]
+			x: 20.0d
+			y: -10.5d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			description: [
+				"有了它你就能够生产&6量子系列电路&r"
+				""
+				"我更推荐你使用带有&6铟&r的配方"
+			]
+			hide_dependency_lines: true
+			id: "0C41A1AD7CB90755"
+			subtitle: "更便宜的EV电路"
+			tasks: [{
+				id: "772EBBB2DF68A842"
+				item: "gtceu:qbit_cpu_chip"
+				type: "item"
+			}]
+			x: 13.0d
+			y: -10.5d
+		}
+		{
+			dependencies: ["3AE5C45656FB3C78"]
+			id: "4D8A4FD221FFFBFD"
+			tasks: [{
+				id: "381F1CDF55B43E34"
+				item: "gtceu:advanced_smd_transistor"
+				type: "item"
+			}]
+			x: 6.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["3AE5C45656FB3C78"]
+			id: "6AF11AA534D7AA98"
+			tasks: [{
+				id: "6847D75894850B8A"
+				item: "gtceu:advanced_smd_resistor"
+				type: "item"
+			}]
+			x: 6.0d
+			y: -2.5d
+		}
+		{
+			dependencies: [
+				"3AE5C45656FB3C78"
+				"652514A4AFAC187D"
+			]
+			id: "5C2F025EF01EDB5A"
+			tasks: [{
+				id: "458572C31C27F1E1"
+				item: "gtceu:advanced_smd_capacitor"
+				type: "item"
+			}]
+			x: 6.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["3AE5C45656FB3C78"]
+			id: "06E925469FCA22F5"
+			tasks: [{
+				id: "302084E10E19BA81"
+				item: "gtceu:advanced_smd_diode"
+				type: "item"
+			}]
+			x: 6.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["3AE5C45656FB3C78"]
+			id: "25CC909AEAFDAB76"
+			tasks: [{
+				id: "3F0A5FCE6B81E4C8"
+				item: "gtceu:advanced_smd_inductor"
+				type: "item"
+			}]
+			x: 6.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["67E7B62710A78614"]
+			id: "509269850A10116F"
+			tasks: [{
+				id: "0D79C409031F4AF5"
+				item: "gtceu:quantum_star"
+				type: "item"
+			}]
+			x: 18.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["509269850A10116F"]
+			id: "1E239C34C36FAD60"
+			tasks: [
+				{
+					id: "6E739E69CCC7E032"
+					item: "gtceu:iv_emitter"
+					type: "item"
+				}
+				{
+					id: "0BBAEF10B33B72CB"
+					item: "gtceu:iv_sensor"
+					type: "item"
+				}
+			]
+			title: "&9IV&r发射器和&9IV&r传感器"
+			x: 18.0d
+			y: -2.5d
+		}
+		{
+			dependencies: [
+				"0F6181E3AF0A0791"
+				"159FD72C1F0AD3A0"
+			]
+			description: ["稀土两件套"]
+			id: "7E7B941FF52CC0F2"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [
+				{
+					id: "6C17A8420DDEA340"
+					item: "gtocore:dissolving_tank"
+					type: "item"
+				}
+				{
+					id: "307F1FF333116029"
+					item: "gtocore:digestion_tank"
+					type: "item"
+				}
+			]
+			title: "溶解罐和煮解池"
+			x: 6.0d
+			y: -10.0d
+		}
+		{
+			dependencies: ["652514A4AFAC187D"]
+			description: ["YummYummmm……你想来一点吗？"]
+			hide_dependency_lines: true
+			id: "43F467FE1F9FAA2B"
+			shape: "hexagon"
+			size: 1.5d
+			subtitle: "分子料理"
+			tasks: [{
+				id: "7BE6AE453D3D297D"
+				item: "gtocore:molecular_transformer"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["02C299889115BADD"]
+			description: ["一路做到钐稀土精粉即可产出稀土"]
+			id: "0F6181E3AF0A0791"
+			tasks: [{
+				id: "757516F02237AAB0"
+				item: "gtceu:bastnasite_dust"
+				type: "item"
+			}]
+			x: 5.5d
+			y: -8.5d
+		}
+		{
+			dependencies: ["02C299889115BADD"]
+			description: [
+				"相比左边中间多了两个增产配方，分别使用富铈混合物粉和钐精粉进行单步100%和50%的增产"
+				""
+				"一路做到饱和独居石稀土粉即可产出稀土"
+			]
+			id: "159FD72C1F0AD3A0"
+			tasks: [{
+				id: "23E5233187F6DFCE"
+				item: "gtceu:monazite_dust"
+				type: "item"
+			}]
+			x: 6.5d
+			y: -8.5d
+		}
+		{
+			dependencies: ["768633CC1F8644DE"]
+			description: ["夹层玻璃所需"]
+			hide_dependency_lines: true
+			icon: "gtceu:polyvinyl_butyral_bucket"
+			id: "761587B546E4158C"
+			tasks: [
+				{
+					id: "2A7AB3B27E2C9F9E"
+					item: "gtceu:polyvinyl_butyral_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "250EA185FD5420A7"
+					type: "checkmark"
+				}
+			]
+			x: 1.5d
+			y: -3.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			description: [
+				"你有两条路线来制作稀土，选择你想要的一条，它们都是8步产出稀土"
+				""
+				"产出稀土的路上有比较多的配方和副产，为了避免你头痛，我已经帮你整理好了"
+				""
+				"[ \"完成本任务后解锁\", { \"text\": \"稀土\", \"underlined\": \"true\", \"clickEvent\": { \"action\": \"change_page\", \"value\": \"75569B5559E011E2\" } }, \"章节，查看详细流程\"]"
+				""
+				"&o&7如果想挑战自己，也可以选择不看"
+			]
+			icon: "gtceu:small_rare_earth_dust"
+			id: "02C299889115BADD"
+			tasks: [{
+				id: "6CEDB540521430C9"
+				title: "稀土元素"
+				type: "checkmark"
+			}]
+			x: 6.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["7B0A6A5396DB2D20"]
+			icon: "gtceu:polybenzimidazole_bucket"
+			id: "3AE5C45656FB3C78"
+			tasks: [
+				{
+					id: "588A924740A25308"
+					item: "gtceu:polybenzimidazole_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "2E7DD3DE537C5C84"
+					type: "checkmark"
+				}
+			]
+			title: "高级贴片元件"
+			x: 8.0d
+			y: -1.5d
+		}
+		{
+			dependencies: [
+				"23DB14B3093506B8"
+				"32B3E6812521AB70"
+			]
+			description: ["该用合金冶炼炉了"]
+			id: "6176A38AA179BAF5"
+			tasks: [{
+				id: "66FEBA03CE4CF8E8"
+				item: "gtocore:hastelloy_n_75_ingot"
+				type: "item"
+			}]
+			x: 12.0d
+			y: -4.5d
+		}
+		{
+			dependencies: [
+				"1E4E0104070BEDEA"
+				"42523391D2C40A1D"
+			]
+			id: "3E4FA9312C0DD6DE"
+			tasks: [{
+				id: "7CC4D9E15CE09644"
+				item: "gtceu:fiber_reinforced_printed_circuit_board"
+				type: "item"
+			}]
+			x: 15.0d
+			y: -10.5d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			hide_dependency_lines: true
+			id: "1E4E0104070BEDEA"
+			tasks: [{
+				id: "49531CFF1E0CE6AA"
+				item: "gtocore:tungsten_tetraboride_ceramics_flake"
+				type: "item"
+			}]
+			x: 16.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["1261BACF1E71D3A7"]
+			id: "42523391D2C40A1D"
+			tasks: [{
+				id: "5F40FDE702952E72"
+				item: "gtceu:fiber_reinforced_circuit_board"
+				type: "item"
+			}]
+			x: 14.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			hide_dependency_lines: true
+			icon: "gtceu:epoxy_bucket"
+			id: "1261BACF1E71D3A7"
+			tasks: [
+				{
+					id: "11598209DDB35CBF"
+					item: "gtceu:epoxy_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "7CD4D75C85307F98"
+					type: "checkmark"
+				}
+			]
+			x: 12.0d
+			y: -12.0d
+		}
+		{
+			dependencies: [
+				"4CD7E4E23FCD3D84"
+				"56408F9F9ACD204D"
+			]
+			description: ["别忘了穿上&bT3&r器官"]
+			id: "335934E09401C67B"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				dimension: "gtocore:io"
+				icon: "ad_astra:io_globe"
+				id: "1FAA893329885B46"
+				title: "&d访问木卫一"
+				type: "dimension"
+			}]
+			x: 16.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["335934E09401C67B"]
+			description: ["你在木卫一上拿到的硅岩将会成为你接下来几个阶段最重要的材料之一"]
+			icon: "gtceu:raw_naquadah"
+			id: "6CD1C787E12CE2CB"
+			tasks: [
+				{
+					id: "10C137F30C90C445"
+					item: "gtceu:raw_naquadah"
+					type: "item"
+				}
+				{
+					id: "53ABD4D4C8DCAA79"
+					item: "gtceu:raw_plutonium"
+					type: "item"
+				}
+			]
+			title: "硅岩矿脉"
+			x: 16.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["2BD46F9D8A842B4A"]
+			description: [
+				"IV时代解锁了大量的&e多方块机器&r，这些机器可以安装&6并行控制仓&r，&6加速仓&r和至多&a8个&r&6能源仓&r。将你的单方块机器升级为大批量加工巨兽吧！"
+				""
+				"[ \"详见\", { \"text\": \"大批量加工\", \"underlined\": \"true\", \"clickEvent\": { \"action\": \"change_page\", \"value\": \"68C24A1ED361D607\" } }, \"章节\" ]"
+			]
+			icon: "gtceu:large_autoclave"
+			id: "79A84A1D8BCDC012"
+			shape: "diamond"
+			tasks: [{
+				id: "1571ABAAEFB1193D"
+				title: "大批量加工"
+				type: "checkmark"
+			}]
+			x: 8.5d
+			y: -7.0d
+		}
+		{
+			dependencies: [
+				"1E239C34C36FAD60"
+				"5B98FF5DDD4B2629"
+			]
+			description: [
+				"装配线在合成物品时，必须要先经过&e研究&r"
+				""
+				"你需要先在&6扫描仪&r中用闪存研究好后，放入&6数据访问仓&r中，才能让装配线解锁配方"
+				""
+				"在此之后，你还会遇到更加强大的数据载体和研究仪器"
+			]
+			icon: {
+				Count: 1
+				id: "gtceu:data_stick"
+				tag: { }
+			}
+			id: "2964D4005BFFFADF"
+			tasks: [
+				{
+					id: "14F21972F4D5B0CA"
+					item: "gtceu:iv_scanner"
+					type: "item"
+				}
+				{
+					id: "2EB1F780489DDF1A"
+					item: {
+						Count: 1
+						id: "gtceu:data_stick"
+						tag: { }
+					}
+					type: "item"
+				}
+			]
+			title: "装配线配方数据"
+			x: 20.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["1E239C34C36FAD60"]
+			description: ["更高效的真空冷冻机，具有最高64并行，同时对你的能源供应也提出了更高的要求"]
+			id: "208474321D430E90"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "0039150C74521D54"
+				item: "gtocore:cold_ice_freezer"
+				type: "item"
+			}]
+			x: 20.0d
+			y: -2.5d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			description: ["PPS特种工程塑料，你需要它来制作线缆"]
+			hide_dependency_lines: true
+			id: "4EB6838703CB5F0E"
+			tasks: [{
+				id: "0C731998387A3EDB"
+				item: "gtceu:polyphenylene_sulfide_foil"
+				type: "item"
+			}]
+			x: 8.0d
+			y: -14.0d
+		}
+		{
+			dependencies: ["23DB14B3093506B8"]
+			id: "1380B1134D0C1C8E"
+			shape: "diamond"
+			subtitle: "升级你的大型机器#1"
+			tasks: [{
+				id: "1EAAD9C8D9D7DEA3"
+				item: "gtocore:integral_framework_iv"
+				type: "item"
+			}]
+			x: 8.5d
+			y: -3.5d
+		}
+		{
+			dependencies: [
+				"251002F2103BDA84"
+				"5F522D73AF5F1B2F"
+			]
+			description: [
+				"你可以用这个来代替过去的存储总线方案"
+				""
+				"进阶版本可同时绑定&b20&r个目标，可以使用&6坐标标签枪&r批量绑定，&6螺丝刀&r点击可&e切换模式&r"
+				""
+				"&6顺序模式&r：按照放入的信息卡的&e顺序&r作为优先级发送物品"
+				""
+				"&6轮询调度模式&r：往放入的信息卡&e均分&r发送以样板为单位的物品"
+			]
+			icon: "gtocore:advanced_tesseract_generator"
+			id: "029CAD5FD378D3E1"
+			optional: true
+			shape: "diamond"
+			subtitle: "轮椅自动化"
+			tasks: [
+				{
+					id: "3CDD1FE8E3131DE2"
+					item: "gtocore:advanced_tesseract_generator"
+					type: "item"
+				}
+				{
+					id: "1EFF0C03A8A3F85D"
+					item: "gtocore:tesseract_target_marker"
+					optional_task: true
+					type: "item"
+				}
+			]
+			x: 22.0d
+			y: -8.5d
+		}
+		{
+			dependencies: ["1B8F815BF14E7AE8"]
+			description: [
+				"催化剂仓允许你重复利用催化剂，每次使用只会减少&b1点&r耐久而非直接消耗"
+				""
+				"注意催化剂仓中只能放入由&6催化剂基底&r合成的催化剂"
+				""
+				"&e如果此类催化剂不放入&l催化剂仓&r&e或者&l催化剂总成&r&e，则每次合成会直接消耗"
+			]
+			id: "09C9709EE53D0022"
+			tasks: [
+				{
+					id: "233E499D7363EB83"
+					item: "gtocore:catalyst_hatch"
+					type: "item"
+				}
+				{
+					id: "7F6D8CF00B70612C"
+					item: "gtocore:advanced_catalyst_hatch"
+					type: "item"
+				}
+			]
+			x: 24.5d
+			y: -6.5d
+		}
+		{
+			dependencies: ["2BD46F9D8A842B4A"]
+			id: "0CB4E535EACE80FA"
+			subtitle: "真正意义上的无限水！"
+			tasks: [{
+				id: "3373E13C70B01E61"
+				item: "gtocore:infinite_water_hatch"
+				type: "item"
+			}]
+			x: 11.5d
+			y: -10.0d
+		}
+		{
+			dependencies: ["61D19307E3E7118B"]
+			description: [
+				"跨维度传无线电"
+				""
+				"注意搭建时需要在&e每个&r需要无线电的维度都搭建一个（除了无线能源塔所在的维度），能够使用的&e最高电压&r取决于其上安装的&6整体框架&r"
+				""
+				"&o&7如果你需要一些哭泣的黑曜石，可以去看看黑曜石的tooltips"
+			]
+			hide_dependency_lines: true
+			id: "388D743C6BA5D995"
+			shape: "hexagon"
+			size: 1.5d
+			subtitle: "终于不需要在外星放发电机了"
+			tasks: [{
+				id: "3F3435A0F2EFDC66"
+				item: "gtocore:wireless_dimension_repeater"
+				type: "item"
+			}]
+			x: 3.0d
+			y: -9.0d
+		}
+		{
+			dependencies: [
+				"2964D4005BFFFADF"
+				"251002F2103BDA84"
+			]
+			description: [
+				"将&6数据载体&r——目前是闪存——放入&6数据访问仓&r，即可在对应装配线解锁配方"
+				""
+				"目前一个装配线只能同时解锁&a9个&r配方，后续你可以制造&6数据库&r同时解锁更多配方！"
+				""
+				"同样的，你之后会遇到更加强大的数据访问仓"
+			]
+			id: "2C9C7F2B5A15B845"
+			tasks: [{
+				id: "119A64F2F907B638"
+				item: "gtceu:data_access_hatch"
+				type: "item"
+			}]
+			x: 22.0d
+			y: -4.5d
+		}
+		{
+			dependencies: [
+				"1E239C34C36FAD60"
+				"3EF9AF3171607009"
+			]
+			description: [
+				"从IV开始可以使用&6激光能源仓&r来为机器提供更高的功率"
+				""
+				"同样有其无线版本"
+			]
+			icon: "gtceu:iv_256a_laser_target_hatch"
+			id: "7AF970C19F565FB6"
+			tasks: [
+				{
+					id: "372D8340C52DD848"
+					item: "gtceu:iv_256a_laser_target_hatch"
+					type: "item"
+				}
+				{
+					id: "5A2FB851D7D2A988"
+					item: "gtocore:iv_wireless_input_hatch_256a"
+					type: "item"
+				}
+			]
+			x: 17.0d
+			y: -3.5d
+		}
+		{
+			dependencies: [
+				"056EC4E6FAF614B7"
+				"251002F2103BDA84"
+			]
+			hide_until_deps_visible: true
+			icon: "gtceu:assembly_line"
+			id: "72D4F4A7A9BB037F"
+			optional: true
+			subtitle: "简单模式下，装配线无需有序输入！"
+			tasks: [{
+				id: "618C6DAA95D3235A"
+				type: "checkmark"
+			}]
+			title: "装配线&a（简单）&r"
+			x: 18.75d
+			y: -7.5d
+		}
+		{
+			dependencies: ["135B35F7619D288E"]
+			description: [
+				"在&6IV马达&r之前，你需要面对一条超级长的&e稀土产线&r。与铂处类似，我同样建议你搭建一条独立产线。"
+				""
+				"在获取IV马达之后，将基地里的通用工厂逐步替换成真正的&e多方块机器&r是一个不错的选择。"
+				""
+				"这个阶段的机器需要大量的&6钨钢&r来制作，因此开始发展该阶段前确保你有持续的&6钨&r产出。"
+				""
+				"好消息是，不是所有东西都需要IV马达，在取得&aEV能源仓&r后你就可以制作&6IV并行控制仓&r和&6寒冰冷冻机&r等机器！"
+			]
+			id: "1CF7845875EEFA3B"
+			rewards: [{
+				auto: "invisible"
+				command: "/playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1"
+				elevate_perms: true
+				id: "6F8AEB8D38AE4A86"
+				silent: true
+				type: "command"
+			}]
+			shape: "gear"
+			size: 2.0d
+			subtitle: "&9你需要天马行空般的想象力"
+			tasks: [{
+				id: "616B27AED4DE272F"
+				item: "gtceu:iv_machine_hull"
+				type: "item"
+			}]
+			title: "欢迎来到&9强导压&r阶段"
+			x: 6.0d
+			y: -5.5d
+		}
+		{
+			dependencies: ["2BD46F9D8A842B4A"]
+			description: ["来自GTO的新机器，用于&e电镀&r和&e给转子镀膜&r"]
+			hide_dependent_lines: true
+			id: "652514A4AFAC187D"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "4A1869499BEB8704"
+				item: "gtocore:electroplating_bath"
+				type: "item"
+			}]
+			x: 10.0d
+			y: -10.25d
+		}
+		{
+			dependencies: ["18C15CA29316062F"]
+			description: ["继续提升蒸汽机器的配方电压一级，解锁更多次数的超频"]
+			id: "6B6658EFC9A57BD7"
+			optional: true
+			shape: "diamond"
+			subtitle: "蒸汽机器死忠粉"
+			tasks: [{
+				id: "29862FC7085A2A01"
+				item: "gtocore:high_pressure_steam_input_hatch"
+				type: "item"
+			}]
+			x: 20.0d
+			y: -13.0d
+		}
+		{
+			dependencies: [
+				"251002F2103BDA84"
+				"1FB1EC5B9CEFC2BC"
+			]
+			hide_until_deps_visible: true
+			icon: "gtceu:assembly_line"
+			id: "3D02255CCA6D5812"
+			optional: true
+			subtitle: "专家模式下，装配线流体也需要有序输入！"
+			tasks: [{
+				id: "3BADB98E652EDA7F"
+				type: "checkmark"
+			}]
+			title: "装配线&d（专家）&r"
+			x: 19.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["1CF7845875EEFA3B"]
+			description: [
+				"这是什么邪道？！好吧，如果你只是急需少量的稀土产物（比如在制作石墨烯中作为催化剂长杆的一部分），而又不想马上处理漫长的稀土产线，可以试一试"
+				""
+				"但我仍然推荐你正常完成整个稀土产线，毕竟石头粉的产率肯定是远不如常规稀土矿物"
+				""
+				"&o&7不知道你有没有发现赤泥甚至可以在HV不上天的情况下产出钛。二周目的时候你可以试一试..."
+			]
+			hide_dependency_lines: true
+			hide_dependent_lines: true
+			icon: "gtocore:red_mud_bucket"
+			id: "4EAFBB80247274E2"
+			optional: true
+			subtitle: "不推荐走这条路"
+			tasks: [
+				{
+					id: "6E7F3955734BB2F5"
+					item: "gtocore:red_mud_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "481DFF0FBD4D88F4"
+					type: "checkmark"
+				}
+			]
+			x: 7.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["7BE738C0A5DC60F2"]
+			id: "7883A7EECBFD90E0"
+			shape: "diamond"
+			tasks: [{
+				id: "4DF00E81E80A5905"
+				item: {
+					Count: 1
+					id: "gtocore:ostrum_vajra"
+					tag: {
+						GT.Behaviours: { }
+						GT.Tool: {
+							Damage: 0
+						}
+					}
+				}
+				type: "item"
+			}]
+			x: 12.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["652514A4AFAC187D"]
+			disable_toast: true
+			icon_scale: 0.25d
+			id: "3FEC35A36C296537"
+			shape: "none"
+			size: 0.25d
+			tasks: [{
+				id: "263216D039DF267A"
+				stat: "minecraft:jump"
+				type: "stat"
+				value: 1
+			}]
+			x: 10.0d
+			y: -10.25d
+		}
+		{
+			dependencies: [
+				"5612C7735BC4F5BC"
+				"0BFFC7241DFB6A9C"
+			]
+			description: ["工业空间站的很多材料需要它"]
+			id: "7BDD24E8C42100EC"
+			shape: "hexagon"
+			size: 1.0d
+			subtitle: "空间站定制材料丝"
+			tasks: [{
+				id: "695CC9CF25F65C39"
+				item: "gtocore:fiber_extruder"
+				type: "item"
+			}]
+			x: 19.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["0BFFC7241DFB6A9C"]
+			description: ["盐水提纯"]
+			icon: "gtceu:bromine_bucket"
+			id: "7B22A8B66A42157D"
+			tasks: [
+				{
+					id: "3872D2093B7E13EA"
+					item: "gtceu:bromine_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "234F6F4B944C317E"
+					type: "checkmark"
+				}
+			]
+			x: 17.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["0BFFC7241DFB6A9C"]
+			description: ["从辉钼矿粉中来"]
+			id: "6B602E416AB57B3C"
+			tasks: [{
+				id: "7AF6931E2349D7DB"
+				item: "gtceu:rhenium_dust"
+				type: "item"
+			}]
+			x: 17.0d
+			y: -13.0d
+		}
+		{
+			dependencies: ["0BFFC7241DFB6A9C"]
+			description: ["工业空间站的很多材料需要它"]
+			id: "18C15CA29316062F"
+			shape: "hexagon"
+			size: 1.0d
+			subtitle: "空间站定制材料块"
+			tasks: [{
+				id: "623AFB9A0EB53BD8"
+				item: "gtocore:thermo_press"
+				type: "item"
+			}]
+			x: 19.0d
+			y: -13.0d
+		}
+		{
+			dependencies: ["1D413C9604012CBA"]
+			description: [
+				"工业空间站在&3UV&r阶段之前都不是必需品，不过我仍建议你尽早规划建造"
+				""
+				"这里简单列出了你需要的新原料和新机器，但你还需要编写大量的样板&o（真的很多！）"
+				""
+				"[\"别忘了去\",{ \"text\": \"穹宇居所\", \"underlined\": \"true\", \"clickEvent\": { \"action\": \"change_page\", \"value\": \"23E859D5CC9E4C8C\" } },\"章节看看你可以制造的仓室\"]"
+			]
+			icon: "gtocore:large_expandable_space_station_core_module"
+			id: "0BFFC7241DFB6A9C"
+			tasks: [{
+				id: "4910A6818070DFB8"
+				title: "关于工业空间站"
+				type: "checkmark"
+			}]
+			x: 18.0d
+			y: -12.5d
+		}
+	]
+	subtitle: ["Tier5-IV"]
+	title: "7. 强导压(IV)"
+}

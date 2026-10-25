@@ -105,7 +105,7 @@ public final class HyperdimensionalSteamFurnaceRegistration {
             ModLog.info("Registered {}; recipeTypes={}, patternFactory=1, dimensions=15x43x15, " +
                             "importedLitematic=true, previews=true",
                     MACHINE_ID, Arrays.toString(EXPECTED_RECIPE_TYPES));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional steam furnace registration failed", error);
@@ -142,7 +142,7 @@ public final class HyperdimensionalSteamFurnaceRegistration {
             validate(definition, true);
             ModLog.info("Validated loaded {}; patternBuilt=true, recipeTypes={}", MACHINE_ID,
                     Arrays.toString(EXPECTED_RECIPE_TYPES));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded hyperdimensional steam furnace validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

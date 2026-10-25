@@ -52,11 +52,7 @@ public final class ModLog {
     }
 
     private static String format(String template, Object... arguments) {
-        String result = template;
-        for (Object argument : arguments) {
-            result = result.replaceFirst("\\{}", java.util.regex.Matcher.quoteReplacement(String.valueOf(argument)));
-        }
-        return result;
+        return org.slf4j.helpers.MessageFormatter.arrayFormat(template, arguments).getMessage();
     }
 }
 

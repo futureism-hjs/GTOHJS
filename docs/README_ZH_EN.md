@@ -1,5 +1,21 @@
 # GTOHJS Documentation Index
 
+- `58_ultra_high_amperage_templates.md`: wireless 256A+ terminal-template
+  repair, energy/laser slot mapping and build/deployment evidence.
+
+- `54_ftb_quest_prose_and_layout.md`: user-directed horizontal categories,
+  original-GTO prose style, tooltip deduplication and subtitle-only simple items.
+
+- `53_ftb_quest_chapter.md`: complete HJS quest coverage, detailed player
+  mechanisms, original-data preservation and static validation (no game run).
+
+- `52_chemical_distorter_hv_parallel.md`: late-HV Chemical Distorter acquisition
+  and voltage-based parallel implementation; clean-built/deployed, runtime pending.
+- `51_acquisition_recipe_proposal.md`: 17 approved acquisition recipes and
+  conflict review; implemented, clean-built and deployed, runtime checks pending.
+- `50_acquisition_recipe_audit.md`: current 0.5.6 item acquisition coverage,
+  missing recipes, initial-fragment gap and pending progression interview.
+
 ## License boundary
 
 - `LICENSE`: LGPL-3.0-only text for GTO HJS source code.
@@ -10,13 +26,37 @@
 > [!WARNING]
 > This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**Target build version:** `gtohjs-5.0per1.jar` (IDEA MCP rebuild succeeded; deployed for manual existing-recipe loading verification)
+**Target build version:** `gtohjs-5.6-spe1-for-gtocore-0.5.6-beta.jar` (Java 21 online IDEA clean build; per-change save-entry evidence is recorded in document 45)
 
-**Current source version:** `gtohjs-5.0per1` (method-mode recipe-source migration; Gradle CLI loopback remains blocked, IDEA MCP rebuild succeeded, and no client has been launched by Codex)
+**Current source version:** `gtohjs-5.6-spe1-for-gtocore-0.5.6-beta` (dev19 feature port and architecture refactor; current verification boundaries are recorded in documents 45 and 46)
 
 **Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 
 ## Reading order
+
+For the Automatic Radiation Hatch's native block-predicate replacement repair
+and retained shared hatch limits, read `automatic_radiation_hatch.md`.
+
+For unrestricted inputs/controller recipe-type selection on the four processing
+machines and the three derived biochemical families with maintenance filtering,
+read `49_controller_inputs_and_biochemical_recipes.md`.
+
+For the Deep Chemical Distorter structure, dedicated native-derived recipes,
+three-tier voltage/coil reductions and animated GTL attribution, read
+`47_deep_chemical_distorter.md`.
+
+Start the 5.6 port at `45_dev19_to_056_port_and_architecture.md` for ownership,
+adaptive network, infinite energy, tooltip routing and current verification.
+
+For the one-stop platinum recipe migration and the matrix's native
+Thread/Accelerate/Overclock Hatches, read `46_platinum_refining_matrix.md`.
+Document 45 also records the Plasma Machine Tool's rolling/cluster modes and
+the four pattern-order machines' shared Accelerate/Overclock Hatch support.
+
+For the subsequent local source additions, read `native_fusion_parallel.md`,
+`automatic_radiation_hatch.md` and `biochemical_machine_markers.md`.
+Their build/deployment checks remain pending: on 2026-10-24 the user explicitly
+prohibited this agent from building or deploying while another AI works here.
 
 1. `01_single_block_steam_electric.md`: single-block registration and steam/electric branching.
 2. `02_low_level_steam_multiblock.md`: low-level steam hatches and vent hatches.
@@ -62,6 +102,7 @@
 
 41. `41_gto_core_kotlin_inventory_and_gtohjs_migration.md`: complete inventory of GTOCore's 59 Kotlin files, the translation/GUI/utility/machine categories they cover, the three ABI-preserving GTOHJS migrations, Kotlin 2.3.20 build wiring, dependency requirements, and verification boundary.
 42. `42_method_mode_recipe_sources.md`: shared recipe-source discovery, finite GT and contextual material provider contracts, workbench source contract, native ASM save lifecycle, generated Java-source workflow, and migration inventory.
+43. `48_parallel_and_thread_hard_limits.md`: audit of the three independent ceilings bounding GTO 0.5.6-beta parallelism and threads — the `2^53 - 1` API constant imposed by `ContentModifier`'s `double` multiplier, the `256` stock thread hatch ceiling set by the `UV..MAX` tier range, and the `int` interface thread ceiling; which ceiling a GTOHJS controller can move by overriding `getMaxParallel()` and `getThread()`, and why the `parallel * thread` `long` product needs a guard.
 
 Start with 01 for lifecycle rules, then 02/03 for steam controllers, 04/05/06 for electric and modular machines, 07/08 for recipe types and native recipe injection, and 28 for the preloaded AE component-pack storage contract. Read 41 before changing Kotlin sources or the Kotlin build.
 

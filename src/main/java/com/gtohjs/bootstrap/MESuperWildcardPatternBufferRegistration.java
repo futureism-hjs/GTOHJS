@@ -39,7 +39,7 @@ public final class MESuperWildcardPatternBufferRegistration {
             ModLog.info("Registered ME super wildcard pattern buffer: id={}, capacity={} ({}x{})",
                     BUFFER_ID, MEPatternBufferConfig.wildcardPatternCount(),
                     MEPatternBufferConfig.wildcardColumns(), MEPatternBufferConfig.wildcardRows());
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("ME super wildcard pattern buffer registration failed", error);

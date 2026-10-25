@@ -93,7 +93,7 @@ public final class AdvancedSteamArrayRegistration {
             validate(definition, false);
             ModLog.info("Registered {}; storageLimit={}, pattern=3x3x3, solarBoilers=true",
                     MACHINE_ID, STORAGE_LIMIT);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             definition = null;
             ModLog.error("Advanced steam array registration failed", error);
         }

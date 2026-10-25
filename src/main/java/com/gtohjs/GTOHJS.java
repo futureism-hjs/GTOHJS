@@ -1,32 +1,19 @@
 package com.gtohjs;
 
-import com.gtohjs.bootstrap.AdvancedAlchemyCauldronRegistration;
-import com.gtohjs.bootstrap.AdvancedGeneratorArrayRegistration;
-import com.gtohjs.bootstrap.AdvancedSteamArrayRegistration;
 import com.gtohjs.bootstrap.FragmentWorldCollectionMachineRegistration;
-import com.gtohjs.bootstrap.FragmentWorldCollectionRecipeTypeRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalChemicalFactoryRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalBiochemicalFactoryRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalBiochemicalRecipeTypeRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalForgeRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalSmelterRegistration;
-import com.gtohjs.bootstrap.HyperdimensionalSteamFurnaceRegistration;
+import com.gtohjs.adaptivenet.AdaptiveTemplateCommand;
+import com.gtohjs.adaptivenet.AdaptiveLedgerScheduler;
+import com.gtohjs.adaptivenet.AdaptiveTowerStructure;
+import com.gtohjs.adaptivenet.GTOHJSBlockEntities;
+import com.gtohjs.bootstrap.GTOHJSRegistration;
 import com.gtohjs.bootstrap.LargePetalApothecaryRecipeTypeRegistration;
-import com.gtohjs.bootstrap.LargePetalApothecaryRegistration;
-import com.gtohjs.bootstrap.MEInputAssemblyRegistration;
-import com.gtohjs.bootstrap.MESuperPatternBufferRegistration;
-import com.gtohjs.bootstrap.MESuperWildcardPatternBufferRegistration;
-import com.gtohjs.bootstrap.OneStopRareEarthProcessingPlantRegistration;
-import com.gtohjs.bootstrap.OneStopRareEarthRecipeTypeRegistration;
-import com.gtohjs.bootstrap.UniversalSteamFactoryRegistration;
-import com.gtohjs.bootstrap.SteamArrayRegistration;
 import com.gtohjs.bootstrap.ThermalAndIntakeHatchRegistration;
-import com.gtohjs.bootstrap.VacuumCoverRegistration;
 import com.gtohjs.block.GTOHJSBlocks;
 import com.gtohjs.api.RecipeSourceCatalog;
 import com.gtohjs.item.GTOHJSItems;
 import com.gtohjs.item.GTOHJSItemTooltipHandler;
 import com.gtohjs.config.MEPatternBufferConfig;
+import com.gtohjs.machine.wildcard.WildcardRebuildScheduler;
 import com.gtohjs.util.ModLog;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -44,8 +31,16 @@ public final class GTOHJS {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         MEPatternBufferConfig.initialize();
         GTOHJSBlocks.register(modBus);
+        GTOHJSBlockEntities.register(modBus);
         GTOHJSItems.register(modBus);
         MinecraftForge.EVENT_BUS.addListener(GTOHJSItemTooltipHandler::onItemTooltip);
+        MinecraftForge.EVENT_BUS.addListener(AdaptiveTemplateCommand::register);
+        MinecraftForge.EVENT_BUS.addListener(AdaptiveLedgerScheduler::onServerTick);
+        MinecraftForge.EVENT_BUS.addListener(AdaptiveLedgerScheduler::onServerStopping);
+        MinecraftForge.EVENT_BUS.addListener(WildcardRebuildScheduler::onServerTick);
+        MinecraftForge.EVENT_BUS.addListener(WildcardRebuildScheduler::onServerStopping);
+        MinecraftForge.EVENT_BUS.addListener(WildcardRebuildScheduler::onTagsUpdated);
+        MinecraftForge.EVENT_BUS.addListener(WildcardRebuildScheduler::onDatapackSync);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         modBus.addListener(this::onLoadComplete);
         // GTO recipe and machine classes must initialize only in their native registry windows.
@@ -59,28 +54,8 @@ public final class GTOHJS {
     private void onLoadComplete(FMLLoadCompleteEvent event) {
         GTOHJSBlocks.validateLoaded();
         GTOHJSItems.validateLoaded();
-        OneStopRareEarthRecipeTypeRegistration.validateLoaded();
-        HyperdimensionalBiochemicalRecipeTypeRegistration.validateLoaded();
-        LargePetalApothecaryRecipeTypeRegistration.validateLoaded();
-        FragmentWorldCollectionRecipeTypeRegistration.validateLoaded();
-        MEInputAssemblyRegistration.validateLoaded();
-        MESuperPatternBufferRegistration.validateLoaded();
-        MESuperWildcardPatternBufferRegistration.validateLoaded();
-        UniversalSteamFactoryRegistration.validateLoaded();
-        OneStopRareEarthProcessingPlantRegistration.validateLoaded();
-        HyperdimensionalForgeRegistration.validateLoaded();
-        HyperdimensionalSteamFurnaceRegistration.validateLoaded();
-        HyperdimensionalSmelterRegistration.validateLoaded();
-        HyperdimensionalChemicalFactoryRegistration.validateLoaded();
-        HyperdimensionalBiochemicalFactoryRegistration.validateLoaded();
-        AdvancedGeneratorArrayRegistration.validateLoaded();
-        AdvancedAlchemyCauldronRegistration.validateLoaded();
-        SteamArrayRegistration.validateLoaded();
-        AdvancedSteamArrayRegistration.validateLoaded();
-        LargePetalApothecaryRegistration.validateLoaded();
-        ThermalAndIntakeHatchRegistration.validateLoaded();
-        VacuumCoverRegistration.validateLoaded();
-        FragmentWorldCollectionMachineRegistration.validateLoaded();
+        GTOHJSRegistration.validateLoaded();
+        AdaptiveTowerStructure.validateLoaded();
 
         RecipeSourceCatalog.validateGTFinalized();
         RecipeSourceCatalog.validateMaterialFinalized();
@@ -99,6 +74,7 @@ public final class GTOHJS {
         RecipeSourceCatalog.validateCraftingServerRecipes(event.getServer());
         int recipes = LargePetalApothecaryRecipeTypeRegistration.validateProxyRecipes(
                 event.getServer());
+        WildcardRebuildScheduler.onServerStarted(event);
         ModLog.info("Server started; validated method-mode crafting recipes and " +
                 "large petal apothecary proxy recipes={}", recipes);
     }

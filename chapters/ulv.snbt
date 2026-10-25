@@ -1,0 +1,1149 @@
+{
+	autofocus_id: "4678D97346E46529"
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "ulv"
+	group: "2A1218851E38A2EE"
+	hide_quest_until_deps_visible: true
+	icon: "gtocore:primitive_distillation_tower"
+	id: "7EE10B51F068F7FB"
+	order_index: 2
+	quest_links: [
+		{
+			id: "2144C60D0F965D68"
+			linked_quest: "0DCA3A96184C9EAC"
+			x: -2.0d
+			y: -8.5d
+		}
+		{
+			id: "26DD69D6B9A64358"
+			linked_quest: "4AF39FF336EA1BF4"
+			shape: "diamond"
+			x: -2.0d
+			y: 1.5d
+		}
+		{
+			id: "391E63C2F15DE329"
+			linked_quest: "1A00DF4BC5C15459"
+			shape: "diamond"
+			x: -3.5d
+			y: 0.0d
+		}
+		{
+			id: "455E3F6F33BD24B6"
+			linked_quest: "507807175748245C"
+			shape: "gear"
+			size: 2.0d
+			x: 10.0d
+			y: -5.0d
+		}
+		{
+			id: "4A5A58465AF8F47B"
+			linked_quest: "020E8B707A8CF794"
+			shape: "hexagon"
+			x: 0.0d
+			y: 1.5d
+		}
+	]
+	quests: [
+		{
+			dependencies: ["0859B24E8AF3303F"]
+			description: [
+				"另一种发电方式，可以让你直接使用石化燃料发电。"
+				""
+				"产能略微比原始热力发电机大。"
+			]
+			id: "3791F49E789E7673"
+			optional: true
+			rewards: [{
+				id: "2B47BB06DB65D353"
+				item: "farmersdelight:cabbage_rolls"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "实际上什么油都能烧"
+			tasks: [{
+				id: "6A13C40FABCAD89C"
+				item: "gtocore:ulv_semi_fluid"
+				type: "item"
+			}]
+			title: "这是内燃机"
+			x: 0.75d
+			y: -2.5d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"顾名思义，烧东西来发电。"
+				""
+				"&o&7本质上就是一个小型的火力发电机&r&r"
+			]
+			id: "11FC35FC0409E3AC"
+			optional: true
+			rewards: [{
+				count: 16
+				id: "49ABF191A007338E"
+				item: "minecraft:coal"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "以热生电"
+			tasks: [{
+				id: "76AE3F639115F08C"
+				item: "gtocore:ulv_thermal_generator"
+				type: "item"
+			}]
+			title: "最原始的发电机"
+			x: -3.5d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"68AB0026ACD5103E"
+				"13A73FA0625AC68F"
+			]
+			description: [
+				"看到EMI组装机右下角的&e电压等级&r了吗？它决定你必须要用什么机器来制作！"
+				""
+				"很可怜，并没有几台机器支持&7ULV&r电压..."
+			]
+			id: "1CA6E1AD1909373A"
+			rewards: [{
+				id: "05A79431EC56D73D"
+				item: "farmersrespite:rose_hip_pie_slice"
+				type: "item"
+			}]
+			shape: "gear"
+			size: 1.5d
+			subtitle: "反正能把它们组装在一起就行了"
+			tasks: [{
+				id: "60367C7A1C461705"
+				item: "gtocore:ulv_assembler"
+				type: "item"
+			}]
+			title: "原始拼接"
+			x: -2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["11FC35FC0409E3AC"]
+			description: [
+				"风力跟高度（Y值）直接相关，在Y值低于0的地方是没有风力来发电的"
+				""
+				"转子前不能有任何遮挡，包括生物实体和方块"
+				""
+				"最好与正在转动的扇叶保持距离"
+			]
+			id: "76B352DA96B91E6E"
+			optional: true
+			rewards: [{
+				id: "1BD6937ECF10FD23"
+				item: {
+					Count: 1
+					id: "gtocore:wood_kinetic_rotor"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			shape: "diamond"
+			subtitle: "清洁能源"
+			tasks: [{
+				id: "6FA072BD07623E24"
+				item: "gtocore:ulv_wind_mill_turbine"
+				type: "item"
+			}]
+			title: "这是大风车"
+			x: -5.0d
+			y: -5.0d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"由于电压过低，实际上也只能处理那么几个配方。"
+				""
+				"聚乙烯是你必须要处理的配方。"
+			]
+			id: "35926F43AF33BB41"
+			rewards: [{
+				id: "68AA768569615BDB"
+				item: "farmersdelight:mutton_wrap"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "能力有限"
+			tasks: [{
+				id: "071924CE35F306EC"
+				item: "gtocore:ulv_chemical_reactor"
+				type: "item"
+			}]
+			title: "初代大乱炖"
+			x: 2.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["1CC2469A8203DE05"]
+			description: [
+				"&6固化机&r是可以将液体重塑为固体的机器"
+				""
+				"同样的问题，电压过低，所以就处理几个关键配方就行了"
+				""
+				"你需要制作聚乙烯片"
+			]
+			id: "76259357A13F3B1E"
+			rewards: [{
+				id: "538526526BE89C98"
+				item: "farmersdelight:kelp_roll_slice"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "让它冷却下来"
+			tasks: [{
+				id: "6180660635C1D52B"
+				item: "gtocore:ulv_fluid_solidifier"
+				type: "item"
+			}]
+			title: "固化成型"
+			x: 2.0d
+			y: -7.0d
+		}
+		{
+			dependencies: ["27F4D9739FE33A02"]
+			description: [
+				"通风板需要安装在&6机器/仓室/流体容器&r等的任意一个侧面，在这个侧面不被阻挡的情况下可以以200mB/秒的速度抽入空气"
+				""
+				"&o&7可以安装在多个侧面并行工作，增加抽入速度&r"
+			]
+			hide_dependent_lines: true
+			id: "1CDBE91D2ACD9111"
+			shape: "hexagon"
+			size: 1.2d
+			subtitle: "疯狂吸入"
+			tasks: [{
+				id: "0961EA8680E8D70C"
+				item: "gtocore:air_vent"
+				type: "item"
+			}]
+			title: "空气从哪来？"
+			x: -2.0d
+			y: 2.85d
+		}
+		{
+			dependencies: [
+				"68AB0026ACD5103E"
+				"13A73FA0625AC68F"
+				"206990570B2743AE"
+			]
+			description: [
+				"&6打包机&r是可以将物品&e4合1&r或者&e9合1&r的机器"
+				""
+				"可以将&6小粉&r打包成&6大粉&r，也可以用于制作&6多重流体管道&r"
+				""
+				"当然目前你需要它来制作&6锡线缆&r"
+			]
+			hide_dependency_lines: true
+			id: "4E0B6C5CE3808705"
+			rewards: [{
+				count: 2
+				id: "059E2C3972C652D2"
+				item: "farmersrespite:coffee_cake_slice"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "就是把它们挤在一起"
+			tasks: [{
+				id: "5131D0A9C6B238E5"
+				item: "gtocore:ulv_packer"
+				type: "item"
+			}]
+			title: "原始人的打包办法"
+			x: 3.5d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"2D5EB54D9AC2F900"
+				"0B7EC948A9BA56EF"
+				"206990570B2743AE"
+			]
+			description: [
+				"恭喜！你终于用上了&7电路板&r！"
+				""
+				"一般来说新一级电压带来的&e新电路板&r都会比上一级电压的电路板&b便宜&r，记得做好更新迭代"
+			]
+			id: "0FBE7318DFBA700E"
+			rewards: [
+				{
+					count: 8
+					id: "3C78121873BC6B22"
+					item: "farmersdelight:hamburger"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "7FA716F5153C7B15"
+					item: "gtceu:basic_electronic_circuit"
+					type: "item"
+				}
+			]
+			shape: "gear"
+			size: 1.5d
+			subtitle: "你的第一块电路板"
+			tasks: [{
+				id: "7038301353A30474"
+				item: "gtceu:basic_electronic_circuit"
+				type: "item"
+			}]
+			title: "&c基础电子电路"
+			x: 5.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["4E0B6C5CE3808705"]
+			description: [
+				"线缆可以让你不会因为触电而受到伤害，并且减少了线损"
+				""
+				"但依然不能突破传输上限，否则会导致导线融毁"
+			]
+			id: "4C1AA691B0A8EC24"
+			rewards: [{
+				count: 16
+				id: "0B34AF42043C63EC"
+				item: "gtceu:tin_single_cable"
+				type: "item"
+			}]
+			subtitle: "这可不能手搓"
+			tasks: [{
+				id: "58ABEF332F1C76E6"
+				item: "gtceu:tin_single_cable"
+				type: "item"
+			}]
+			title: "低压线缆"
+			x: 5.0d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"201D44A832961946"
+				"4C1AA691B0A8EC24"
+			]
+			description: [
+				"更强的锅炉，但是燃料消耗很快"
+				""
+				"除了生产大量蒸汽，青铜锅炉还能用来生产水煤气"
+			]
+			id: "6D86CEB34F76644B"
+			rewards: [{
+				id: "0E6CDAAF829C5304"
+				item: "farmersdelight:chocolate_pie_slice"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "那些产蒸汽的大家伙"
+			tasks: [{
+				id: "7FD0D944AE2158D6"
+				item: "gtceu:bronze_large_boiler"
+				type: "item"
+			}]
+			x: 6.5d
+			y: -5.0d
+		}
+		{
+			dependencies: ["0859B24E8AF3303F"]
+			description: [
+				"&6车床&r是可以将金属锭直接制作为&6杆&r（产量比手搓的翻倍哦！）、将螺栓制作为&6螺丝&r、将齿轮制作为&6锯片&r的机器"
+				""
+				"由于电压过低，目前你还无法加工&6钢&r"
+				""
+				"&7&o我讨厌锉子！&r"
+			]
+			id: "03B5D54A3BB46B18"
+			rewards: [{
+				id: "2E8FFC78733AF1DA"
+				item: "farmersdelight:cake_slice"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "电动矬子"
+			tasks: [{
+				id: "0036C72451286C84"
+				item: "gtocore:ulv_lathe"
+				type: "item"
+			}]
+			x: -0.75d
+			y: -1.0d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"&6线材轧机&r是可以将金属锭直接制作为&6导线&r的机器"
+				""
+				"相比徒手制作导线 ，材料产出率整整提高了&b2-3倍&r之多"
+				""
+				"或许是你应该做的第一台ULV机器？"
+				""
+				"由于电压过低，目前你还无法加工&6铜&r"
+			]
+			id: "2EE92A46E52B0565"
+			rewards: [{
+				id: "1F3FD0FC379188BF"
+				item: "minecraft:pumpkin_pie"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "保护你的剪线钳"
+			tasks: [{
+				id: "6820DA52EC05C73A"
+				item: "gtocore:ulv_wiremill"
+				type: "item"
+			}]
+			title: "导线，开始生产！"
+			x: -3.5d
+			y: -3.5d
+		}
+		{
+			dependencies: ["4678D97346E46529"]
+			description: [
+				"&6电池箱&r能够为你的电网提供&e缓存&r"
+				""
+				"虽然你已经可以制作电池箱，但&6电池&r你还&c无法生产&r"
+				""
+				"不过在这个阶段，你大概也没有蓄电需求？如果你真的需要蓄电，做一个电池箱会送你一个电容"
+				""
+				"&7【TODO：超级电容将在不久的版本后移动到商店】&r"
+			]
+			id: "45BB0C58909C7011"
+			optional: true
+			rewards: [{
+				id: "2C69E748FFF6AA1E"
+				item: "gtocore:super_capacitor"
+				type: "item"
+			}]
+			shape: "diamond"
+			subtitle: "你的应急能源"
+			tasks: [{
+				id: "39B3E42785946E7C"
+				item: "gtceu:ulv_battery_buffer_4x"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["27F4D9739FE33A02"]
+			description: [
+				"&b2级&r真空需要这个这个家伙，而为了让机器获得真空等级则需要让真空泵&4紧贴&r机器。"
+				""
+				"&e注意：真空泵不能位于机器的正上方或正下方&r"
+			]
+			icon: "gtocore:hp_steam_vacuum_pump"
+			id: "5CFDAB8B03980F9D"
+			shape: "hexagon"
+			subtitle: "喜欢贴贴"
+			tasks: [
+				{
+					id: "6692EFF7A36E5403"
+					item: "gtocore:hp_steam_vacuum_pump"
+					type: "item"
+				}
+				{
+					id: "6F641EAEA2A0EAAC"
+					item: "gtceu:bronze_huge_fluid_pipe"
+					type: "item"
+				}
+			]
+			title: "更大更强的真空"
+			x: 3.5d
+			y: 2.85d
+		}
+		{
+			dependencies: ["6C328AB57C610EF9"]
+			description: ["它的配方速度太慢了，你需要多准备&5多几个&r化学反应釜"]
+			icon: "gtceu:resin_circuit_board"
+			id: "134DA399427DD1A5"
+			subtitle: "上面会铭刻什么呢"
+			tasks: [{
+				id: "76805A9CBA554FCC"
+				item: "gtceu:resin_circuit_board"
+				type: "item"
+			}]
+			title: "电路基板的前身"
+			x: 2.0d
+			y: 2.85d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"在小机器的一个面上放置电动泵，即可作为覆盖板&d主动抽取/排出&r小机器内的液体"
+				""
+				"那当然前提是你得有个&e容器&r紧贴你的小机器对吧"
+				""
+				"每tick可以操作&432mb&r的液体，虽然不多，但也算是一个自动化的方案了"
+			]
+			id: "1CC2469A8203DE05"
+			rewards: [{
+				id: "6F3F03FA8FCBC3A4"
+				item: "gtocore:ulv_electric_pump"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "但这不能抽原油"
+			tasks: [{
+				id: "2E6FFEC173B70C8D"
+				item: "gtocore:ulv_electric_pump"
+				type: "item"
+			}]
+			title: "让液体动起来"
+			x: -0.3d
+			y: -5.0d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"贴在小机器的面上可以自动拉取物品，但速度实在是堪忧......"
+				""
+				"以及你需要提升一下你的&6橡胶&r产量了"
+			]
+			id: "68AB0026ACD5103E"
+			rewards: [{
+				id: "78768C9064C8C06D"
+				item: "gtocore:ulv_conveyor_module"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "凎，这东西怎么速度也没我快！"
+			tasks: [{
+				id: "729FD3CA14E85A4C"
+				item: "gtocore:ulv_conveyor_module"
+				type: "item"
+			}]
+			title: "它能帮我搬东西！"
+			x: -3.5d
+			y: -1.5d
+		}
+		{
+			dependencies: ["1CC2469A8203DE05"]
+			description: [
+				"如果你的小机器的槽位有&6多个&r液体输入的话，那无疑使用流体校准器是个&a更优的选择&r"
+				""
+				"它的功能包括&b精确输入&r与&9保持输入&r，前者可以精确输入的&d位置&r，后者是&e避免输入量过大&r挤占其他流体的槽位"
+			]
+			hide_dependency_lines: false
+			hide_dependent_lines: true
+			id: "4ED89021AC92A0AE"
+			shape: "hexagon"
+			subtitle: "精确到位"
+			tasks: [{
+				id: "3DF43D082EB2EA92"
+				item: "gtocore:ulv_fluid_regulator"
+				type: "item"
+			}]
+			title: "滴定管？"
+			x: 2.0d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"7D370CF55A0AE36D"
+				"0859B24E8AF3303F"
+			]
+			description: ["机械臂的合成就复杂很多了，所以前期的其他工作一定要处理好"]
+			id: "13A73FA0625AC68F"
+			rewards: [{
+				id: "42D9E5D6A2531FA2"
+				item: "gtocore:ulv_robot_arm"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "速度还不如手搬呢！"
+			tasks: [{
+				id: "5D389C4389DD4CCE"
+				item: "gtocore:ulv_robot_arm"
+				type: "item"
+			}]
+			title: "摆放到位"
+			x: -2.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["4678D97346E46529"]
+			description: [
+				"&7电动马达&r是各个时代发展生产力&4必须大量生产&r的部件，所以最好一次做上个一组或半组！"
+				""
+				"[\"\",{\"text\":\"超低压的时代的六件套主要需要\"},{ \"text\": \"铜\",\"color\":\"#e17c09\", \"underlined\": \"true\", \"clickEvent\": { \"action\": \"change_page\", \"value\": \"60976D12EFCED9C4\" } },{\"text\":\"和\"},{ \"text\": \"锡\",\"color\":\"yellow\", \"underlined\": \"true\", \"clickEvent\": { \"action\": \"change_page\", \"value\": \"17C2FCD590054742\" } },{\"text\":\"来制造，也是蒸汽时代的主要材料的延续\"}]"
+			]
+			id: "7D370CF55A0AE36D"
+			rewards: [{
+				count: 4
+				id: "46DB52559B32A949"
+				item: "gtocore:ulv_electric_motor"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "你还是多造点吧"
+			tasks: [{
+				id: "18EBCBF4239C5CE0"
+				item: "gtocore:ulv_electric_motor"
+				type: "item"
+			}]
+			title: "最慢的马达"
+			x: -2.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["7D370CF55A0AE36D"]
+			description: [
+				"活塞是一类重要的中间合成产物，除了合成之外没有别的用途"
+				""
+				"不过我猜你会喜欢由它合成的半流质发电机"
+			]
+			id: "0859B24E8AF3303F"
+			rewards: [{
+				id: "4E68A5BC2B0E7FCD"
+				item: "gtocore:ulv_electric_piston"
+				type: "item"
+			}]
+			shape: "hexagon"
+			subtitle: "通往烦人之路"
+			tasks: [{
+				id: "4257BFBFB50B3FCE"
+				item: "gtocore:ulv_electric_piston"
+				type: "item"
+			}]
+			title: "一样不能用来抽水"
+			x: -0.75d
+			y: -2.5d
+		}
+		{
+			dependencies: ["03B5D54A3BB46B18"]
+			description: [
+				"红宝石杆能作为聚合反应的催化剂以参与聚乙烯的合成"
+				""
+				"以及这东西能合成搋子，可以清除机器内残留的液体。"
+				""
+				"&8&o但既然任何一种*杆都能合成搋子，为什么要用红宝石的呢？&r&r"
+			]
+			hide_dependent_lines: true
+			id: "423C010EB03C96E6"
+			shape: "hexagon"
+			size: 1.0d
+			subtitle: "本质上是催化剂？"
+			tasks: [{
+				id: "33F109C4F8312B30"
+				item: "gtceu:ruby_rod"
+				type: "item"
+			}]
+			x: 0.75d
+			y: -1.0d
+		}
+		{
+			dependencies: [
+				"1CA6E1AD1909373A"
+				"35926F43AF33BB41"
+			]
+			description: [
+				"现在你可以开始着手制作第一个电路"
+				""
+				"你需要准备三种原料：真空管、电阻和覆膜印刷电路基板"
+			]
+			icon: "gtocore:suprachronal_circuit_lv"
+			id: "6E3C93AC06BB6F31"
+			shape: "circle"
+			subtitle: "准备好了吗？"
+			tasks: [{
+				id: "417A3F6AA48CF609"
+				title: "电路"
+				type: "checkmark"
+			}]
+			title: "那么，这是你的第一个电路"
+			x: 2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0FBE7318DFBA700E"]
+			description: ["现在不用塑料片了"]
+			icon: "immersive_aircraft:industrial_gears"
+			id: "201D44A832961946"
+			shape: "circle"
+			subtitle: "发展的核心"
+			tasks: [{
+				id: "658933619AB97612"
+				title: "化工、能源"
+				type: "checkmark"
+			}]
+			title: "发展与能源"
+			x: 5.0d
+			y: -3.5d
+		}
+		{
+			dependencies: [
+				"6E3C93AC06BB6F31"
+				"53109F7472C0B443"
+			]
+			description: ["显然，你目前只能选择产量最低的配方"]
+			id: "0B7EC948A9BA56EF"
+			shape: "circle"
+			subtitle: "希望你准备好了不少"
+			tasks: [{
+				id: "144CDD9C9F9B820F"
+				item: "gtceu:vacuum_tube"
+				type: "item"
+			}]
+			title: "三剑客其一：真空管"
+			x: 3.5d
+			y: -1.0d
+		}
+		{
+			dependencies: ["6E3C93AC06BB6F31"]
+			description: [
+				"仔细翻看EMI，不要遗漏它的两个配方！"
+				""
+				"你现在做不出退火铜，所以你必须使用&6铜导线&r"
+				""
+				"目前获取碳粉的途径有两个：处理&6滑石/石墨矿&r，或者离心&6黑色灰烬&r（炼钢副产物）"
+			]
+			id: "206990570B2743AE"
+			shape: "circle"
+			subtitle: "你接触的第一个电子元件"
+			tasks: [{
+				id: "0ED08CFF140E39C1"
+				item: "gtceu:resistor"
+				type: "item"
+			}]
+			title: "三剑客其二：电阻"
+			x: 3.5d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"134DA399427DD1A5"
+				"6E3C93AC06BB6F31"
+				"5CFDAB8B03980F9D"
+			]
+			description: [
+				"制造这个宝贝需要你的组装机达到&4真空2级&r的条件"
+				""
+				"希望你已经准备好了&6高压蒸汽真空泵&r"
+			]
+			id: "2D5EB54D9AC2F900"
+			shape: "circle"
+			subtitle: "准备强力写入！"
+			tasks: [{
+				id: "7239827DEAF32FAE"
+				item: "gtceu:resin_printed_circuit_board"
+				type: "item"
+			}]
+			title: "三剑客其三：覆膜印刷电路基板"
+			x: 3.5d
+			y: 1.0d
+		}
+		{
+			dependencies: ["507807175748245C"]
+			description: [
+				"你可以用它在本级电压和高一级电压之间相互转换"
+				""
+				"使用&6螺丝刀&r来改变它的工作方式"
+				""
+				"其中的一个面会与其他的五个面看上去不同，此面为输出端，其余面均为输入端"
+			]
+			id: "1EFAEF7D0E6700A9"
+			optional: true
+			shape: "diamond"
+			subtitle: "万能的转换器"
+			tasks: [{
+				id: "146ADCB0A93C988D"
+				item: "gtceu:ulv_transformer_1a"
+				type: "item"
+			}]
+			x: 12.5d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"1CDBE91D2ACD9111"
+				"020E8B707A8CF794"
+				"31F0EB6822F9566E"
+			]
+			description: [
+				"如果你还没有造&6蒸汽分离机&r，是时候造一台了"
+				""
+				"离心&6空气&r获取氧气"
+				""
+				"&o&7提示：你需要安装至少两个蒸汽流体输出仓才可以执行离心空气的配方（因为这个配方有两个流体产物）"
+			]
+			icon: "ad_astra:oxygen_bucket"
+			id: "6C328AB57C610EF9"
+			subtitle: "你活着都靠它"
+			tasks: [
+				{
+					id: "1A83E2F0FFCC76B2"
+					item: "ad_astra:oxygen_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "4773E3E615AF0C7E"
+					type: "checkmark"
+				}
+			]
+			x: 0.0d
+			y: 2.85d
+		}
+		{
+			dependencies: ["2EE92A46E52B0565"]
+			description: [
+				"&6织布机&r是可以将导线制作为多重导线的机器"
+				""
+				"比压缩机效率更高，后续的高A导线都必须使用织布机合成"
+			]
+			id: "3BE44DC31F4047B9"
+			shape: "hexagon"
+			subtitle: "但并不能织布"
+			tasks: [{
+				id: "6A1D6F5F4BCE7F49"
+				item: "gtocore:ulv_loom"
+				type: "item"
+			}]
+			title: "让导线多合一"
+			x: -5.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["0DCA3A96184C9EAC"]
+			description: [
+				"这些用于制作超导体的&6魔法合金&r可以让你在每个电压的初期就能用上&6超导体&r，仅仅是多了一步额外的处理步骤：&b魔力灌注&r"
+				""
+				"如果你想在之后的阶段快速用到&6超导体&r，你需要开始发展&a魔法线&r，并拥有至少一个&6魔力池&r"
+			]
+			id: "597DEB09F86B2821"
+			optional: true
+			subtitle: "怎么是粗胚?"
+			tasks: [{
+				id: "6D5D1A40A708ABB0"
+				item: "gtocore:pulsating_alloy_superconductor_base"
+				type: "item"
+			}]
+			x: -0.5d
+			y: -8.5d
+		}
+		{
+			dependencies: [
+				"7A359C1F5E041C4F"
+				"597DEB09F86B2821"
+			]
+			description: [
+				"如果说你有满满&b一池魔力池&r的话，你能造&d很多的&r&a脉冲合金导线&r，不骗你，是真的"
+				""
+				"前期可以直接用&5火红莲&r生产一些魔力，可以配合&6悬浮沙漏&r来自动做好魔力的生产"
+			]
+			id: "1C9024E83C0BE0A4"
+			optional: true
+			subtitle: "弹弹弹，弹走大电阻"
+			tasks: [{
+				id: "42505277D20AE06C"
+				item: "gtocore:pulsating_alloy_single_wire"
+				type: "item"
+			}]
+			title: "魔法的力量"
+			x: 1.0d
+			y: -8.5d
+		}
+		{
+			dependencies: [
+				"1CDBE91D2ACD9111"
+				"31F0EB6822F9566E"
+			]
+			description: [
+				"可以往多方块里面塞&4无限&r的空气参与合成"
+				""
+				"当然，这些空气是&4无法&r被拿出来的"
+			]
+			id: "380CC80AE197328A"
+			shape: "diamond"
+			subtitle: "更大马力,更大容量"
+			tasks: [{
+				id: "43ADA042DE958330"
+				item: "gtocore:infinite_intake_hatch"
+				type: "item"
+			}]
+			x: -3.5d
+			y: 2.85d
+		}
+		{
+			dependencies: ["0FBE7318DFBA700E"]
+			description: [
+				"仍然只能挖掘实体矿脉，机器的电压等级取整体框架和能源仓提供电压的最小值"
+				""
+				"如果觉得造价太高可以先用单方块矿机，等你产能上来了再做"
+				""
+				"&o&7LV阶段可以解锁用电的单方块矿机，速度比蒸汽矿机快了不少，至少能用了"
+			]
+			id: "6CC4173B5BF99920"
+			shape: "diamond"
+			size: 1.0d
+			subtitle: "解放双手"
+			tasks: [{
+				id: "74099FBE9992D542"
+				item: "gtocore:digital_miner"
+				type: "item"
+			}]
+			x: 5.0d
+			y: 2.85d
+		}
+		{
+			dependencies: ["0FBE7318DFBA700E"]
+			description: [
+				"神奇的电路，主要用于控制配方合成。"
+				""
+				"从ULV开始的输入仓和总线都自带一个编程电路槽，只需要点击就可以调整电路。只有蒸汽输入总线需要手动制作电路放入。"
+				""
+				"用电的单方块机器也自带一个编程电路槽。"
+			]
+			id: "6273314FCFE52E8A"
+			shape: "pentagon"
+			tasks: [{
+				id: "20731655D50F0FB3"
+				item: "gtceu:programmed_circuit"
+				type: "item"
+			}]
+			x: 6.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["4678D97346E46529"]
+			description: ["用于给需要充电的工具或者装备&e快速充电&r，比用&6电池箱&r充电快"]
+			id: "37E22F35AE3EF086"
+			optional: true
+			shape: "diamond"
+			tasks: [{
+				id: "2C585EBEE2B62B85"
+				item: "gtceu:ulv_charger_4x"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -6.5d
+		}
+		{
+			dependencies: [
+				"056EC4E6FAF614B7"
+				"1CA6E1AD1909373A"
+			]
+			hide_until_deps_visible: true
+			icon: "gtocore:ulv_electric_motor"
+			id: "03E94BB0F0B3ED2E"
+			optional: true
+			rewards: [
+				{
+					count: 16
+					id: "1B9CC58A83F0C34B"
+					item: "gtocore:ulv_electric_motor"
+					type: "item"
+				}
+				{
+					count: 4
+					id: "24811CF5AC480F0D"
+					item: "gtocore:ulv_conveyor_module"
+					type: "item"
+				}
+				{
+					count: 4
+					id: "04AAF259F65CDD1A"
+					item: "gtocore:ulv_electric_piston"
+					type: "item"
+				}
+				{
+					count: 4
+					id: "4D6F3DCD09EBCB19"
+					item: "gtocore:ulv_robot_arm"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "33F1924315A15A15"
+					item: "gtocore:ulv_electric_pump"
+					type: "item"
+				}
+			]
+			shape: "octagon"
+			tasks: [{
+				id: "158D91949C406FFB"
+				type: "checkmark"
+			}]
+			title: "ULV部件补助&a（简单）&r"
+			x: -3.5d
+			y: 1.5d
+		}
+		{
+			dependencies: ["53A8535B07FE3958"]
+			description: [
+				"欢迎来到超低压阶段"
+				""
+				"哪怕是再微弱的电那都是电，所以注意不要被裸露的导线电死了"
+				""
+				"从现在起，你可以开始着手降低材料的造价，或许将&6原始线材轧机&r、&6原始车床&r作为你新时代的开端是不错的选择？"
+			]
+			id: "4678D97346E46529"
+			rewards: [{
+				auto: "invisible"
+				command: "/playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1"
+				elevate_perms: true
+				id: "05D8B6F2AD5E8E21"
+				silent: true
+				type: "command"
+			}]
+			shape: "gear"
+			size: 2.0d
+			subtitle: "&7你需要天马行空般的想象力"
+			tasks: [{
+				id: "60EC1E07571ED8BF"
+				item: "gtceu:ulv_machine_hull"
+				type: "item"
+			}]
+			title: "欢迎来到&7超低压&r阶段"
+			x: -2.0d
+			y: -6.5d
+		}
+		{
+			dependencies: [
+				"056EC4E6FAF614B7"
+				"0FBE7318DFBA700E"
+			]
+			hide_until_deps_visible: true
+			icon: "gtceu:basic_electronic_circuit"
+			id: "35CBD9D27781F929"
+			optional: true
+			rewards: [
+				{
+					count: 16
+					id: "272BCD53EE7CB4F6"
+					item: "gtceu:basic_electronic_circuit"
+					type: "item"
+				}
+				{
+					count: 64
+					id: "1F285D2FFAC22CBF"
+					item: "gtocore:copper_coin"
+					type: "item"
+				}
+			]
+			shape: "octagon"
+			tasks: [{
+				id: "0A11CC353F29846B"
+				type: "checkmark"
+			}]
+			title: "芯片补助&a（简单）&r"
+			x: 6.5d
+			y: 1.5d
+		}
+		{
+			dependencies: [
+				"1FB1EC5B9CEFC2BC"
+				"4678D97346E46529"
+			]
+			hide_until_deps_visible: true
+			id: "2F5F08A3D4B89B05"
+			optional: true
+			subtitle: "机器淋雨会爆炸！"
+			tasks: [{
+				id: "1BAF14E7BEC449F7"
+				type: "checkmark"
+			}]
+			title: "给你的产线搭个天花板&d（专家）&r"
+			x: 0.0d
+			y: -6.5d
+		}
+		{
+			dependencies: [
+				"1CA6E1AD1909373A"
+				"18E057F31DDC4065"
+			]
+			hide_until_deps_visible: true
+			icon: "gtocore:ulv_electric_motor"
+			id: "5ECEF5305E8551FA"
+			optional: true
+			rewards: [
+				{
+					count: 8
+					id: "4EDC72EBC75321D1"
+					item: "gtocore:ulv_electric_motor"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "32A7151EA25348D6"
+					item: "gtocore:ulv_conveyor_module"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "4CDB4C10233F0077"
+					item: "gtocore:ulv_electric_piston"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "5BF68CD7944C1A45"
+					item: "gtocore:ulv_robot_arm"
+					type: "item"
+				}
+				{
+					count: 2
+					id: "1D7029127E78BFC6"
+					item: "gtocore:ulv_electric_pump"
+					type: "item"
+				}
+			]
+			shape: "octagon"
+			tasks: [{
+				id: "0B679403167F1FE6"
+				type: "checkmark"
+			}]
+			title: "ULV部件补助&e（普通）&r"
+			x: -3.5d
+			y: 1.0d
+		}
+		{
+			dependencies: [
+				"0FBE7318DFBA700E"
+				"18E057F31DDC4065"
+			]
+			hide_until_deps_visible: true
+			icon: "gtceu:basic_electronic_circuit"
+			id: "2907ABEAAFEF3BC1"
+			optional: true
+			rewards: [{
+				count: 6
+				id: "09C47351E0D8CF6D"
+				item: "gtceu:basic_electronic_circuit"
+				type: "item"
+			}]
+			shape: "octagon"
+			tasks: [{
+				id: "0572331A03D50238"
+				type: "checkmark"
+			}]
+			title: "芯片补助&e（普通）&r"
+			x: 6.0d
+			y: 1.5d
+		}
+		{
+			dependencies: ["1CDBE91D2ACD9111"]
+			disable_toast: true
+			icon_scale: 0.25d
+			id: "31F0EB6822F9566E"
+			shape: "none"
+			size: 0.25d
+			tasks: [{
+				id: "6EA88A0AB6903848"
+				stat: "minecraft:jump"
+				type: "stat"
+				value: 1
+			}]
+			x: -2.0d
+			y: 2.85d
+		}
+	]
+	subtitle: ["Tier0.5-ULV"]
+	title: "2. 超低压(ULV)"
+}

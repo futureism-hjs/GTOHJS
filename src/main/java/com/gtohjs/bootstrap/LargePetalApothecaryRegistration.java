@@ -106,7 +106,7 @@ public final class LargePetalApothecaryRegistration {
             ModLog.info("Registered {}; structure=5x3x5, controller=(4,1,2), recipeTypes=3, " +
                             "livingrockCasings={}, requiredAir={}",
                     MACHINE_ID, EXPECTED_CASINGS, EXPECTED_AIR);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Large petal apothecary registration failed", error);
@@ -158,7 +158,7 @@ public final class LargePetalApothecaryRegistration {
                     gtoDefinition.getPatterns() != null ? gtoDefinition.getPatterns().length : -1;
             ModLog.info("Validated loaded {}; structure=5x3x5, patternBuilt=true, cachedPatterns={}",
                     MACHINE_ID, cachedPatterns);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded large petal apothecary validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

@@ -1,0 +1,591 @@
+{
+	always_invisible: true
+	autofocus_id: "528BD3F48D7742DF"
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	disable_toast: true
+	filename: "util"
+	group: ""
+	icon: "ars_nouveau:blank_parchment"
+	id: "42C8000FF5A6A651"
+	order_index: 3
+	quest_links: [ ]
+	quests: [
+		{
+			dependency_requirement: "one_started"
+			description: ["完成此任务跳过木软锤"]
+			icon: "minecraft:white_bed"
+			id: "528BD3F48D7742DF"
+			invisible: true
+			invisible_until_tasks: 9999
+			size: 1.0d
+			tasks: [{
+				id: "005088AE361607C3"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "minecraft:beds"
+					}
+				}
+				title: "床"
+				type: "item"
+			}]
+			x: 0.5d
+			y: 0.0d
+		}
+		{
+			can_repeat: false
+			dependency_requirement: "one_started"
+			disable_toast: true
+			hide_dependency_lines: true
+			hide_dependent_lines: true
+			hide_details_until_startable: true
+			hide_lock_icon: true
+			hide_text_until_complete: true
+			hide_until_deps_complete: true
+			hide_until_deps_visible: true
+			id: "619EE8C56F705241"
+			invisible: true
+			progression_mode: "flexible"
+			tasks: [{
+				consume_items: false
+				id: "3E7E91883ACE5876"
+				item: {
+					Count: 1
+					id: "constructionwand:infinity_wand"
+					tag: {
+						wand_options: { }
+					}
+				}
+				type: "item"
+			}]
+			x: 2.5d
+			y: 0.0d
+		}
+		{
+			id: "54869A710D7DC29D"
+			invisible: true
+			tasks: [{
+				id: "2AD96079FB73F89A"
+				item: "gtocore:precision_steam_mechanism"
+				type: "item"
+			}]
+			x: 4.5d
+			y: 0.0d
+		}
+		{
+			icon: {
+				Count: 1
+				id: "gtceu:nanomuscle_helmet"
+				tag: { }
+			}
+			id: "226B4BF9F95A3C30"
+			invisible: true
+			rewards: [
+				{
+					auto: "enabled"
+					id: "6A3FC73ED9CF201B"
+					item: {
+						Count: 1
+						id: "minecraft:golden_helmet"
+						tag: {
+							Damage: 0
+							Enchantments: [
+								{
+									id: "minecraft:protection"
+									lvl: 3s
+								}
+								{
+									id: "minecraft:projectile_protection"
+									lvl: 5s
+								}
+							]
+							RepairCost: 7
+							Trim: {
+								material: "minecraft:redstone"
+								pattern: "minecraft:host"
+							}
+							display: {
+								Name: "{\"text\":\"员工头盔\"}"
+							}
+						}
+					}
+					team_reward: false
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "66C9DFA30CE07AE1"
+					item: {
+						Count: 1
+						id: "minecraft:leather_chestplate"
+						tag: {
+							Damage: 0
+							Enchantments: [
+								{
+									id: "minecraft:thorns"
+									lvl: 3s
+								}
+								{
+									id: "minecraft:blast_protection"
+									lvl: 2s
+								}
+							]
+							RepairCost: 3
+							Trim: {
+								material: "minecraft:redstone"
+								pattern: "minecraft:host"
+							}
+							display: {
+								Name: "{\"text\":\"员工劳保服\"}"
+							}
+						}
+					}
+					team_reward: false
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "15474BB65597BDB4"
+					item: {
+						Count: 1
+						id: "minecraft:chainmail_leggings"
+						tag: {
+							Damage: 0
+							Enchantments: [
+								{
+									id: "apotheosis:rebounding"
+									lvl: 1s
+								}
+								{
+									id: "minecraft:unbreaking"
+									lvl: 2s
+								}
+							]
+							RepairCost: 7
+							Trim: {
+								material: "minecraft:redstone"
+								pattern: "minecraft:host"
+							}
+							display: {
+								Name: "{\"text\":\"员工劳动裤\"}"
+							}
+						}
+					}
+					team_reward: false
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "68F87F686933EB25"
+					item: {
+						Count: 1
+						id: "minecraft:iron_boots"
+						tag: {
+							Damage: 0
+							Enchantments: [
+								{
+									id: "minecraft:fire_protection"
+									lvl: 5s
+								}
+								{
+									id: "minecraft:feather_falling"
+									lvl: 1s
+								}
+							]
+							RepairCost: 3
+							Trim: {
+								material: "minecraft:redstone"
+								pattern: "minecraft:host"
+							}
+							display: {
+								Name: "{\"text\":\"员工劳保靴\"}"
+							}
+						}
+					}
+					team_reward: false
+					type: "item"
+				}
+			]
+			tasks: [{
+				id: "29034BFBCFA2BA4C"
+				stat: "minecraft:deaths"
+				type: "stat"
+				value: 1
+			}]
+			title: "劳保服套装"
+			x: 0.5d
+			y: 2.0d
+		}
+		{
+			icon: "ars_nouveau:blank_parchment"
+			id: "2ABDF1C7B4E1B44A"
+			invisible: true
+			rewards: [{
+				auto: "enabled"
+				id: "162AA460170C7972"
+				item: {
+					Count: 1
+					id: "minecraft:totem_of_undying"
+					tag: {
+						RepairCost: 0
+						display: {
+							Name: "{\"text\":\"员工生活质量保障证(一次性)\"}"
+						}
+					}
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "2C57CE49C88CC412"
+				stat: "minecraft:deaths"
+				type: "stat"
+				value: 5
+			}]
+			title: "开路护符"
+			x: 2.5d
+			y: 2.0d
+		}
+		{
+			id: "3C10974F3E128ECA"
+			invisible: true
+			rewards: [{
+				auto: "enabled"
+				id: "698673E0044DB840"
+				item: {
+					Count: 1
+					id: "minecraft:netherite_sword"
+					tag: {
+						Damage: 0
+						Enchantments: [
+							{
+								id: "minecraft:sharpness"
+								lvl: 5s
+							}
+							{
+								id: "minecraft:smite"
+								lvl: 6s
+							}
+						]
+						RepairCost: 3
+						display: {
+							Name: "{\"text\":\"员工基础生活保障剑\"}"
+						}
+					}
+				}
+				team_reward: false
+				type: "item"
+			}]
+			tasks: [{
+				id: "14F7B7C471B635D0"
+				stat: "minecraft:deaths"
+				type: "stat"
+				value: 10
+			}]
+			title: "冲锋之剑"
+			x: 4.5d
+			y: 2.0d
+		}
+		{
+			icon: "extrabotany:failnaught"
+			id: "71F8C203B6B0257D"
+			invisible: true
+			rewards: [
+				{
+					auto: "enabled"
+					id: "25972D9AB4F7C50A"
+					item: {
+						Count: 1
+						id: "minecraft:bow"
+						tag: {
+							Damage: 0
+							Enchantments: [
+								{
+									id: "minecraft:infinity"
+									lvl: 1s
+								}
+								{
+									id: "minecraft:flame"
+									lvl: 1s
+								}
+								{
+									id: "minecraft:punch"
+									lvl: 3s
+								}
+								{
+									id: "minecraft:power"
+									lvl: 2s
+								}
+							]
+							RepairCost: 31
+							display: {
+								Name: "{\"text\":\"员工清扫弓\"}"
+							}
+						}
+					}
+					team_reward: false
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "54421F296F91773F"
+					item: "minecraft:arrow"
+					team_reward: false
+					type: "item"
+				}
+			]
+			tasks: [{
+				id: "2A22E196E25424F7"
+				stat: "minecraft:deaths"
+				type: "stat"
+				value: 15
+			}]
+			title: "秩序之弓"
+			x: 6.5d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"1FCF7BF494F483B4"
+				"4AF39FF336EA1BF4"
+			]
+			dependency_requirement: "one_completed"
+			id: "64642383F67CAA6F"
+			invisible: true
+			tasks: [{
+				id: "6B7BEF097781DFDB"
+				stat: "minecraft:jump"
+				type: "stat"
+				value: 1
+			}]
+			title: "贴片辅助"
+			x: 6.5d
+			y: 0.0d
+		}
+		{
+			description: [
+				"[\"\",{\"text\": \"锡石矿脉：\",\"color\":\"#89847e\"},{\"text\": \"锡\",\"color\":\"#fafeff\"},{\"text\": \"—\"},{\"text\": \"锡石\",\"color\":\"#89847e\"}]"
+				"[\"\",{\"text\": \"铝土矿脉：\",\"color\":\"#cfb853\"},{\"text\": \"铝土矿\",\"color\":\"#cfb853\"},{\"text\": \"—\"},{\"text\": \"钛铁矿\",\"color\":\"#2b2a24\"},{\"text\": \"—\"},{\"text\": \"铝\",\"color\":\"#7db9d8\"}]"
+				"[\"\",{\"text\": \"磁铁矿脉：\",\"color\":\"#9d9d9d\"},{\"text\": \"磁铁矿\",\"color\":\"#9d9d9d\"},{\"text\": \"—\"},{\"text\": \"钒磁铁矿\",\"color\":\"#505d70\"},{\"text\": \"—\"},{\"text\": \"金\",\"color\":\"#fdf55f\"}]"
+				"[\"\",{\"text\": \"沥青铀矿脉：\",\"color\":\"#ffd647\"},{\"text\": \"沥青铀矿\",\"color\":\"#ffd647\"},{\"text\": \"—\"},{\"text\": \"晶质铀矿\",\"color\":\"#ffd52e\"}]"
+				"[\"\",{\"text\": \"独居石矿脉：\",\"color\":\"#caab60\"},{\"text\": \"氟碳镧铈矿\",\"color\":\"#caab60\"},{\"text\": \"—\"},{\"text\": \"独居石\",\"color\":\"#d0ee98\"},{\"text\": \"—\"},{\"text\": \"钕\",\"color\":\"#6c5863\"}]"
+				"[\"\",{\"text\": \"皂滑矿脉：\",\"color\":\"#5a7261\"},{\"text\": \"皂石\",\"color\":\"#5a7261\"},{\"text\": \"—\"},{\"text\": \"滑石\",\"color\":\"#ebffe9\"},{\"text\": \"—\"},{\"text\": \"海绿石砂\",\"color\":\"#1da351\"},{\"text\": \"—\"},{\"text\": \"镍黄铁矿\",\"color\":\"#e3cf13\"}]"
+				"[\"\",{\"text\": \"锡石榴石矿脉：\",\"color\":\"#cc4c25\"},{\"text\": \"锡石矿砂\",\"color\":\"#89847e\"},{\"text\": \"—\"},{\"text\": \"石榴石砂\",\"color\":\"#cc4c25\"},{\"text\": \"—\"},{\"text\": \"石棉\",\"color\":\"#E6E6E6\"},{\"text\": \"—\"},{\"text\": \"硅藻土\",\"color\":\"#fffafa\"}]"
+				"[\"\",{\"text\": \"白钨矿脉：\",\"color\":\"#d7e8b3\"},{\"text\": \"白钨矿\",\"color\":\"#d7e8b3\"},{\"text\": \"—\"},{\"text\": \"钨酸锂\",\"color\":\"#3b3a32\"},{\"text\": \"—\"},{\"text\": \"锂\",\"color\":\"#d7e7ee\"}]"
+				"[\"\",{\"text\": \"云母矿脉：\",\"color\":\"#ecfeff\"},{\"text\": \"蓝晶石\",\"color\":\"#d5ffff\"},{\"text\": \"—\"},{\"text\": \"云母\",\"color\":\"#ecfeff\"},{\"text\": \"—\"},{\"text\": \"铯榴石\",\"color\":\"#eed9e1\"}]"
+				"[\"\",{\"text\": \"磷灰石矿脉：\",\"color\":\"#06cdf1\"},{\"text\": \"磷灰石\",\"color\":\"#06cdf1\"},{\"text\": \"—\"},{\"text\": \"磷酸三钙\",\"color\":\"#fffddb\"},{\"text\": \"—\"},{\"text\": \"烧绿石\",\"color\":\"#5b4838\"}]"
+				"[\"\",{\"text\": \"铜矿脉：\",\"color\":\"#e77c56\"},{\"text\": \"黄铜矿\",\"color\":\"#96c185\"},{\"text\": \"—\"},{\"text\": \"铁\",\"color\":\"#eeeeee\"},{\"text\": \"—\"},{\"text\": \"黄铁矿\",\"color\":\"#fffee6\"},{\"text\": \"—\"},{\"text\": \"铜\",\"color\":\"#e77c56\"}]"
+				"[\"\",{\"text\": \"硝石矿脉：\",\"color\":\"#E6E6E6\"},{\"text\": \"硝石\",\"color\":\"#E6E6E6\"},{\"text\": \"—\"},{\"text\": \"硅藻土\",\"color\":\"#fffafa\"},{\"text\": \"—\"},{\"text\": \"蓝石\",\"color\":\"#83cbf5\"},{\"text\": \"—\"},{\"text\": \"明矾石\",\"color\":\"#fbd677\"}]"
+				"[\"\",{\"text\": \"铁矿脉：\",\"color\":\"#97873a\"},{\"text\": \"针铁矿\",\"color\":\"#97873a\"},{\"text\": \"—\"},{\"text\": \"黄褐铁矿\",\"color\":\"#f5e315\"},{\"text\": \"—\"},{\"text\": \"赤铁矿\",\"color\":\"#ff7161\"},{\"text\": \"—\"},{\"text\": \"孔雀石\",\"color\":\"#00f1b0\"}]"
+				"[\"\",{\"text\": \"石榴石矿脉：\",\"color\":\"#950c15\"},{\"text\": \"红石榴石\",\"color\":\"#950c15\"},{\"text\": \"—\"},{\"text\": \"黄石榴石\",\"color\":\"#f6ff09\"},{\"text\": \"—\"},{\"text\": \"紫水晶\",\"color\":\"#cfa0f3\"},{\"text\": \"—\"},{\"text\": \"猫眼石\",\"color\":\"#D8BFD8\"}]"
+				"[\"\",{\"text\": \"矿砂矿脉：\",\"color\":\"#5c5c5c\"},{\"text\": \"玄武岩矿砂\",\"color\":\"#5c5c5c\"},{\"text\": \"—\"},{\"text\": \"花岗岩矿砂\",\"color\":\"#d69077\"},{\"text\": \"—\"},{\"text\": \"漂白土\",\"color\":\"#f3efbb\"},{\"text\": \"—\"},{\"text\": \"石膏\",\"color\":\"#fffaec\"}]"
+				"[\"\",{\"text\": \"谢尔顿矿脉：\",\"color\":\"#fff4ba\"},{\"text\": \"斑铜矿\",\"color\":\"#ffe05a\"},{\"text\": \"—\"},{\"text\": \"谢尔顿矿\",\"color\":\"#665f2f\"},{\"text\": \"—\"},{\"text\": \"铂\",\"color\":\"#fff4ba\"},{\"text\": \"—\"},{\"text\": \"钯\",\"color\":\"#bd92b5\"}]"
+				"[\"\",{\"text\": \"黝铜矿脉：\",\"color\":\"#a3a09b\"},{\"text\": \"黝铜矿\",\"color\":\"#a3a09b\"},{\"text\": \"—\"},{\"text\": \"铜\",\"color\":\"#e77c56\"},{\"text\": \"—\"},{\"text\": \"辉锑矿\",\"color\":\"#656565\"}]"
+				"[\"\",{\"text\": \"铬铁矿脉：\",\"color\":\"#9d9d9d\"},{\"text\": \"磁铁矿\",\"color\":\"#9d9d9d\"},{\"text\": \"—\"},{\"text\": \"钒磁铁矿\",\"color\":\"#2b2a24\"},{\"text\": \"—\"},{\"text\": \"铬铁矿\",\"color\":\"#c5c1a8\"}]"
+				"[\"\",{\"text\": \"带状铁矿脉：\",\"color\":\"#97873a\"},{\"text\": \"针铁矿\",\"color\":\"#97873a\"},{\"text\": \"—\"},{\"text\": \"黄褐铁矿\",\"color\":\"#f5e315\"},{\"text\": \"—\"},{\"text\": \"赤铁矿\",\"color\":\"#ff7161\"},{\"text\": \"—\"},{\"text\": \"金\",\"color\":\"#fdf55f\"}]"
+				"[\"\",{\"text\": \"钼矿脉：\",\"color\":\"#e3ddc3\"},{\"text\": \"钼铅矿\",\"color\":\"#ff9000\"},{\"text\": \"—\"},{\"text\": \"辉钼矿\",\"color\":\"#e3ddc3\"},{\"text\": \"—\"},{\"text\": \"钼\",\"color\":\"#404068\"},{\"text\": \"—\"},{\"text\": \"钼钙矿\",\"color\":\"#d8cfac\"}]"
+				"[\"\",{\"text\": \"硫矿脉：\",\"color\":\"#fdff31\"},{\"text\": \"硫\",\"color\":\"#fdff31\"},{\"text\": \"—\"},{\"text\": \"黄铁矿\",\"color\":\"#fffee6\"},{\"text\": \"—\"},{\"text\": \"闪锌矿\",\"color\":\"#ffdc88\"}]"
+				"[\"\",{\"text\": \"方铅矿脉：\",\"color\":\"#f3e8fa\"},{\"text\": \"方铅矿\",\"color\":\"#f3e8fa\"},{\"text\": \"—\"},{\"text\": \"银\",\"color\":\"#DCDCFF\"},{\"text\": \"—\"},{\"text\": \"铅\",\"color\":\"#7e6f82\"}]"
+				"[\"\",{\"text\": \"钻石矿脉：\",\"color\":\"#C8FFFF\"},{\"text\": \"石墨\",\"color\":\"#a8a89e\"},{\"text\": \"—\"},{\"text\": \"钻石\",\"color\":\"#C8FFFF\"},{\"text\": \"—\"},{\"text\": \"煤炭\",\"color\":\"#393e41\"}]"
+				"[\"\",{\"text\": \"橄榄石矿脉：\",\"color\":\"#a7e404\"},{\"text\": \"膨润土\",\"color\":\"#ede8a3\"},{\"text\": \"—\"},{\"text\": \"磁铁矿\",\"color\":\"#9d9d9d\"},{\"text\": \"—\"},{\"text\": \"橄榄石\",\"color\":\"#a7e404\"},{\"text\": \"—\"},{\"text\": \"海绿石砂\",\"color\":\"#1da351\"}]"
+				"[\"\",{\"text\": \"戴斯矿脉：\",\"color\":\"#f2a057\"},{\"text\": \"戴斯\",\"color\":\"#f2a057\"},{\"text\": \"—\"},{\"text\": \"菱镁矿\",\"color\":\"#fbfbf6\"}]"
+				"[\"\",{\"text\": \"铜锡矿脉：\",\"color\":\"#96c185\"},{\"text\": \"黄铜矿\",\"color\":\"#96c185\"},{\"text\": \"—\"},{\"text\": \"沸石\",\"color\":\"#f2e3e0\"},{\"text\": \"—\"},{\"text\": \"锡石\",\"color\":\"#89847e\"},{\"text\": \"—\"},{\"text\": \"雄黄\",\"color\":\"#ff3d33\"}]"
+				"[\"\",{\"text\": \"镍矿脉：\",\"color\":\"#ccdff5\"},{\"text\": \"硅镁镍矿\",\"color\":\"#32c880\"},{\"text\": \"—\"},{\"text\": \"镍\",\"color\":\"#ccdff5\"},{\"text\": \"—\"},{\"text\": \"辉钴矿\",\"color\":\"#1975ff\"},{\"text\": \"—\"},{\"text\": \"镍黄铁矿\",\"color\":\"#e3cf13\"}]"
+				"[\"\",{\"text\": \"锰矿脉：\",\"color\":\"#ffb777\"},{\"text\": \"钙铝榴石\",\"color\":\"#ffb777\"},{\"text\": \"—\"},{\"text\": \"锰铝榴石\",\"color\":\"#ffa81e\"},{\"text\": \"—\"},{\"text\": \"软锰矿\",\"color\":\"#c7b5ab\"},{\"text\": \"—\"},{\"text\": \"钽铁矿\",\"color\":\"#4e6b94\"}]"
+				"[\"\",{\"text\": \"黄玉矿脉：\",\"color\":\"#e8d73a\"},{\"text\": \"蓝黄玉\",\"color\":\"#dbfeff\"},{\"text\": \"—\"},{\"text\": \"黄玉\",\"color\":\"#e8d73a\"},{\"text\": \"—\"},{\"text\": \"辉铜矿\",\"color\":\"#657882\"},{\"text\": \"—\"},{\"text\": \"斑铜矿\",\"color\":\"#ffe05a\"}]"
+				"[\"\",{\"text\": \"耐热矿脉：\",\"color\":\"#C8FFFF\"},{\"text\": \"耐热金属\",\"color\":\"#e65757\"},{\"text\": \"—\"},{\"text\": \"钴\",\"color\":\"#5050FA\"},{\"text\": \"—\"},{\"text\": \"烧绿石\",\"color\":\"#5b4838\"}]"
+				"[\"\",{\"text\": \"紫金矿脉：\",\"color\":\"#fdf55f\"},{\"text\": \"紫金\",\"color\":\"#e5939b\"},{\"text\": \"—\"},{\"text\": \"金\",\"color\":\"#fdf55f\"}]"
+				"[\"\",{\"text\": \"硅岩矿脉：\",\"color\":\"#323232\"},{\"text\": \"硅岩\",\"color\":\"#323232\"},{\"text\": \"—\"},{\"text\": \"钚\",\"color\":\"#ba2727\"}]"
+				"[\"\",{\"text\": \"铍矿脉：\",\"color\":\"#73d73d\"},{\"text\": \"铍\",\"color\":\"#73d73d\"},{\"text\": \"—\"},{\"text\": \"绿宝石\",\"color\":\"#17ff6c\"}]"
+				"[\"\",{\"text\": \"钛矿脉：\",\"color\":\"#2b2a24\"},{\"text\": \"钛铁矿\",\"color\":\"#2b2a24\"},{\"text\": \"—\"},{\"text\": \"钛\",\"color\":\"#ed8eea\"}]"
+				"[\"\",{\"text\": \"红石矿脉：\",\"color\":\"#ff0000\"},{\"text\": \"红石\",\"color\":\"#ff0000\"},{\"text\": \"—\"},{\"text\": \"红宝石\",\"color\":\"#d72310\"},{\"text\": \"—\"},{\"text\": \"朱砂\",\"color\":\"#ff335f\"}]"
+				"[\"\",{\"text\": \"蓝宝石矿脉：\",\"color\":\"#3235e3\"},{\"text\": \"铁铝榴石\",\"color\":\"#a21717\"},{\"text\": \"—\"},{\"text\": \"镁铝榴石\",\"color\":\"#e81958\"},{\"text\": \"—\"},{\"text\": \"蓝宝石\",\"color\":\"#3235e3\"},{\"text\": \"—\"},{\"text\": \"绿色蓝宝石\",\"color\":\"#9ae6b0\"}]"
+				"[\"\",{\"text\": \"天青石矿脉：\",\"color\":\"#e6e6a5\"},{\"text\": \"天青石\",\"color\":\"#de953c\"},{\"text\": \"—\"},{\"text\": \"谢尔顿矿\",\"color\":\"#665f2f\"},{\"text\": \"—\"},{\"text\": \"天然碱\",\"color\":\"#e6e6a5\"}]"
+				"[\"\",{\"text\": \"锆石矿脉：\",\"color\":\"#b99b7e\"},{\"text\": \"锆石\",\"color\":\"#b99b7e\"},{\"text\": \"—\"},{\"text\": \"钨\",\"color\":\"#3b3a32\"},{\"text\": \"—\"},{\"text\": \"软锰矿\",\"color\":\"#c7b5ab\"},{\"text\": \"—\"},{\"text\": \"钽铁矿\",\"color\":\"#4e6b94\"}]"
+			]
+			hide_until_deps_complete: true
+			id: "59430E02028CD872"
+			invisible: true
+			tasks: [{
+				id: "265F4DF63BCC0FA1"
+				type: "checkmark"
+			}]
+			x: -1.5d
+			y: 2.0d
+		}
+		{
+			id: "18E057F31DDC4065"
+			invisible: true
+			tasks: [{
+				d: 2
+				id: "4FE93CA8EB2B8076"
+				type: "gtocore:gtodifficulty"
+			}]
+			x: 2.5d
+			y: 4.0d
+		}
+		{
+			id: "1FB1EC5B9CEFC2BC"
+			invisible: true
+			tasks: [{
+				d: 3
+				id: "1964A7EC14B261D4"
+				type: "gtocore:gtodifficulty"
+			}]
+			x: 4.5d
+			y: 4.0d
+		}
+		{
+			id: "056EC4E6FAF614B7"
+			invisible: true
+			tasks: [{
+				d: 1
+				id: "0BA0587A03A9DE71"
+				type: "gtocore:gtodifficulty"
+			}]
+			x: 0.5d
+			y: 4.0d
+		}
+		{
+			id: "24B0FBD7AAD6C8B1"
+			invisible: true
+			tasks: [{
+				id: "5B3BF4414BCB2CA7"
+				modid: "factory_blocks"
+				type: "gtocore:mod"
+			}]
+			x: 0.5d
+			y: 6.0d
+		}
+		{
+			id: "28C9BF5C59F5F723"
+			invisible: true
+			tasks: [
+				{
+					d: 2
+					id: "5684B78CDFAC0B11"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+				{
+					d: 3
+					id: "44C43852590C5A3F"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+			]
+			title: "普通＋专家"
+			x: 6.5d
+			y: 4.0d
+		}
+		{
+			dependencies: ["056EC4E6FAF614B7"]
+			description: ["使用压印器压印AE电路板"]
+			hide_until_deps_visible: true
+			id: "354F44C38AF0268D"
+			tasks: [{
+				id: "7D80201B469071C7"
+				item: "ae2:inscriber"
+				type: "item"
+			}]
+			title: "压印器&a（简单）&r"
+			x: -5.5d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"0BC456B4331C09F5"
+				"056EC4E6FAF614B7"
+				"0C85F6611B7A1FCE"
+			]
+			description: ["直接在EMI里搜索\"任何\"就能看到通配符，拖进样板即可。不要漏了虚拟物品！"]
+			hide_dependency_lines: true
+			hide_until_deps_visible: true
+			id: "66AA197AB2675421"
+			tasks: [{
+				id: "78CAA92EDED9B281"
+				item: "gtocore:me_wildcard_pattern_buffer"
+				type: "item"
+			}]
+			x: -5.5d
+			y: 4.0d
+		}
+		{
+			dependencies: [
+				"0BC456B4331C09F5"
+				"28C9BF5C59F5F723"
+				"187C5D9C4BFCFD35"
+				"18E4BD0C2EDCBDF2"
+			]
+			description: ["直接在EMI里搜索\"任何\"就能看到通配符，拖进样板即可。不要漏了虚拟物品！"]
+			hide_until_deps_visible: true
+			id: "3826E92A98E87DF1"
+			tasks: [{
+				id: "4EF8F52DACFE0560"
+				item: "gtocore:me_wildcard_pattern_buffer"
+				type: "item"
+			}]
+			x: -5.5d
+			y: 6.0d
+		}
+		{
+			id: "6B26B74068A2EF29"
+			invisible: true
+			tasks: [
+				{
+					d: 1
+					id: "33E0FDF72101550A"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+				{
+					d: 2
+					id: "4C84D8EEF16276D7"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+				{
+					id: "77D623771D825069"
+					item: {
+						Count: 1
+						id: "minecraft:paper"
+						tag: {
+							RepairCost: 0
+							display: {
+								Name: "{\"text\":\"AEMVEV\"}"
+							}
+						}
+					}
+					optional_task: true
+					type: "item"
+				}
+			]
+			title: "专家主线锁"
+			x: 6.5d
+			y: 6.0d
+		}
+		{
+			id: "12D5479B3944EA92"
+			invisible: true
+			tasks: [
+				{
+					d: 1
+					id: "6A59FCDCCBB2D734"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+				{
+					d: 2
+					id: "72C39C805FB5425C"
+					optional_task: true
+					type: "gtocore:gtodifficulty"
+				}
+			]
+			title: "简单＋普通"
+			x: 4.5d
+			y: 6.0d
+		}
+	]
+	title: "辅助章节"
+}

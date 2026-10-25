@@ -3,8 +3,10 @@ package com.gtohjs.item;
 import com.gregtechceu.gtceu.api.item.ComponentItem;
 import com.gregtechceu.gtceu.common.item.CoverPlaceBehavior;
 import com.gtohjs.GTOHJS;
+import com.gtohjs.adaptivenet.NetDataStickBehavior;
 import com.gtohjs.block.GTOHJSBlocks;
 import com.gtohjs.bootstrap.VacuumCoverRegistration;
+import com.gtocore.common.item.WirelessEnergyUnitBlockItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -19,6 +21,24 @@ import java.util.List;
 public final class GTOHJSItems {
     private static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, GTOHJS.MOD_ID);
+    private static final DeferredRegister<Item> CORE_ITEMS =
+            DeferredRegister.create(ForgeRegistries.ITEMS, "gtocore");
+
+    public static final RegistryObject<Item> BIOCHEMICAL_EXTRACTION_MARKER = ITEMS.register(
+            "biochemical_extraction_marker", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> BIOCHEMICAL_REACTION_MARKER = ITEMS.register(
+            "biochemical_reaction_marker", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> INCUBATOR_MARKER = ITEMS.register(
+            "incubator_marker", () -> new Item(new Item.Properties()));
+    private static final List<RegistryObject<Item>> MACHINE_MARKERS = List.of(
+            BIOCHEMICAL_EXTRACTION_MARKER, BIOCHEMICAL_REACTION_MARKER, INCUBATOR_MARKER);
+
+    public static final RegistryObject<ComponentItem> NET_DATA_STICK = CORE_ITEMS.register(
+            "net_data_stick", () -> {
+                ComponentItem item = ComponentItem.create(new Item.Properties().stacksTo(1));
+                item.attachComponents(NetDataStickBehavior.INSTANCE);
+                return item;
+            });
 
     public static final RegistryObject<ComponentItem> RECIPE_EDITOR = ITEMS.register("recipe_editor", () -> {
         ComponentItem item = ComponentItem.create(new Item.Properties().stacksTo(1));
@@ -60,6 +80,10 @@ public final class GTOHJSItems {
     public static final RegistryObject<BlockItem> INTEGRAL_BRONZE_FRAMEWORK = ITEMS.register(
             GTOHJSBlocks.INTEGRAL_BRONZE_FRAMEWORK_ID,
             () -> new BlockItem(GTOHJSBlocks.INTEGRAL_BRONZE_FRAMEWORK.get(), new Item.Properties()));
+    public static final RegistryObject<WirelessEnergyUnitBlockItem> INFINITE_WIRELESS_ENERGY_UNIT = ITEMS.register(
+            GTOHJSBlocks.INFINITE_WIRELESS_ENERGY_UNIT_ID,
+            () -> new InfiniteEnergyUnitItem(
+                    GTOHJSBlocks.INFINITE_WIRELESS_ENERGY_UNIT.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> WORLD_FRAGMENTS_OVERWORLD = worldFragment("overworld");
     public static final RegistryObject<Item> WORLD_FRAGMENTS_NETHER = worldFragment("nether");
@@ -105,28 +129,36 @@ public final class GTOHJSItems {
 
     public static void register(IEventBus modBus) {
         ITEMS.register(modBus);
+        CORE_ITEMS.register(modBus);
         modBus.addListener(GTOHJSItems::addCreativeTabContents);
     }
 
     private static void addCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
         if (CreativeModeTabs.BUILDING_BLOCKS.equals(event.getTabKey())) {
             event.accept(INTEGRAL_BRONZE_FRAMEWORK.get());
+            event.accept(INFINITE_WIRELESS_ENERGY_UNIT.get());
         }
         if (CreativeModeTabs.TOOLS_AND_UTILITIES.equals(event.getTabKey())) {
             event.accept(RECIPE_EDITOR.get());
+            event.accept(NET_DATA_STICK.get());
             event.accept(MULTIBLOCK_STRUCTURE_GENERATOR.get());
             event.accept(VACUUM_COVER.get());
             event.accept(NORMAL_AE_COMPONENT_PACK.get().getDefaultInstance());
             event.accept(SUPER_AE_COMPONENT_PACK.get().getDefaultInstance());
         }
         if (CreativeModeTabs.INGREDIENTS.equals(event.getTabKey())) {
+            MACHINE_MARKERS.forEach(marker -> event.accept(marker.get()));
             WORLD_FRAGMENTS.forEach(fragment -> event.accept(fragment.get()));
         }
     }
 
     public static void validateLoaded() {
+        if (MACHINE_MARKERS.stream().anyMatch(marker -> !marker.isPresent())) {
+            throw new IllegalStateException("Machine marker items were not all registered");
+        }
         if (!NORMAL_AE_COMPONENT_PACK.isPresent() || !SUPER_AE_COMPONENT_PACK.isPresent()
-                || !VACUUM_COVER.isPresent()) {
+                || !VACUUM_COVER.isPresent() || !NET_DATA_STICK.isPresent()
+                || !INFINITE_WIRELESS_ENERGY_UNIT.isPresent()) {
             throw new IllegalStateException("GTOHJS utility items were not all registered");
         }
         if (WORLD_FRAGMENTS.size() != 16 || WORLD_FRAGMENTS.stream().anyMatch(fragment -> !fragment.isPresent())) {

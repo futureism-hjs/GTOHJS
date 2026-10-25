@@ -58,7 +58,7 @@ public final class ThermalAndIntakeHatchRegistration {
             ModLog.info("Registered configurable heat/intake definitions: thermalPart={}, thermalMachine={}, " +
                             "advancedIntake={}, ultimateIntake={}",
                     THERMAL_ID, THERMAL_MACHINE_ID, INTAKE_ID, ULTIMATE_INTAKE_ID);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             thermalDefinition = null;
             thermalMachineDefinition = null;

@@ -62,7 +62,7 @@ public final class FragmentWorldCollectionMachineRegistration {
                     SINGLE_MACHINE_ID, LARGE_MACHINE_ID,
                     GTMachineUtils.largeTankSizeFunction.applyAsInt(GTValues.ULV),
                     IParallelMachine.MAX_PARALLEL);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             singleDefinition = null;
             largeDefinition = null;

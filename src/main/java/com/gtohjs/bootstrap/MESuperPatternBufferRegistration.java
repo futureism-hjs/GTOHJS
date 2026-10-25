@@ -46,7 +46,7 @@ public final class MESuperPatternBufferRegistration {
             ModLog.info("Registered configurable ME pattern assemblies: buffer={}, proxy={}, capacity={} ({}x{}x{})",
                     BUFFER_ID, PROXY_ID, MEPatternBufferConfig.patternCount(),
                     MEPatternBufferConfig.columns(), MEPatternBufferConfig.rows(), MEPatternBufferConfig.pages());
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             bufferDefinition = null;
             proxyDefinition = null;

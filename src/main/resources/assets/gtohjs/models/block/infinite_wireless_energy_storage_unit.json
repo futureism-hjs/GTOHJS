@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": { "all": "gtohjs:block/infinite_wireless_energy_storage_unit" }
+}

@@ -116,7 +116,7 @@ public final class AdvancedGeneratorArrayRegistration {
                     AdvancedGeneratorArraySupport.GENERATION_MULTIPLIER,
                     AdvancedGeneratorArraySupport.WIRELESS_LOSS,
                     definition.getRenderer());
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Advanced generator array registration failed", error);
@@ -149,7 +149,7 @@ public final class AdvancedGeneratorArrayRegistration {
                     MACHINE_ID, AdvancedGeneratorArraySupport.INTERNAL_GENERATOR_LIMIT,
                     AdvancedGeneratorArraySupport.GENERATION_MULTIPLIER,
                     AdvancedGeneratorArraySupport.WIRELESS_LOSS);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded advanced generator array validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

@@ -100,7 +100,7 @@ public final class HyperdimensionalForgeRegistration {
             ModLog.info("Registered {}; recipeTypes={}, patternFactory=1, dimensions=15x43x15, " +
                             "importedLitematic=true, previews=true",
                     MACHINE_ID, Arrays.toString(EXPECTED_RECIPE_TYPES));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Hyperdimensional forge registration failed", error);
@@ -137,7 +137,7 @@ public final class HyperdimensionalForgeRegistration {
             validate(definition, true);
             ModLog.info("Validated loaded {}; patternBuilt=true, recipeTypes={}", MACHINE_ID,
                     Arrays.toString(EXPECTED_RECIPE_TYPES));
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             ModLog.error("Loaded hyperdimensional forge validation failed", error);
             if (error instanceof RuntimeException runtimeException) {

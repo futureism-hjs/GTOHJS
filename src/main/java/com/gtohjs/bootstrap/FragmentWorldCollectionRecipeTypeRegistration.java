@@ -63,7 +63,7 @@ public final class FragmentWorldCollectionRecipeTypeRegistration {
             validate(definition);
             state = State.REGISTERED;
             ModLog.info("Registered recipe type {}; itemIO=3/12, fluidIO=1/1", RECIPE_TYPE_ID);
-        } catch (Throwable error) {
+        } catch (Exception error) {
             state = State.FAILED;
             definition = null;
             ModLog.error("Fragment-world collection recipe type registration failed", error);

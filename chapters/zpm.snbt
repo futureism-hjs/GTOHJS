@@ -1,0 +1,1222 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "zpm"
+	group: "2A1218851E38A2EE"
+	hide_quest_until_deps_visible: true
+	icon: "gtocore:nano_forge"
+	id: "7D815C5C7CE4821E"
+	images: [
+		{
+			height: 1.0d
+			image: "xtonesreworked:block/bitt/12"
+			rotation: 45.0d
+			width: 1.0d
+			x: -9.0d
+			y: -6.0d
+		}
+		{
+			color: 16711935
+			height: 1.0d
+			image: "ftbquests:block/barrier_open"
+			order: 1
+			rotation: 45.0d
+			width: 1.0d
+			x: -9.0d
+			y: -6.0d
+		}
+	]
+	order_index: 9
+	quest_links: [
+		{
+			id: "52240C285F13ADF8"
+			linked_quest: "05833AD0EAA634A7"
+			shape: "diamond"
+			x: -9.0d
+			y: -6.0d
+		}
+		{
+			id: "7E30FC47C3028882"
+			linked_quest: "256F90AFB461107E"
+			shape: "gear"
+			size: 2.0d
+			x: 6.0d
+			y: -4.0d
+		}
+		{
+			id: "29645CEBC289497D"
+			linked_quest: "61A5DA41383BB91A"
+			x: 2.0d
+			y: 8.0d
+		}
+		{
+			id: "78DA328CC15F9A01"
+			linked_quest: "228B283B5477879B"
+			shape: "hexagon"
+			x: -6.5d
+			y: -4.0d
+		}
+	]
+	quests: [
+		{
+			dependencies: ["346DEC4D870A2087"]
+			id: "5E32A6DFE04D28F4"
+			shape: "hexagon"
+			tasks: [{
+				id: "55A932B4EBE74C38"
+				item: "gtceu:wetware_processor"
+				type: "item"
+			}]
+			title: "&4湿件处理器"
+			x: -2.0d
+			y: 8.0d
+		}
+		{
+			dependencies: [
+				"5B5C82819DC2D27A"
+				"2FF39933AC2AC5BE"
+			]
+			id: "346DEC4D870A2087"
+			tasks: [{
+				id: "107C132E812E4106"
+				item: "gtceu:neuro_processing_unit"
+				type: "item"
+			}]
+			x: 0.0d
+			y: 8.0d
+		}
+		{
+			dependencies: [
+				"59864AA3CB69A3CF"
+				"2C79D433651D795C"
+			]
+			description: [
+				"终于！现在你可以走向&4湿件&r处理器了！"
+				""
+				"做够一定数量之后你就该使用增殖配方来生产细胞了"
+			]
+			hide_dependency_lines: false
+			id: "5B5C82819DC2D27A"
+			shape: "gear"
+			size: 2.0d
+			subtitle: "生命自此繁衍"
+			tasks: [{
+				count: 32L
+				id: "5B9E76FBAF95732F"
+				item: "gtceu:stem_cells"
+				type: "item"
+			}]
+			x: -2.0d
+			y: 6.0d
+		}
+		{
+			dependencies: [
+				"722C24B0C50641D1"
+				"7E4DBCAC89579784"
+			]
+			dependency_requirement: "one_completed"
+			id: "717F73B64CA7E035"
+			tasks: [{
+				id: "01CEF32406C73D16"
+				item: "gtocore:preparation_petri_dish"
+				type: "item"
+			}]
+			x: -4.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["19127B42AB919C11"]
+			description: ["实际上整个生物线几乎全部都需要无菌超净间"]
+			id: "608F56E6A187940C"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "2A177DF08FC91802"
+				item: "gtceu:sterilizing_filter_casing"
+				type: "item"
+			}]
+			x: -2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"0A7AD87999A0DDF5"
+				"1156B92F11DA73B6"
+				"3490AACD4AA62C5D"
+			]
+			id: "1DE0A599F076C31A"
+			shape: "gear"
+			size: 2.0d
+			subtitle: "金粉甜甜圈"
+			tasks: [{
+				id: "71419E9374165D99"
+				item: "gtceu:zpm_fusion_reactor"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -4.0d
+		}
+		{
+			dependencies: [
+				"1DE0A599F076C31A"
+				"30534A92ED62F4B8"
+			]
+			id: "19127B42AB919C11"
+			tasks: [{
+				id: "54FEA0141358A88F"
+				item: "gtceu:tritanium_ingot"
+				type: "item"
+			}]
+			x: -2.0d
+			y: -2.0d
+		}
+		{
+			dependencies: [
+				"1F94544576D30A92"
+				"697AE6FFF1F2D877"
+			]
+			description: ["在机器中养殖动物获取需要的原料"]
+			id: "502F7DD0C930D5BF"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "2679A1BA4FA8EFE3"
+				item: "gtocore:biochemical_extraction"
+				type: "item"
+			}]
+			x: -9.0d
+			y: 4.0d
+		}
+		{
+			dependencies: [
+				"3490AACD4AA62C5D"
+				"5B83B53046A06AFE"
+			]
+			description: [
+				"通常用于制作第一批生物原料"
+				""
+				"从有机物直接变出生命来，很神奇吧！"
+			]
+			id: "1F94544576D30A92"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "32140130234C5F12"
+				item: "gtocore:biochemical_reaction"
+				type: "item"
+			}]
+			x: -9.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["2FF39933AC2AC5BE"]
+			description: ["三级数据载体"]
+			id: "0BB1BDBE8BB307E4"
+			shape: "hexagon"
+			tasks: [{
+				id: "0B03EDAA52FCC18F"
+				item: {
+					Count: 1
+					id: "gtceu:data_module"
+					tag: { }
+				}
+				type: "item"
+			}]
+			x: 2.0d
+			y: 4.0d
+		}
+		{
+			dependencies: [
+				"0BB1BDBE8BB307E4"
+				"2947C7CBDC544496"
+			]
+			id: "7402D24D2847B7F2"
+			shape: "diamond"
+			tasks: [{
+				id: "4AB2877CB2E0A003"
+				item: "gtocore:fuel_refining_complex"
+				type: "item"
+			}]
+			x: 2.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["19127B42AB919C11"]
+			id: "28265843939C1503"
+			shape: "hexagon"
+			tasks: [{
+				id: "31FA202B3B09CB69"
+				item: "gtceu:tritanium_coil_block"
+				type: "item"
+			}]
+			x: 0.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["28265843939C1503"]
+			id: "24F1061AFD1BFEB2"
+			subtitle: "UV超导"
+			tasks: [{
+				id: "73A59148303A615B"
+				item: "gtceu:enriched_naquadah_trinium_europium_duranide_ingot"
+				type: "item"
+			}]
+			x: 2.0d
+			y: -2.0d
+		}
+		{
+			dependencies: [
+				"24F1061AFD1BFEB2"
+				"0C85F6611B7A1FCE"
+			]
+			description: [
+				"做出它后你可以突破单台计算机可以获取的&e算力上限&r。是时候铺设计算机以获取&b算力&r了！"
+				""
+				"在上面可以安装&6算力数据仓&r来实现算力分发，别忘了给提供算力的计算机安装&6桥接组件&r！"
+			]
+			hide_dependent_lines: true
+			id: "2947C7CBDC544496"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "4A8D522FF1ABCC7F"
+				item: "gtceu:network_switch"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["3AD590B74363891F"]
+			id: "25331E8563FB84D2"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "681C275DFE2B1408"
+				item: "gtceu:mega_blast_furnace"
+				type: "item"
+			}]
+			x: 4.75d
+			y: -2.75d
+		}
+		{
+			dependencies: ["3AD590B74363891F"]
+			id: "7A5C8C049D2DFFD2"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "51A33689384430A1"
+				item: "gtocore:mega_alloy_blast_smelter"
+				type: "item"
+			}]
+			x: 4.75d
+			y: -1.25d
+		}
+		{
+			dependencies: ["3AD590B74363891F"]
+			id: "0ECFA06FC2CE4E8D"
+			shape: "diamond"
+			size: 1.5d
+			tasks: [{
+				id: "549887823D723091"
+				item: "gtceu:mega_vacuum_freezer"
+				type: "item"
+			}]
+			x: 5.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["1DE0A599F076C31A"]
+			id: "0B7A508B2670C9C2"
+			tasks: [{
+				id: "57540A1799710573"
+				item: "gtceu:darmstadtium_ingot"
+				type: "item"
+			}]
+			x: 2.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["5E32A6DFE04D28F4"]
+			id: "348156EA1A381ABF"
+			shape: "hexagon"
+			tasks: [{
+				id: "2826FD1AFD985403"
+				item: "gtceu:wetware_processor_assembly"
+				type: "item"
+			}]
+			title: "&4湿件处理器集群"
+			x: -4.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["0BB1BDBE8BB307E4"]
+			description: ["只需要&bT3&r器官"]
+			icon: {
+				Count: 1
+				id: "ad_astra_rocketed:tier_7_rocket"
+				tag: { }
+			}
+			id: "49E04C29B878D3A8"
+			shape: "gear"
+			size: 2.0d
+			tasks: [
+				{
+					id: "27F480925F17A21E"
+					item: {
+						Count: 1
+						id: "ad_astra_rocketed:tier_7_rocket"
+						tag: { }
+					}
+					type: "item"
+				}
+				{
+					id: "7B1BB0C2D4F8D906"
+					item: "gtocore:stellar_energy_rocket_fuel_bucket"
+					type: "item"
+				}
+			]
+			x: 2.0d
+			y: 6.0d
+		}
+		{
+			dependencies: [
+				"19134C6F6A115AEE"
+				"2947C7CBDC544496"
+				"0007751813572404"
+			]
+			description: [
+				"先别急着庆祝，你还有一半的路没走呢"
+				""
+				"不过最难的路已经走完了"
+			]
+			id: "19B07E541BE74686"
+			shape: "gear"
+			size: 2.0d
+			subtitle: "千载独步，惟公一人"
+			tasks: [{
+				id: "6C753B18CFABE897"
+				item: "gtceu:wetware_processor_mainframe"
+				type: "item"
+			}]
+			title: "&4湿件处理器主机"
+			x: -9.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["608F56E6A187940C"]
+			description: ["无菌超净间不是超净间的上位替代，但无菌维护仓是超净维护仓的上位替代。"]
+			id: "56164CB7D9300DB3"
+			tasks: [{
+				id: "5392F9E6CEDE79BB"
+				item: "gtocore:sterile_cleaning_maintenance_hatch"
+				type: "item"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			description: ["没有肉末？试试&6渔场&r！"]
+			id: "06099A423968D6E0"
+			tasks: [{
+				id: "1740A8FB666D3595"
+				item: "gtceu:meat_dust"
+				type: "item"
+			}]
+			x: -4.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["06099A423968D6E0"]
+			icon: "gtocore:bacterial_growth_medium_bucket"
+			id: "7A12577E23FC07A1"
+			shape: "hexagon"
+			tasks: [
+				{
+					id: "2D515B6F4FADC217"
+					item: "gtocore:bacterial_growth_medium_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "489DB3163CDA095D"
+					type: "checkmark"
+				}
+			]
+			x: -6.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["6742F9E1907A9A84"]
+			description: ["你必须先用生化反应来制作前&a16个&r细菌"]
+			id: "747599D690EADE56"
+			tasks: [
+				{
+					count: 16L
+					id: "4FB967ED913ADB3B"
+					item: "gtocore:eschericia_coli_dust"
+					type: "item"
+				}
+				{
+					count: 16L
+					id: "1615C588C918C52D"
+					item: "gtocore:bifidobacterium_breve_dust"
+					type: "item"
+				}
+				{
+					count: 16L
+					id: "65E2DF9B259489F0"
+					item: "gtocore:brevibacterium_flavium_dust"
+					type: "item"
+				}
+				{
+					count: 16L
+					id: "3E47A3636A16835D"
+					item: "gtocore:streptococcus_pyogenes_dust"
+					type: "item"
+				}
+			]
+			title: "我需要DNA#2"
+			x: -6.0d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"7651697F32169E49"
+				"06DF372F16F1A5CA"
+				"6742F9E1907A9A84"
+			]
+			description: ["在做出最初的&a16个&r细菌之后就可以开始&e增殖&r。动物细胞则较为简单，只需要&6刷怪蛋&r即可。"]
+			hide_dependency_lines: true
+			icon: "gtceu:bacteria_bucket"
+			id: "7FED9F9CC769610C"
+			subtitle: "给我增殖！"
+			tasks: [
+				{
+					id: "05ACCFEFEDCCC541"
+					type: "checkmark"
+				}
+				{
+					id: "027107B28F156454"
+					item: "gtceu:bacteria_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "3557F63CB7D7AC8E"
+					item: "gtocore:rapidly_replicating_animal_cells_bucket"
+					optional_task: true
+					type: "item"
+				}
+			]
+			title: "自行生长"
+			x: -7.5d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"747599D690EADE56"
+				"7651697F32169E49"
+			]
+			icon: "gtocore:pluripotency_induction_gene_therapy_fluid_bucket"
+			id: "59864AA3CB69A3CF"
+			shape: "hexagon"
+			size: 1.5d
+			subtitle: "基因大杂烩"
+			tasks: [
+				{
+					id: "129F506D7D108336"
+					item: "gtocore:pluripotency_induction_gene_therapy_fluid_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "484C41FD395D6FDB"
+					type: "checkmark"
+				}
+			]
+			x: -4.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["65A2C89AD67604DE"]
+			description: [
+				"是第一批干细胞的制作原料，也是细胞增殖的原料"
+				""
+				"有更高效的循环产线制作它"
+			]
+			icon: "gtceu:sterilized_growth_medium_bucket"
+			id: "2C79D433651D795C"
+			shape: "hexagon"
+			tasks: [
+				{
+					id: "776EC25032BCC4A6"
+					item: "gtceu:sterilized_growth_medium_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "10A8189C15D49F38"
+					type: "checkmark"
+				}
+			]
+			x: -2.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["3490AACD4AA62C5D"]
+			description: ["尽管你可能没有做过小型的，但我依然建议你直接做大型的"]
+			id: "06DF372F16F1A5CA"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "7AA7690C37E91096"
+				item: "gtocore:large_incubator"
+				type: "item"
+			}]
+			x: -11.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["3490AACD4AA62C5D"]
+			description: [
+				"按U查看EMI来控制辐射原料和剂量，考验你数学基本功的时候到了"
+				""
+				"在容器内保持1根以上的杆会一直提供恒定的辐射"
+			]
+			id: "63AAABA655725FB9"
+			subtitle: "小心辐射"
+			tasks: [{
+				id: "4D00999E5D8C31C5"
+				item: "gtocore:radiation_hatch"
+				type: "item"
+			}]
+			x: -11.0d
+			y: -4.0d
+		}
+		{
+			dependencies: [
+				"1817710A29037DB0"
+				"7E4DBCAC89579784"
+			]
+			id: "2FF39933AC2AC5BE"
+			tasks: [{
+				id: "08777A99EA37841C"
+				item: "gtceu:wetware_printed_circuit_board"
+				type: "item"
+			}]
+			x: 0.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["3490AACD4AA62C5D"]
+			hide_dependency_lines: true
+			id: "1817710A29037DB0"
+			tasks: [{
+				id: "07F6F650F52E203B"
+				item: "gtocore:hydroxyapatite_ceramic_flake"
+				type: "item"
+			}]
+			x: 0.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["348156EA1A381ABF"]
+			id: "19134C6F6A115AEE"
+			shape: "hexagon"
+			tasks: [{
+				id: "32888C6B154AF435"
+				item: "gtceu:wetware_processor_computer"
+				type: "item"
+			}]
+			title: "&4湿件处理器超级计算机"
+			x: -6.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["005535C2AAA38997"]
+			description: [
+				"霜原星的&6羊&r概率掉落"
+				""
+				"需要&e倍增&r产线，主要作为&a增殖&r各种细胞的原材料"
+			]
+			id: "351F704B01567BD7"
+			tasks: [{
+				id: "259434E989076A2D"
+				item: "gtocore:glacio_spirit"
+				type: "item"
+			}]
+			x: -5.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["228B283B5477879B"]
+			description: ["很好，我想你懂要做什么"]
+			id: "0A7AD87999A0DDF5"
+			shape: "hexagon"
+			tasks: [{
+				id: "225BE6D80FC578C3"
+				item: "gtceu:zpm_energy_input_hatch"
+				type: "item"
+			}]
+			x: -4.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["5D828A5258BFF11F"]
+			description: ["不需要电力的机器"]
+			id: "590D044B9C85B84A"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "04BB37B15CA80C3A"
+				item: "gtocore:algae_farm"
+				type: "item"
+			}]
+			x: -11.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["590D044B9C85B84A"]
+			description: ["以你现在的科技水平，应当不介意多做几台农场吧！"]
+			id: "3F041E002D75AB2C"
+			tasks: [
+				{
+					id: "2C02AAD6EC7AC0FD"
+					item: "gtocore:blue_algae"
+					type: "item"
+				}
+				{
+					id: "2E89B095F65362CA"
+					item: "gtocore:gold_algae"
+					type: "item"
+				}
+				{
+					id: "4536B996F3C71EC0"
+					item: "gtocore:brown_algae"
+					type: "item"
+				}
+				{
+					id: "6BEEFF7D758A1A4B"
+					item: "gtocore:green_algae"
+					type: "item"
+				}
+				{
+					id: "1573C9240CBCA9DE"
+					item: "gtocore:red_algae"
+					type: "item"
+				}
+			]
+			title: "藻类"
+			x: -11.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["3F041E002D75AB2C"]
+			description: ["可能是养料，也可能是魔法... 总之我们需要这些！"]
+			id: "697AE6FFF1F2D877"
+			subtitle: "这些生物真难伺候！"
+			tasks: [
+				{
+					id: "73F77CF85D4E0347"
+					item: "gtocore:nutrient_distillation_bucket"
+					type: "item"
+				}
+				{
+					id: "0EA028002632B9D2"
+					item: "gtocore:cloud_seed_concentrated_bucket"
+					type: "item"
+				}
+				{
+					id: "7E96AFD6082268D2"
+					item: "gtocore:fire_water_bucket"
+					type: "item"
+				}
+				{
+					id: "4D9ED10837069AA5"
+					item: "gtocore:vapor_of_levity_bucket"
+					type: "item"
+				}
+			]
+			title: "生物养料"
+			x: -11.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["19B07E541BE74686"]
+			description: [
+				"显然你已经受够了普通装配线的速度，是时候迭代更新了！"
+				""
+				"进阶装配线是装配线的并行版本，可以用&b巨型输入总线&r，而且可以上&e激光仓&r"
+				""
+				"需要注意，盲目超频不可取，因为进阶装配线是&c超损超频&r的！换言之，&a4倍&r的功率只能让配方耗时变为&c0.65&r倍，但是并行可以正常结算"
+			]
+			id: "6DC73D6C2AD17444"
+			shape: "diamond"
+			size: 1.5d
+			subtitle: "真的进阶... 吗？"
+			tasks: [{
+				id: "0D60F984E24013D9"
+				item: "gtocore:advanced_assembly_line"
+				type: "item"
+			}]
+			x: -11.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["6DC73D6C2AD17444"]
+			description: [
+				"你注意到类似于&6LuV力场发生器&r之类的配方了吗？它们有两组一样的物品，会给有序的装配线带来困难"
+				""
+				"不过别担心！你可以尝试一下&7命名模具&r。把它放在冲压机中即可实现物品的重命名，或许对你有所帮助"
+			]
+			id: "34E06CBE6931518C"
+			subtitle: "额外的自动化步骤"
+			tasks: [{
+				id: "30FF199FF0329827"
+				item: "gtceu:name_casting_mold"
+				type: "item"
+			}]
+			x: -11.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["19B07E541BE74686"]
+			description: ["虽说一步处理，不过考虑到后续流程，你可能还得生产一些石脑油"]
+			id: "0CBF5FDD07337CE1"
+			shape: "diamond"
+			subtitle: "油的一步处理"
+			tasks: [{
+				id: "038D5413A06693F0"
+				item: "gtocore:petrochemical_plant"
+				type: "item"
+			}]
+			x: -9.0d
+			y: 10.0d
+		}
+		{
+			dependencies: ["0985154AE9169549"]
+			id: "78904EE60D9B411E"
+			tasks: [
+				{
+					id: "0A7196AC9BC6C7ED"
+					item: "gtceu:tiny_protactinium_dust"
+					type: "item"
+				}
+				{
+					id: "243C9C8DFD7A2A48"
+					item: "gtceu:tiny_neptunium_dust"
+					type: "item"
+				}
+			]
+			title: "核废料兄弟"
+			x: 6.0d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"78904EE60D9B411E"
+				"7C85C4B5A3E64723"
+				"49EECA793E1FF66F"
+			]
+			hide_dependent_lines: true
+			id: "0007751813572404"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "3E22B05032147378"
+				item: "gtocore:super_particle_collider"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 2.0d
+		}
+		{
+			dependencies: [
+				"0007751813572404"
+				"2CBDC8B5C9C32530"
+				"795AD7C014EEE5D3"
+			]
+			dependency_requirement: "one_completed"
+			description: [
+				"可以通过&6粒子对撞&r获得，也可以通过&6大型虚空采矿场&r挖取&6凯金化合物&r然后处理获得"
+				""
+				"不过无论如何获得你都需要&6三钛线圈&r"
+			]
+			id: "26167AFECA871925"
+			tasks: [{
+				id: "0DD236AADC72F7E6"
+				item: "gtceu:astatine_dust"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["26167AFECA871925"]
+			description: ["其实你可以直接跳过&cZPM&r做&3UV&r的"]
+			id: "3709A36606135AF0"
+			optional: true
+			shape: "diamond"
+			subtitle: "升级你的大型机器#3"
+			tasks: [{
+				id: "4866105FF1FF23AD"
+				item: "gtocore:integral_framework_zpm"
+				type: "item"
+			}]
+			x: 6.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["28265843939C1503"]
+			id: "7C85C4B5A3E64723"
+			tasks: [{
+				id: "2B8971E69E3A3060"
+				item: "gtocore:lafium_ingot"
+				type: "item"
+			}]
+			x: 2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"502F7DD0C930D5BF"
+				"351F704B01567BD7"
+				"0099AE8ACBB72951"
+			]
+			description: ["用神化的&e捕获附魔&r获取普通蛋，并通过生化反应诱导获取外星蛋"]
+			id: "7651697F32169E49"
+			tasks: [
+				{
+					id: "1BD8993009393E01"
+					item: "ad_astra:pygro_brute_spawn_egg"
+					type: "item"
+				}
+				{
+					id: "1EB516FC9C0E54D3"
+					item: "ad_astra:pygro_spawn_egg"
+					type: "item"
+				}
+				{
+					id: "122ECC92699D7405"
+					item: "ad_astra:mogler_spawn_egg"
+					type: "item"
+				}
+				{
+					id: "4627BC1EDF647328"
+					item: "ad_astra:sulfur_creeper_spawn_egg"
+					type: "item"
+				}
+			]
+			title: "我需要DNA#3"
+			x: -6.0d
+			y: 4.0d
+		}
+		{
+			dependencies: ["6742F9E1907A9A84"]
+			description: ["你必须先用生化反应来制作前&a16个&r细菌"]
+			id: "65A2C89AD67604DE"
+			tasks: [{
+				count: 16L
+				id: "6A86228DF9447140"
+				item: "gtocore:cupriavidus_necator_dust"
+				type: "item"
+			}]
+			title: "我需要DNA#1"
+			x: -4.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["608F56E6A187940C"]
+			description: ["无水乙醇可以通过乙醇+自循环沸石产生"]
+			id: "7E4DBCAC89579784"
+			tasks: [{
+				id: "62233B10FD891347"
+				item: "gtocore:sterilized_petri_dish"
+				type: "item"
+			}]
+			x: -2.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["3490AACD4AA62C5D"]
+			id: "1B4F781414C7AEBA"
+			subtitle: "不需要为一个环境单开一台机器了"
+			tasks: [{
+				id: "1BC71058232BC8E9"
+				item: "gtocore:modular_configuration_maintenance_hatch"
+				type: "item"
+			}]
+			x: -11.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["3490AACD4AA62C5D"]
+			id: "488D6BA7A6FC7752"
+			shape: "diamond"
+			subtitle: "木头的一步处理"
+			tasks: [{
+				id: "3A130D7EDBF5C2DF"
+				item: "gtocore:wood_distillation"
+				type: "item"
+			}]
+			x: -7.5d
+			y: -2.5d
+		}
+		{
+			dependencies: ["608F56E6A187940C"]
+			hide_dependency_lines: true
+			icon: "gtceu:mutagen_bucket"
+			id: "0099AE8ACBB72951"
+			tasks: [
+				{
+					id: "270877B95A714083"
+					item: "gtceu:mutagen_bucket"
+					optional_task: true
+					type: "item"
+				}
+				{
+					id: "7042B30465A3697E"
+					type: "checkmark"
+				}
+			]
+			x: -7.0d
+			y: 6.0d
+		}
+		{
+			dependencies: [
+				"1F94544576D30A92"
+				"717F73B64CA7E035"
+				"7A12577E23FC07A1"
+			]
+			description: ["培养细菌较为复杂，你需要在&6生化反应室&r中先完成&e初代培养&r，再转移至&6培养缸&r进行&e增殖&r"]
+			icon: "gtceu:bio_chaff"
+			id: "6742F9E1907A9A84"
+			tasks: [{
+				id: "0D91FABC6AA07541"
+				title: "培养细菌"
+				type: "checkmark"
+			}]
+			x: -6.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["26167AFECA871925"]
+			description: [
+				"全新的反应堆，仍在测试阶段"
+				""
+				"提示：你只需要知道如何定性控制机器即可，无需真的看懂公式"
+			]
+			id: "4520F6658FC37F85"
+			size: 1.0d
+			tasks: [{
+				id: "22B316DD32F2AF97"
+				item: "gtocore:fast_neutron_breeder_reactor"
+				type: "item"
+			}]
+			x: 6.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["4520F6658FC37F85"]
+			description: ["EMI里面部分配方废料粉是第七个产物所以没空间显示了，实际上是有的"]
+			id: "36A7AE94EDBE45C2"
+			tasks: [{
+				id: "2AE711CD2EE2EFC4"
+				item: "gtocore:light_emitting_charged_suspicious_waste_dust"
+				type: "item"
+			}]
+			x: 6.0d
+			y: 8.0d
+		}
+		{
+			dependencies: ["36A7AE94EDBE45C2"]
+			description: ["是&6空间站高能转换调配仓&r和&6太空电梯连接仓&r的材料之一，也用于燃料电池发电"]
+			id: "49C45F55F5DF8BFC"
+			tasks: [{
+				id: "7378BC1E4E25C4DC"
+				item: "gtocore:etrium_dust"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 8.0d
+		}
+		{
+			dependencies: [
+				"7FED9F9CC769610C"
+				"6742F9E1907A9A84"
+				"7651697F32169E49"
+			]
+			disable_toast: true
+			icon_scale: 0.25d
+			id: "7B0B57FC6C6C3D9E"
+			shape: "none"
+			size: 0.25d
+			tasks: [{
+				id: "133D90A471C42972"
+				stat: "minecraft:jump"
+				type: "stat"
+				value: 1
+			}]
+			x: -7.5d
+			y: 2.0d
+		}
+		{
+			dependencies: ["2BF339EE989F9A8E"]
+			description: [
+				"这一章节你将体验到一门独特的产线——&a生&r&2物&r&a线&r"
+				""
+				"普通的&6晶体处理器&r已经接近无机物的极限... 或许&a菌&r&2群&r可以帮我们做些计算？"
+				""
+				"在GT，所有的科技就像&a魔&r&2法&r一样"
+				""
+				"你的目标是制作并&a增&r&2殖&r&6干细胞&r"
+			]
+			id: "3490AACD4AA62C5D"
+			rewards: [{
+				auto: "invisible"
+				command: "/playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1"
+				elevate_perms: true
+				id: "4E00CDA022134B31"
+				silent: true
+				type: "command"
+			}]
+			shape: "gear"
+			size: 2.0d
+			subtitle: "&c你需要天马行空般的想象力"
+			tasks: [{
+				id: "78CEB67F88F86158"
+				item: "gtceu:zpm_machine_hull"
+				type: "item"
+			}]
+			title: "欢迎来到&c零点压&r阶段"
+			x: -9.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["24F1061AFD1BFEB2"]
+			description: [
+				"占地更大，速度更快的冶炼冷却机器，允许安装&6并行控制仓&r&o（终于！）&r，&6加速仓&r和至多&a8个&r&6能源仓&r"
+				""
+				"它们也可以贴上升级模块"
+			]
+			icon: "gtocore:orbital_smelting_facility"
+			id: "3AD590B74363891F"
+			tasks: [{
+				id: "3DAF15E2403D857D"
+				title: "冶炼三件套"
+				type: "checkmark"
+			}]
+			x: 4.0d
+			y: -2.0d
+		}
+		{
+			dependencies: [
+				"3490AACD4AA62C5D"
+				"7E1C35C2DE805E6B"
+			]
+			id: "52C0E5B54098C1AD"
+			shape: "hexagon"
+			tasks: [{
+				id: "0DF56BF924C780E6"
+				item: "gtceu:zpm_assembler"
+				type: "item"
+			}]
+			x: -7.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["49E04C29B878D3A8"]
+			hide_dependent_lines: true
+			icon: "ad_astra:glacio_globe"
+			id: "005535C2AAA38997"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				dimension: "ad_astra:glacio"
+				icon: "ad_astra:glacio_globe"
+				id: "273A98417DF1C619"
+				title: "&d访问霜原星"
+				type: "dimension"
+			}]
+			x: 4.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["228B283B5477879B"]
+			hide_dependent_lines: true
+			id: "5B83B53046A06AFE"
+			tasks: [
+				{
+					id: "6600E2B014111C97"
+					item: "gtceu:zpm_emitter"
+					type: "item"
+				}
+				{
+					id: "3ED93D9381303D48"
+					item: "gtceu:zpm_sensor"
+					type: "item"
+				}
+				{
+					id: "68D5F5B2276C25C5"
+					item: "gtceu:zpm_field_generator"
+					type: "item"
+				}
+			]
+			title: "&cZPM&r力场发生器，发射器和传感器"
+			x: -4.5d
+			y: -6.0d
+		}
+		{
+			dependencies: [
+				"31F90B973A779017"
+				"0B7A508B2670C9C2"
+				"0C85F6611B7A1FCE"
+			]
+			hide_dependent_lines: true
+			id: "49EECA793E1FF66F"
+			shape: "hexagon"
+			size: 1.5d
+			tasks: [{
+				id: "5DDDA7609E78FB32"
+				item: "gtocore:decay_hastener"
+				type: "item"
+			}]
+			x: 2.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["19B07E541BE74686"]
+			description: ["虽说一步处理，但部分矿物处理存在特殊步骤，仍需单独隔离处理"]
+			id: "1585D7EF776E3E9C"
+			shape: "diamond"
+			size: 1.5d
+			subtitle: "矿石的一步处理"
+			tasks: [{
+				id: "5642F3EBE81E7FCE"
+				item: "gtocore:integrated_ore_processor"
+				type: "item"
+			}]
+			x: -9.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["0007751813572404"]
+			disable_toast: true
+			icon_scale: 0.25d
+			id: "795AD7C014EEE5D3"
+			shape: "none"
+			size: 0.25d
+			tasks: [{
+				id: "51ADF52F239A4E08"
+				stat: "minecraft:jump"
+				type: "stat"
+				value: 1
+			}]
+			x: 4.0d
+			y: 2.0d
+		}
+	]
+	subtitle: ["Tier7-ZPM"]
+	title: "9. 零点压(ZPM)"
+}
