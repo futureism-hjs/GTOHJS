@@ -9,24 +9,59 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 #### 新增
 
-- 新增七台 GTL 衍生多方块机器、结构和专属配方类型，并接入铂精炼、奇异增殖、
-  超维度化学生产及生化配方。
-- 新增五个自适配无线电网仓室/终端、网络数据棒和无线电网无限能源单元，以及
-  相应的频率、模板、并行、电压、电流、缓冲和传输速率管理。
-- 新增 0.5.6 任务书内容，以及原生激光焊接、拆包、织布机、轧机和多辊式轧机配方。
+- 新增 Neutron Control Factory、Platinum Refining Matrix、Dragon Field
+  Proliferation Core、Plasma Machine Tool、Hadron Catalytic Refinery、Quantum
+  Mass Spectrum Array 和 Superconducting Fusion Assembler 七台多方块机器，各自
+  注册结构和配方类型；接入铂族污泥精炼、奇异增殖、超维度化工和生化配方。
+- 新增五个 GTOCore 机器 ID：`gtocore:adaptive_net_energy_input_hatch`、
+  `gtocore:adaptive_net_energy_output_hatch`、`gtocore:adaptive_net_laser_target_hatch`、
+  `gtocore:adaptive_net_laser_source_hatch` 和 `gtocore:adaptive_net_energy_terminal`；另新增
+  `gtocore:net_data_stick` 与 `gtohjs:infinite_wireless_energy_storage_unit`。
+  四种仓室按能源/激光输入或输出接入 GTO 0.5.6 团队电网；终端可配置频率和
+  无线模板，并显示团队账本流入、流出和净变化。
+- 新增 `gtohjs:biochemical_extraction_marker`、
+  `gtohjs:biochemical_reaction_marker` 和 `gtohjs:incubator_marker`，并从原生
+  `biochemical_extraction`、`biochemical_reaction`、`incubator` 的 12、38、62
+  个配方派生生化工厂配方；每条派生配方要求对应的非消耗标记、时长减半且 EU/t 不变。
+  生化反应与孵化配方移除 `RADIOACTIVITY` 数据；孵化过滤等级由维护仓能力提供：普通
+  仓为 0，清洁/无菌/绝对洁净等级分别为 1/2/3。
+- 新增 `gtocore:chemical_distort`、`gtocore:hyperdimensional_biochemical_factory`、
+  `gtocore:neutron_control_factory`、`gtocore:platinum_refining_matrix`、
+  `gtocore:plasma_machine_tool`、`gtocore:hadron_catalytic_refinery`、
+  `gtocore:quantum_mass_spectrum_array`、`gtocore:superconducting_fusion_assembler`、
+  五个自适配电网部件、`gtocore:net_data_stick` 和 `gtocore:auto_radiation_hatch` 的
+  装配机/装配线获取配方；新增三种标记的工作台配方及相应任务书进度。另新增
+  原生 `laser_welder`、`unpacker`、`loom`、`rolling_mill`、`cluster_mill` 配方。
 
 #### 更改
 
-- 将 dev19 功能移植到 GTOCore 0.5.6-beta，保留旧注册 ID 和配方语义，并集中原生
-  注册入口；无线电网系统复用 0.5.6 团队电网账本。
-- 更新机器配方来源、获取配方和并行/线程上限。自动辐射仓室沿用原生结构谓词及
-  组合数量上限；四台加工机器改由控制器模式选择配方类型。
-- 更新 ME 样板缓冲与配方编辑器、机器模式界面、物品来源提示、结构、资源、英文
-  开发说明及授权/第三方声明。
+- 将 dev19 功能迁移到 GTOCore 0.5.6-beta，保留既有注册 ID 与配方语义，并把机器、
+  配方类型和 AE 注册清单集中到 `GTOHJSRegistration` 的原生注册入口。
+- Plasma Machine Tool、Hadron Catalytic Refinery、Quantum Mass Spectrum Array 和
+  Superconducting Fusion Assembler 保留各自 11/11/10/5 个原生配方类型；控制器已保存
+  的模式决定新工作使用的类型，输入仓决定具体配方。输入结构接受原生物品/流体/双输入
+  仓，但明确排除 `gtocore:me_catalyst_pattern_buffer`；不再要求 ME 样板仓，也不取消或
+  退款已开始的任务。
+- `gtocore:chemical_distort` 增加普通能源仓输入。最高单个输入仓电压不高于 LuV 时并行
+  上限为 2000；高于 LuV 时读取可选并行仓设置，无并行仓则为 1。电压判断不乘电流，
+  也不聚合多个能源仓的 EU/t。
+- 自适配无线电网按仓室各自保存频率、连接状态和优先级；优先级范围为 0–4，数值较高者
+  先从团队账本获得转账。模板并行、电压、电流及缓冲限制保留为各仓配置；模板安数在
+  计算 `voltage × amps` 前先限幅，避免 `long` 溢出。无限能源单元沿用
+  `gtohjs:infinite_wireless_energy_storage_unit`，由方块实体与物品 NBT 交接电量，容量为
+  `2^126−1 EU`、MAX 电压等级、零损耗。
+- 23 个配方源文件迁至 `com.gtohjs.recipes`，保留类名、配方 ID 和发现顺序。通配样板搜索
+  使用每服务端 tick 2 ms/128 次访问的轮转队列，并将 LRU 限制为 32 个签名、32768 项和
+  32 MiB 编码数据；自动辐射仓室扩展原生结构谓词候选且保留组合数量上限。
+- 配方编辑器继续将导出文件写入 `gtohjs/recipe`；无线终端通过左侧页面编辑频率和模板。
+  机器结构、资源及英文开发说明按实际注册 ID 和机制同步。
 
 #### 修复
 
-- 修复无线终端对 256A 及以上无线模板的识别，并优化配方处理性能。
+- 修复自适配终端漏识别 256A–16777216A 激光能源仓模板的问题：无线激光源模板进入第 3
+  槽，激光靶模板进入第 4 槽；保留原生激光 ID 回退、安数校验和创造模式物品过滤。
+- 修复 `gtocore:me_super_wildcard_pattern_buffer` 与 `gtocore:net_data_stick` 缺少
+  GTOHJS 来源提示的问题，并统一无限无线能量单元的中英文显示名。
 
 #### 删除
 
@@ -40,32 +75,81 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 #### Added
 
-- Added seven GTL-derived multiblocks, their structures and dedicated recipe
-  types, plus platinum refining, exotic proliferation, hyperdimensional
-  chemical and biochemical recipes.
-- Added five adaptive wireless hatches/terminal, a network data stick and an
-  Infinite Wireless Energy Unit, with frequency, template, parallelism,
-  voltage, amperage, buffer and transfer-rate handling.
-- Added 0.5.6 quest content and native laser-welding, unpacking, loom,
-  rolling-mill and cluster-mill recipe support.
+- Added seven multiblocks with structures and dedicated recipe types: Neutron
+  Control Factory, Platinum Refining Matrix, Dragon Field Proliferation Core,
+  Plasma Machine Tool, Hadron Catalytic Refinery, Quantum Mass Spectrum Array,
+  and Superconducting Fusion Assembler. Added platinum-group sludge refining,
+  exotic proliferation, hyperdimensional chemical, and biochemical recipes.
+- Added five GTOCore machine IDs: `gtocore:adaptive_net_energy_input_hatch`,
+  `gtocore:adaptive_net_energy_output_hatch`,
+  `gtocore:adaptive_net_laser_target_hatch`,
+  `gtocore:adaptive_net_laser_source_hatch`, and
+  `gtocore:adaptive_net_energy_terminal`; also
+  added `gtocore:net_data_stick` and
+  `gtohjs:infinite_wireless_energy_storage_unit`. The four hatches use GTO
+  0.5.6's team energy ledger; the terminal configures frequency/templates and
+  displays ledger inflow, outflow, and net change.
+- Added `gtohjs:biochemical_extraction_marker`,
+  `gtohjs:biochemical_reaction_marker`, and `gtohjs:incubator_marker`. Derived
+  recipes from the 12 `biochemical_extraction`, 38 `biochemical_reaction`, and
+  62 `incubator` source recipes require their matching nonconsumable marker,
+  run at half duration, and keep the original EU/t. Biochemical-reaction and
+  incubator recipes omit `RADIOACTIVITY` data; incubator filter tiers come from
+  Maintenance Hatch capability (ordinary 0, cleaning/sterile/absolute-clean 1/2/3).
+- Added Assembler/Assembly Line acquisition recipes for
+  `gtocore:chemical_distort`, `gtocore:hyperdimensional_biochemical_factory`,
+  `gtocore:neutron_control_factory`, `gtocore:platinum_refining_matrix`,
+  `gtocore:plasma_machine_tool`, `gtocore:hadron_catalytic_refinery`,
+  `gtocore:quantum_mass_spectrum_array`,
+  `gtocore:superconducting_fusion_assembler`, all five adaptive-grid parts,
+  `gtocore:net_data_stick`, and `gtocore:auto_radiation_hatch`. Added crafting-
+  table recipes for the three markers and matching quest progression. Added native
+  `laser_welder`, `unpacker`, `loom`, `rolling_mill`, and `cluster_mill` recipes.
 
 #### Changed
 
-- Ported the dev19 feature set to GTOCore 0.5.6-beta, retaining existing
-  registry IDs and recipe semantics while consolidating native registration
-  entry points. The wireless grid reuses the 0.5.6 team energy ledger.
-- Updated machine recipe sources, acquisition recipes and parallel/thread
-  limits. Automatic Radiation Hatches extend native structure predicates and
-  retain combined quantity limits. Four processing machines select recipe
-  types through their controllers.
-- Updated ME pattern buffers and the recipe editor, machine-mode UI, item
-  attribution, structures, resources, English development notes and
-  license/third-party declarations.
+- Ported the dev19 feature set to GTOCore 0.5.6-beta, preserving existing
+  registry IDs and recipe semantics. Machine, recipe-type, and AE registrations
+  now share the native registration entry point in `GTOHJSRegistration`.
+- Plasma Machine Tool, Hadron Catalytic Refinery, Quantum Mass Spectrum Array,
+  and Superconducting Fusion Assembler retain their 11/11/10/5 native recipe
+  types. The persisted controller mode selects the type for new work, while
+  input ingredients select the recipe. Their input patterns accept native item,
+  fluid, and dual-input hatches but explicitly reject
+  `gtocore:me_catalyst_pattern_buffer`. No ME Pattern Buffer is required; jobs
+  already running are neither cancelled nor refunded.
+- `gtocore:chemical_distort` accepts ordinary energy hatches as well as laser
+  input. At a highest individual input-hatch voltage of LuV or below, parallel
+  is capped at 2000; above LuV, it uses the optional Parallel Hatch setting and
+  defaults to 1 without that hatch. Voltage classification does not multiply
+  by amperage or aggregate the EU/t of multiple hatches.
+- Adaptive wireless hatches persist their own frequency, connection, and
+  priority. Priority ranges from 0–4, with higher values served first by the
+  shared team ledger. Template amperage is bounded before `voltage × amps` is
+  calculated. The Infinite Wireless Energy Unit keeps ID
+  `gtohjs:infinite_wireless_energy_storage_unit`; its block-entity/item-NBT
+  handoff carries charge with `2^126−1 EU` capacity, MAX voltage tier, and zero
+  loss.
+- Migrated 23 recipe source files to `com.gtohjs.recipes`, preserving class
+  names, recipe IDs, and discovery order. Wildcard-pattern searches use a
+  round-robin queue capped at 2 ms/128 visits per server tick and an LRU capped
+  at 32 signatures, 32768 entries, and 32 MiB of encoded data. Automatic
+  Radiation Hatches extend native structure predicate candidates and retain
+  combined quantity limits.
+- Kept recipe-editor exports under `gtohjs/recipe`; the wireless terminal edits
+  frequencies and templates through its left-side configuration pages. Updated
+  machine structures, resources, and English development notes to match their
+  registered IDs and behavior.
 
 #### Fixed
 
-- Fixed wireless terminal recognition for 256A-and-higher wireless templates
-  and optimized recipe processing performance.
+- Fixed the adaptive terminal's missed 256A–16777216A laser-energy templates:
+  wireless laser-source templates now populate slot 3 and laser-target
+  templates slot 4. Native laser-ID fallback, amperage validation, and creative
+  item exclusion remain in place.
+- Fixed missing GTOHJS attribution for
+  `gtocore:me_super_wildcard_pattern_buffer` and `gtocore:net_data_stick`, and
+  corrected the Chinese/English display name for the Infinite Wireless Energy Unit.
 
 #### Removed
 
