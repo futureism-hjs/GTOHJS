@@ -9,28 +9,24 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 #### 新增
 
-- 新增 Neutron Control Factory、Platinum Refining Matrix、Dragon Field
-  Proliferation Core、Plasma Machine Tool、Hadron Catalytic Refinery、Quantum
-  Mass Spectrum Array 和 Superconducting Fusion Assembler 七台多方块机器，各自
-  注册结构和配方类型；接入铂族污泥精炼、奇异增殖、超维度化工和生化配方。
-- 新增五个 GTOCore 机器 ID：`gtocore:adaptive_net_energy_input_hatch`、
-  `gtocore:adaptive_net_energy_output_hatch`、`gtocore:adaptive_net_laser_target_hatch`、
-  `gtocore:adaptive_net_laser_source_hatch` 和 `gtocore:adaptive_net_energy_terminal`；另新增
-  `gtocore:net_data_stick` 与 `gtohjs:infinite_wireless_energy_storage_unit`。
-  四种仓室按能源/激光输入或输出接入 GTO 0.5.6 团队电网；终端可配置频率和
-  无线模板，并显示团队账本流入、流出和净变化。
+- 从 GTL-EnhancedCore 2.8.3 移植七台多方块机器的结构：中子控制工厂、铂系精炼矩阵、
+  龙式场约束增殖核心、磁流体约束等离子机床、强子流态催化精炼塔、量子场质谱解离阵列、
+  超导磁约束熔合组装器；机器注册和配方类型适配 GTOCore 0.5.6。另接入铂族污泥精炼、
+  奇异增殖、超维度化工及生化配方。
+- 将 GTOHJS dev19 的自适配电网功能移植到 GTOCore 0.5.6 的团队电网账本，并新增五种
+  可安装部件：自适配电网能源仓（能源输入）、自适配电网动力仓（能源输出）、自适配电网
+  激光靶仓（激光输入）、自适配电网激光源仓（激光输出）和自适配电网系统终端（设置频率、
+  配置四类无线模板并查看账本输入/输出/净变化）。新增网络配置闪存和无限无线能量单元。
 - 新增 `gtohjs:biochemical_extraction_marker`、
   `gtohjs:biochemical_reaction_marker` 和 `gtohjs:incubator_marker`，并从原生
   `biochemical_extraction`、`biochemical_reaction`、`incubator` 的 12、38、62
   个配方派生生化工厂配方；每条派生配方要求对应的非消耗标记、时长减半且 EU/t 不变。
   生化反应与孵化配方移除 `RADIOACTIVITY` 数据；孵化过滤等级由维护仓能力提供：普通
   仓为 0，清洁/无菌/绝对洁净等级分别为 1/2/3。
-- 新增 `gtocore:chemical_distort`、`gtocore:hyperdimensional_biochemical_factory`、
-  `gtocore:neutron_control_factory`、`gtocore:platinum_refining_matrix`、
-  `gtocore:plasma_machine_tool`、`gtocore:hadron_catalytic_refinery`、
-  `gtocore:quantum_mass_spectrum_array`、`gtocore:superconducting_fusion_assembler`、
-  五个自适配电网部件、`gtocore:net_data_stick` 和 `gtocore:auto_radiation_hatch` 的
-  装配机/装配线获取配方；新增三种标记的工作台配方及相应任务书进度。另新增
+- 新增深度化学扭曲仪、超维度生化工厂、中子控制工厂、铂系精炼矩阵、磁流体约束等离子
+  机床、强子流态催化精炼塔、量子场质谱解离阵列、超导磁约束熔合组装器、上述五种
+  自适配电网部件、网络配置闪存和自动放射仓的装配机/装配线获取配方；新增三种生化标记
+  的工作台配方及相应任务书进度。另新增
   原生 `laser_welder`、`unpacker`、`loom`、`rolling_mill`、`cluster_mill` 配方。
 
 #### 更改
@@ -75,20 +71,20 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
 #### Added
 
-- Added seven multiblocks with structures and dedicated recipe types: Neutron
-  Control Factory, Platinum Refining Matrix, Dragon Field Proliferation Core,
-  Plasma Machine Tool, Hadron Catalytic Refinery, Quantum Mass Spectrum Array,
-  and Superconducting Fusion Assembler. Added platinum-group sludge refining,
-  exotic proliferation, hyperdimensional chemical, and biochemical recipes.
-- Added five GTOCore machine IDs: `gtocore:adaptive_net_energy_input_hatch`,
-  `gtocore:adaptive_net_energy_output_hatch`,
-  `gtocore:adaptive_net_laser_target_hatch`,
-  `gtocore:adaptive_net_laser_source_hatch`, and
-  `gtocore:adaptive_net_energy_terminal`; also
-  added `gtocore:net_data_stick` and
-  `gtohjs:infinite_wireless_energy_storage_unit`. The four hatches use GTO
-  0.5.6's team energy ledger; the terminal configures frequency/templates and
-  displays ledger inflow, outflow, and net change.
+- Ported seven multiblock structures from GTL-EnhancedCore 2.8.3: Neutron
+  Control Factory, Platinum Refining Matrix, Dragon-Field Proliferation Core,
+  Magnetic Confinement Plasma Machine Tool, Hadron Flow Catalytic Refinery Tower,
+  Quantum Field Mass Spectrometry Dissociation Array, and Superconducting
+  Magnetic Confinement Fusion Assembler. Their machine registration and recipe
+  types use GTOCore 0.5.6. Added platinum-group sludge refining, exotic
+  proliferation, hyperdimensional chemical, and biochemical recipes.
+- Ported GTOHJS dev19's adaptive-grid feature to GTOCore 0.5.6's team energy
+  ledger and added five installable parts: Adaptive Grid Energy Input Hatch,
+  Adaptive Grid Power Output Hatch, Adaptive Grid Laser Target Hatch, Adaptive
+  Grid Laser Source Hatch, and Adaptive Grid Terminal. The four hatches input
+  or output energy/laser power; the terminal sets frequency, configures four
+  wireless-template families, and displays ledger input, output, and net flow.
+  Also added the Network Configuration Flash and Infinite Wireless Energy Unit.
 - Added `gtohjs:biochemical_extraction_marker`,
   `gtohjs:biochemical_reaction_marker`, and `gtohjs:incubator_marker`. Derived
   recipes from the 12 `biochemical_extraction`, 38 `biochemical_reaction`, and
@@ -96,14 +92,14 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
   run at half duration, and keep the original EU/t. Biochemical-reaction and
   incubator recipes omit `RADIOACTIVITY` data; incubator filter tiers come from
   Maintenance Hatch capability (ordinary 0, cleaning/sterile/absolute-clean 1/2/3).
-- Added Assembler/Assembly Line acquisition recipes for
-  `gtocore:chemical_distort`, `gtocore:hyperdimensional_biochemical_factory`,
-  `gtocore:neutron_control_factory`, `gtocore:platinum_refining_matrix`,
-  `gtocore:plasma_machine_tool`, `gtocore:hadron_catalytic_refinery`,
-  `gtocore:quantum_mass_spectrum_array`,
-  `gtocore:superconducting_fusion_assembler`, all five adaptive-grid parts,
-  `gtocore:net_data_stick`, and `gtocore:auto_radiation_hatch`. Added crafting-
-  table recipes for the three markers and matching quest progression. Added native
+- Added Assembler/Assembly Line acquisition recipes for the Deep Chemical
+  Distorter, Hyperdimensional Biochemical Factory, Neutron Control Factory,
+  Platinum Refining Matrix, Magnetic Confinement Plasma Machine Tool, Hadron
+  Flow Catalytic Refinery Tower, Quantum Field Mass Spectrometry Dissociation
+  Array, Superconducting Magnetic Confinement Fusion Assembler, all five
+  adaptive-grid parts, Network Configuration Flash, and Automatic Radiation
+  Hatch. Added crafting-table recipes for the three biochemical markers and
+  matching quest progression. Added native
   `laser_welder`, `unpacker`, `loom`, `rolling_mill`, and `cluster_mill` recipes.
 
 #### Changed
