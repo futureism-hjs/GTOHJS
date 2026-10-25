@@ -12,17 +12,11 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 - 新增七台多方块机器，结构来源为 GTL-EnhancedCore 2.8.3；同时加入对应的专属配方类型及铂系精炼、奇异增殖和超维度化工配方：
 
   · 中子控制工厂
-
   · 铂系精炼矩阵
-
   · 龙式场约束增殖核心
-
   · 磁流体约束等离子机床
-
   · 强子流态催化精炼塔
-
   · 量子场质谱解离阵列
-
   · 超导磁约束熔合组装器
 
 - 新增自适配电网系统，连接同一团队的电网终端与能源/激光仓室，通过频率在团队电网账本中传输电力。
@@ -30,28 +24,21 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
   自适配电网相关方块：
 
   · 自适配电网能源仓：接收团队电网传入的电力
-
   · 自适配电网动力仓：向团队电网账本输入电力
-
   · 自适配电网激光靶仓：接收团队电网传入的激光能量
-
   · 自适配电网激光源仓：向团队电网账本输入激光能量
-
   · 自适配电网系统终端：设置电网频率，配置动力、能源、激光源、激光靶四类模板，
   查看账本输入、输出和净变化
 
   自适配电网相关物品：
 
   · 网络配置闪存：在终端和仓室之间复制、设置或清除电网频率
-
   · 无限无线能量单元：用于构建无线电网塔结构，并保存塔内电量
 
 - 新增三种生化标记，用于超维度生化工厂的对应配方，标记不会在加工时消耗：
 
   · 生物提取机标记
-
   · 生化反应室标记
-
   · 大型培养缸标记
 
   对应配方分别取自生物提取机、生化反应室和大型培养缸的 12、38、62 条原有配方；加工时间减半，EU/t 不变。生化反应与培养配方不再要求放射性条件。培养配方所需过滤等级由维护仓提供：普通 0 级，清洁、无菌、绝对洁净分别为 1、2、3 级。
@@ -92,17 +79,11 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 - Added seven multiblock machines with structures sourced from GTL-EnhancedCore 2.8.3, their dedicated recipe types, and platinum refining, exotic proliferation, and hyperdimensional chemical recipes:
 
   · Neutron Control Factory
-
   · Platinum Refining Matrix
-
   · Dragon-Field Proliferation Core
-
   · Magnetic Confinement Plasma Machine Tool
-
   · Hadron Flow Catalytic Refinery Tower
-
   · Quantum Field Mass Spectrometry Dissociation Array
-
   · Superconducting Magnetic Confinement Fusion Assembler
 
 - Added an adaptive power-grid system that connects a team's grid terminal and
@@ -112,13 +93,9 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
   Adaptive-grid blocks:
 
   · Adaptive Grid Energy Input Hatch: receives power from the team grid
-
   · Adaptive Grid Power Output Hatch: sends power to the team grid ledger
-
   · Adaptive Grid Laser Target Hatch: receives laser energy from the team grid
-
   · Adaptive Grid Laser Source Hatch: sends laser energy to the team grid
-
   · Adaptive Grid Terminal: sets grid frequency, configures power, energy,
   laser-source, and laser-target templates, and displays ledger input, output,
   and net flow
@@ -127,16 +104,13 @@ Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`
 
   · Network Configuration Flash: copies, sets, or clears grid frequency between
   the terminal and hatches
-
   · Infinite Wireless Energy Unit: forms the wireless-grid tower structure and
   stores its energy
 
 - Added three nonconsumable markers for the matching Hyperdimensional Biochemical Factory recipes:
 
   · Biological Extraction Machine Marker
-
   · Biochemical Reaction Chamber Marker
-
   · Large Incubator Marker
 
   The 12 biological extraction, 38 biochemical reaction, and 62 incubator source recipes run at half duration with unchanged EU/t. Reaction and incubator recipes no longer require radioactivity. Incubator filter tiers come from Maintenance Hatches: ordinary 0, cleaning 1, sterile 2, and absolute-clean 3.
