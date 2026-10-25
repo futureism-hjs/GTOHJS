@@ -1,5 +1,7 @@
 # GTOHJS Documentation Index
 
+- `../AGENT.md`: public contributor guidance for AI-assisted development,
+  documentation, privacy, commit messages and release packaging.
 - `../release/USAGE_zh-CN.txt`: public installation instructions included in
   release ZIPs and available to GitHub Actions packaging.
 
