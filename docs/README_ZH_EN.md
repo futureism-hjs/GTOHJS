@@ -1,5 +1,8 @@
 # GTOHJS Documentation Index
 
+- `59_chemical_distorter_halogen_shortcuts.md`: approved HV bromine/iodine
+  shortcuts, exact IO, convenience loss, retained recycling and verification.
+
 - `../AGENT.md`: public contributor guidance for AI-assisted development,
   documentation, privacy, commit messages and release packaging.
 - `../release/USAGE_zh-CN.txt`: public installation instructions included in

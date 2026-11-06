@@ -1,5 +1,9 @@
 # Deep Chemical Distorter
 
+The 2026-11-06 addition in `59_chemical_distorter_halogen_shortcuts.md` adds
+two independent HV halogen recipes to this provider, for 23 recipes total.
+The native-derived polymer family below remains pinned at 21.
+
 The approved late-HV acquisition and voltage-dependent parallel implementation
 is delivered in `52_chemical_distorter_hv_parallel.md`, including current
 build/deployment evidence and pending client acceptance.
