@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'eclipse'
     id 'idea'
@@ -59,23 +61,12 @@ dependencies {
 // GTOCore keeps Kotlin sources beside Java sources. Keep the same layout for the
 // migrated helpers while compiling Kotlin before Java so @JvmStatic APIs remain
 // available to the existing Java registration classes.
-sourceSets {
-    main {
-        kotlin {
-            srcDirs('src/main/kotlin', 'src/main/java')
-        }
-    }
-}
+sourceSets.main.kotlin.srcDirs = ['src/main/kotlin', 'src/main/java']
 
 kotlin {
     jvmToolchain(21)
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        javaParameters.set(true)
-    }
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+    compilerOptions.javaParameters.set(true)
 }
 
 tasks.named('compileJava', JavaCompile).configure {
@@ -109,26 +100,43 @@ tasks.register('verifyOptimizationContracts', JavaExec) {
 }
 tasks.named('check') { dependsOn tasks.named('verifyOptimizationContracts') }
 
+tasks.register('verifyManaConversion', JavaExec) {
+    group = 'verification'
+    description = 'Checks lossless native-storage transfer planning, refusal, rollback and overflow.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.gtohjs.machine.ManaConversionChecks'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+}
+tasks.named('check') { dependsOn tasks.named('verifyManaConversion') }
+
+tasks.register('verifySteamParallelBudget', JavaExec) {
+    group = 'verification'
+    description = 'Checks native-steam startup affordability, refill and parallel ceiling boundaries.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.gtohjs.machine.SteamParallelBudgetChecks'
+}
+
+tasks.named('check') { dependsOn tasks.named('verifySteamParallelBudget') }
+
 tasks.named('processResources', ProcessResources).configure {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    def encodedTextures = [
-        (file('src/main/encoded-assets/infinite_wireless_energy_storage_unit.png.b64')):
-            'assets/gtohjs/textures/block/infinite_wireless_energy_storage_unit.png',
-        (file('src/main/encoded-assets/dev15_widget_icons.png.b64')):
-            'assets/gtohjs/textures/gui/dev15_widget_icons.png',
-        (file('src/main/encoded-assets/biochemical_extraction_marker.png.b64')):
-            'assets/gtohjs/textures/item/biochemical_extraction_marker.png',
-        (file('src/main/encoded-assets/biochemical_reaction_marker.png.b64')):
-            'assets/gtohjs/textures/item/biochemical_reaction_marker.png',
-        (file('src/main/encoded-assets/incubator_marker.png.b64')):
-            'assets/gtohjs/textures/item/incubator_marker.png',
+    Map<File, String> encodedTextures = [
+        (file('src/main/encoded-assets/large_steam_petal_apothecary_front.png.b64')): 'assets/gtohjs/textures/block/multiblock/large_steam_petal_apothecary/overlay_front.png',
+        (file('src/main/encoded-assets/large_steam_petal_apothecary_front_active.png.b64')): 'assets/gtohjs/textures/block/multiblock/large_steam_petal_apothecary/overlay_front_active.png',
+        (file('src/main/encoded-assets/infinite_wireless_energy_storage_unit.png.b64')): 'assets/gtohjs/textures/block/infinite_wireless_energy_storage_unit.png',
+        (file('src/main/encoded-assets/dev15_widget_icons.png.b64')): 'assets/gtohjs/textures/gui/dev15_widget_icons.png',
+        (file('src/main/encoded-assets/biochemical_extraction_marker.png.b64')): 'assets/gtohjs/textures/item/biochemical_extraction_marker.png',
+        (file('src/main/encoded-assets/biochemical_reaction_marker.png.b64')): 'assets/gtohjs/textures/item/biochemical_reaction_marker.png',
+        (file('src/main/encoded-assets/incubator_marker.png.b64')): 'assets/gtohjs/textures/item/incubator_marker.png',
     ]
     inputs.files(encodedTextures.keySet())
     doLast {
-        encodedTextures.each { source, path ->
-            def texture = new File(destinationDir, path)
+        encodedTextures.each { File source, String path ->
+            File texture = new File(destinationDir, path)
             texture.parentFile.mkdirs()
-            texture.bytes = java.util.Base64.getDecoder().decode(source.text.trim())
+            texture.bytes = Base64.getDecoder().decode(source.text.trim())
         }
     }
     def replacements = [

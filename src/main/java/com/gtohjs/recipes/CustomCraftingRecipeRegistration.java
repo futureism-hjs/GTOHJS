@@ -16,7 +16,7 @@ import com.gtocore.common.data.GTOMachines;
 import com.gtolib.utils.RegistriesUtils;
 import com.gtohjs.GTOHJS;
 import com.gtohjs.util.ModLog;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
@@ -44,6 +44,10 @@ public final class CustomCraftingRecipeRegistration {
             GTOHJS.id("one_stop_rare_earth_processing_plant");
     public static final ResourceLocation UNIVERSAL_STEAM_FACTORY_RECIPE_ID =
             GTOHJS.id("universal_steam_factory");
+    public static final ResourceLocation BASIC_ORE_PROCESSING_PLANT_RECIPE_ID =
+            GTOHJS.id("basic_ore_processing_plant");
+    public static final ResourceLocation LARGE_STEAM_PETAL_APOTHECARY_RECIPE_ID =
+            GTOHJS.id("large_steam_petal_apothecary");
     public static final ResourceLocation ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID =
             GTOHJS.id("advanced_alchemy_cauldron");
     public static final ResourceLocation ADVANCED_GENERATOR_ARRAY_RECIPE_ID =
@@ -84,6 +88,8 @@ public final class CustomCraftingRecipeRegistration {
             INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID,
             ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID,
             UNIVERSAL_STEAM_FACTORY_RECIPE_ID,
+            BASIC_ORE_PROCESSING_PLANT_RECIPE_ID,
+            LARGE_STEAM_PETAL_APOTHECARY_RECIPE_ID,
             ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID,
             ADVANCED_GENERATOR_ARRAY_RECIPE_ID,
             STEAM_ARRAY_RECIPE_ID,
@@ -110,6 +116,8 @@ public final class CustomCraftingRecipeRegistration {
     private static volatile Item integralBronzeFrameworkOutput;
     private static volatile Item oneStopPlantOutput;
     private static volatile Item universalSteamFactoryOutput;
+    private static volatile Item basicOreProcessingPlantOutput;
+    private static volatile Item largeSteamPetalApothecaryOutput;
     private static volatile Item advancedAlchemyCauldronOutput;
     private static volatile Item advancedGeneratorArrayOutput;
     private static volatile Item steamArrayOutput;
@@ -144,6 +152,8 @@ public final class CustomCraftingRecipeRegistration {
             Item integralBronzeFramework = requiredItem("gtohjs:integral_bronze_framework");
             Item oneStopPlant = requiredItem("gtocore:one_stop_rare_earth_processing_plant");
             Item universalSteamFactory = requiredItem("gtocore:universal_steam_factory");
+            Item basicOreProcessingPlant = requiredItem("gtocore:basic_ore_processing_plant");
+            Item largeSteamPetalApothecary = requiredItem("gtocore:large_steam_petal_apothecary");
             Item advancedAlchemyCauldron = requiredItem("gtocore:advanced_alchemy_cauldron");
             Item alchemyCauldron = requiredItem("gtocore:alchemy_cauldron");
             Item advancedGeneratorArray = requiredItem("gtocore:advanced_generator_array");
@@ -216,6 +226,27 @@ public final class CustomCraftingRecipeRegistration {
                     'C', new MaterialEntry(TagPrefix.pipeLargeFluid, GTMaterials.Bronze),
                     'D', new MaterialEntry(TagPrefix.gear, GTMaterials.Bronze),
                     'E', new MaterialEntry(TagPrefix.plateDouble, GTMaterials.Bronze));
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    LARGE_STEAM_PETAL_APOTHECARY_RECIPE_ID,
+                    largeSteamPetalApothecary,
+                    "PLP",
+                    "LAL",
+                    "PLP",
+                    'P', new MaterialEntry(TagPrefix.plate, GTMaterials.Bronze),
+                    'L', requiredItem("botania:livingrock"),
+                    'A', requiredItem("botania:apothecary_default"));
+
+            VanillaRecipeHelper.addShapedRecipe(
+                    BASIC_ORE_PROCESSING_PLANT_RECIPE_ID,
+                    basicOreProcessingPlant,
+                    "MPM",
+                    "GFG",
+                    "MPM",
+                    'M', GTMachines.STEAM_MACERATOR.left().asItem(),
+                    'P', new MaterialEntry(TagPrefix.pipeLargeFluid, GTMaterials.Bronze),
+                    'G', new MaterialEntry(TagPrefix.gear, GTMaterials.Bronze),
+                    'F', new MaterialEntry(TagPrefix.frameGt, GTMaterials.Bronze));
 
             VanillaRecipeHelper.addShapedRecipe(
                     ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID,
@@ -413,6 +444,8 @@ public final class CustomCraftingRecipeRegistration {
             integralBronzeFrameworkOutput = integralBronzeFramework;
             oneStopPlantOutput = oneStopPlant;
             universalSteamFactoryOutput = universalSteamFactory;
+            basicOreProcessingPlantOutput = basicOreProcessingPlant;
+            largeSteamPetalApothecaryOutput = largeSteamPetalApothecary;
             advancedAlchemyCauldronOutput = advancedAlchemyCauldron;
             advancedGeneratorArrayOutput = advancedGeneratorArray;
             steamArrayOutput = steamArray;
@@ -453,7 +486,7 @@ public final class CustomCraftingRecipeRegistration {
             throw new IllegalArgumentException("Invalid crafting item id: " + rawId);
         }
         Item item = RegistriesUtils.getItem(rawId);
-        ResourceLocation actualId = item == null ? null : BuiltInRegistries.ITEM.getKey(item);
+        ResourceLocation actualId = item == null ? null : ForgeRegistries.ITEMS.getKey(item);
         if (item == null || item == Items.AIR || !expectedId.equals(actualId)) {
             throw new IllegalStateException(
                     "Missing or mismatched crafting item: expected=" + expectedId + ", actual=" + actualId);
@@ -469,6 +502,8 @@ public final class CustomCraftingRecipeRegistration {
         integralBronzeFrameworkOutput = null;
         oneStopPlantOutput = null;
         universalSteamFactoryOutput = null;
+        basicOreProcessingPlantOutput = null;
+        largeSteamPetalApothecaryOutput = null;
         advancedAlchemyCauldronOutput = null;
         advancedGeneratorArrayOutput = null;
         steamArrayOutput = null;
@@ -496,6 +531,8 @@ public final class CustomCraftingRecipeRegistration {
                 integralBronzeFrameworkOutput == null || integralBronzeFrameworkOutput == Items.AIR ||
                 oneStopPlantOutput == null || oneStopPlantOutput == Items.AIR ||
                 universalSteamFactoryOutput == null || universalSteamFactoryOutput == Items.AIR ||
+                basicOreProcessingPlantOutput == null || basicOreProcessingPlantOutput == Items.AIR ||
+                largeSteamPetalApothecaryOutput == null || largeSteamPetalApothecaryOutput == Items.AIR ||
                 advancedAlchemyCauldronOutput == null || advancedAlchemyCauldronOutput == Items.AIR ||
                 advancedGeneratorArrayOutput == null || advancedGeneratorArrayOutput == Items.AIR ||
                 steamArrayOutput == null || steamArrayOutput == Items.AIR ||
@@ -540,7 +577,7 @@ public final class CustomCraftingRecipeRegistration {
             Item actualOutput = recipe.getResultItem(server.registryAccess()).getItem();
             if (recipe.getType() != RecipeType.CRAFTING || actualOutput != expectedOutput) {
                 invalid.add(id + "{type=" + recipe.getType() + ", output=" +
-                        BuiltInRegistries.ITEM.getKey(actualOutput) + "}");
+                        ForgeRegistries.ITEMS.getKey(actualOutput) + "}");
             }
         });
         if (!missing.isEmpty() || !invalid.isEmpty()) {
@@ -558,6 +595,8 @@ public final class CustomCraftingRecipeRegistration {
         outputs.put(resolveShapedRecipeId(INTEGRAL_BRONZE_FRAMEWORK_RECIPE_ID), integralBronzeFrameworkOutput);
         outputs.put(resolveShapedRecipeId(ONE_STOP_RARE_EARTH_PLANT_RECIPE_ID), oneStopPlantOutput);
         outputs.put(resolveShapedRecipeId(UNIVERSAL_STEAM_FACTORY_RECIPE_ID), universalSteamFactoryOutput);
+        outputs.put(resolveShapedRecipeId(BASIC_ORE_PROCESSING_PLANT_RECIPE_ID), basicOreProcessingPlantOutput);
+        outputs.put(resolveShapedRecipeId(LARGE_STEAM_PETAL_APOTHECARY_RECIPE_ID), largeSteamPetalApothecaryOutput);
         outputs.put(resolveShapedRecipeId(ADVANCED_ALCHEMY_CAULDRON_RECIPE_ID), advancedAlchemyCauldronOutput);
         outputs.put(resolveShapedRecipeId(ADVANCED_GENERATOR_ARRAY_RECIPE_ID), advancedGeneratorArrayOutput);
         outputs.put(resolveShapedRecipeId(STEAM_ARRAY_RECIPE_ID), steamArrayOutput);
@@ -593,5 +632,3 @@ public final class CustomCraftingRecipeRegistration {
         return state;
     }
 }
-
-

@@ -1,5 +1,11 @@
 # Controller inputs and hyperdimensional biochemical recipes
 
+The 2026-11-07 extension in `62_mineral_and_biochemical_shortcuts.md` adds
+five exclusive nanite-center batch copies with T2 maintenance filtering and
+no markers/nanites/module/high-temperature requirements. The page supports
+nine item inputs. The three source-derived families documented below retain
+their existing markers, power, half duration and conditions.
+
 ## Scope and authorization
 
 Target: old HJS for GTOCore 0.5.6-beta only. The user confirmed the design after

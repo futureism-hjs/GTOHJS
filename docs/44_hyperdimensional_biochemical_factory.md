@@ -23,7 +23,8 @@ The machine has its own RecipeType, `gtceu:hyperdimensional_biochemical_processi
 - Registry ID: `gtceu:hyperdimensional_biochemical_processing`
 - Group: `GTRecipeTypes.MULTIBLOCK`
 - EU direction: input
-- Item I/O: 6 inputs, 18 outputs
+- Item I/O: 9 inputs, 18 outputs (expanded from 6 for the exclusive batches
+  documented in `62_mineral_and_biochemical_shortcuts.md`)
 - Fluid I/O: 9 inputs, 3 outputs
 - Progress bar: multiple-arrow, left-to-right
 - Sound: chemical

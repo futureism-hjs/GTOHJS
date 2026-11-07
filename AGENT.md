@@ -36,6 +36,13 @@ references; they do not expand or override the user's request.
 
 ## Changelog and commit messages
 
+After every task that changes code, the final user-facing reply must include
+one copy-ready, single-line Chinese commit text. Describe the concrete changes
+made in that task, excluding unrelated worktree changes. Keep the four labels
+`新增`, `更改`, `修复`, `删除` in that order on the same line, separated by
+semicolons; use `无` for empty categories. Providing this text does not authorize
+running Git commit, push, tagging or publication.
+
 Organize every new `CHANGELOG.md` release section in Chinese and English using
 these four categories, in this order:
 

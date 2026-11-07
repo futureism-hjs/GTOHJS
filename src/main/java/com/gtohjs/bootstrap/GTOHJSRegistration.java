@@ -2,6 +2,7 @@ package com.gtohjs.bootstrap;
 
 import com.gtohjs.adaptivenet.AdaptiveNetRegistration;
 import com.gtohjs.gtl.GtlPortedRecipeTypeRegistration;
+import com.gtohjs.gtl.BasicOreProcessingPlantRegistration;
 import com.gtohjs.gtl.ChemicalDistortRegistration;
 import com.gtohjs.gtl.NeutronControlFactoryRegistration;
 import com.gtohjs.gtl.PlatinumRefiningMatrixRegistration;
@@ -31,6 +32,7 @@ public final class GTOHJSRegistration {
     public static void machines() {
         if (!MACHINES.compareAndSet(false, true)) return;
         UniversalSteamFactoryRegistration.register();
+        BasicOreProcessingPlantRegistration.register();
         OneStopRareEarthProcessingPlantRegistration.register();
         HyperdimensionalForgeRegistration.register();
         HyperdimensionalSteamFurnaceRegistration.register();
@@ -42,6 +44,8 @@ public final class GTOHJSRegistration {
         AdvancedSteamArrayRegistration.register();
         AdvancedAlchemyCauldronRegistration.register();
         LargePetalApothecaryRegistration.register();
+        LargeSteamPetalApothecaryRegistration.register();
+        ManaConverterRegistration.register();
         FragmentWorldCollectionMachineRegistration.register();
         ThermalAndIntakeHatchRegistration.register();
         NeutronControlFactoryRegistration.register();
@@ -73,6 +77,7 @@ public final class GTOHJSRegistration {
         FragmentWorldCollectionRecipeTypeRegistration.validateLoaded();
         GtlPortedRecipeTypeRegistration.validateLoaded();
         UniversalSteamFactoryRegistration.validateLoaded();
+        BasicOreProcessingPlantRegistration.validateLoaded();
         OneStopRareEarthProcessingPlantRegistration.validateLoaded();
         HyperdimensionalForgeRegistration.validateLoaded();
         HyperdimensionalSteamFurnaceRegistration.validateLoaded();
@@ -84,6 +89,8 @@ public final class GTOHJSRegistration {
         AdvancedSteamArrayRegistration.validateLoaded();
         AdvancedAlchemyCauldronRegistration.validateLoaded();
         LargePetalApothecaryRegistration.validateLoaded();
+        LargeSteamPetalApothecaryRegistration.validateLoaded();
+        ManaConverterRegistration.validateLoaded();
         FragmentWorldCollectionMachineRegistration.validateLoaded();
         ThermalAndIntakeHatchRegistration.validateLoaded();
         NeutronControlFactoryRegistration.validateLoaded();

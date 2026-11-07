@@ -1,5 +1,19 @@
 # Dev19 feature port to GTOCore 0.5.6-beta
 
+## Whole-line source attribution (2026-11-07)
+
+The user requested stationary source labels whose entire text changes color
+together. `GtlPortedMachineText` now uses the native
+`TooltipHelper.RAINBOW_HSL_SLOW` on one literal Component, replacing the
+per-character fixed rainbow and Chemical Distorter's moving color phases.
+All nine currently attributed machine paths share this helper, including the
+new steam Basic Ore Processing Plant. GTL-Enhancedcore and GregTech Leisure
+source identities are retained, with Chinese/English label prefixes.
+The helper is invoked only from the existing client item-tooltip event.
+Java21 online IDEA clean build and packaged-bytecode checks passed; tooltip
+appearance has not been checked in a running client. This supersedes the
+visual behavior described in the historical2026-10-25 entry below.
+
 ## EnhancedCore structure attribution (2026-10-25)
 
 The seven EnhancedCore-derived machines now append the fixed per-character

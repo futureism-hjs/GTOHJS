@@ -3,29 +3,19 @@ package com.gtohjs.gtl
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.network.chat.Style
-import net.minecraft.network.chat.TextColor
 import net.minecraft.network.chat.contents.TranslatableContents
-import com.gtolib.utils.StringUtils
+import com.gregtechceu.gtceu.client.util.TooltipHelper
 
-/** Bilingual source and tooltip layout for the seven GTL-derived dev10 machines. */
+/** Bilingual machine tooltips and shared whole-line structure attribution. */
 object GtlPortedMachineText {
     private data class Text(val zh: String, val en: String)
-    private const val STRUCTURE_SOURCE = "结构来源：GTL-Enhancedcore"
-    private val structureColors = intArrayOf(
-        0xFF5555, 0xFFAA00, 0xFFFF55, 0x55FF55,
-        0x55FFFF, 0x5555FF, 0xAA00AA, 0xFF55FF
-    )
-
-    /** Fixed per-character rainbow, preserved from the dev19 implementation. */
-    private fun structureSource(): Component = Component.empty().also { result ->
-        STRUCTURE_SOURCE.forEachIndexed { index, character ->
-            result.append(Component.literal(character.toString())
-                .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(structureColors[index % structureColors.size]))))
-        }
-    }
+    /** Called by the client tooltip event; the entire stationary line shares one color. */
+    private fun structureSource(source: String, chinese: Boolean): Component =
+        Component.literal((if (chinese) "结构来源：" else "Structure source: ") + source)
+            .withStyle(TooltipHelper.RAINBOW_HSL_SLOW)
 
     private val machineNames = linkedMapOf(
+        "basic_ore_processing_plant" to Text("基础矿石处理厂", "Basic Ore Processing Plant"),
         "chemical_distort" to Text("深度化学扭曲仪", "Deep Chemical Distorter"),
         "neutron_control_factory" to Text("中子控制工厂", "Neutron Control Factory"),
         "platinum_refining_matrix" to Text("铂系精炼矩阵", "Platinum Refining Matrix"),
@@ -68,13 +58,10 @@ object GtlPortedMachineText {
                 content.key, if (chinese) text.zh else text.en, *content.args
             ).withStyle(old.style)
         }
-        if (path == "chemical_distort") {
-            lines.add(Component.literal(StringUtils.full_color(
-                if (chinese) "结构来源：GregTech Leisure" else "Structure source: GregTech Leisure"
-            )))
-        } else {
-            lines.add(structureSource())
-        }
+        lines.add(structureSource(
+            if (path == "chemical_distort") "GregTech Leisure" else "GTL-Enhancedcore",
+            chinese
+        ))
     }
 
     @JvmStatic
@@ -135,13 +122,6 @@ object GtlPortedMachineText {
         Component.translatableWithFallback(key, requireNotNull(translations[key]) { "Missing machine text: $key" }.zh, *args)
 
     private fun line(key: String, style: ChatFormatting): Component = translated(key).withStyle(style)
-
-    @JvmStatic
-    fun inferredMode(): Component = translated("gtohjs.diagnostic.order.inferred_mode")
-
-    @JvmStatic
-    fun orderFailure(failureName: String): Component =
-        translated("gtohjs.diagnostic.order.${failureName.lowercase()}")
 
     private fun buildTranslations(): Map<String, Text> = linkedMapOf<String, Text>().apply {
         recipeNames.forEach { (path, name) -> put("gtceu.$path", name) }

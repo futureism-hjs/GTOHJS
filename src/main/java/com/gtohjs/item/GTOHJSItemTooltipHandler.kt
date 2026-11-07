@@ -30,6 +30,7 @@ object GTOHJSItemTooltipHandler {
         "advanced_generator_array",
         "advanced_alchemy_cauldron",
         "large_petal_apothecary",
+        "mana_converter",
         "steam_array",
         "advanced_steam_array",
         "electromagnetic_thermal_control_hatch",

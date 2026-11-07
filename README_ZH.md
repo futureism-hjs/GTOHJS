@@ -15,7 +15,7 @@ for the build, deployment and pending runtime verification.
 
 GTO HJS is a compatibility extension for the Minecraft 1.20.1 Forge build of GregTech Odyssey 0.5.6-beta. It expands GTO with more machines and recipes. The project adds items, blocks, machines, multiblock parts, recipe types and recipes through GTOCore's native registration windows without modifying GTOCore or EMI files.
 
-The target source version is `5.6-spe1-for-gtocore-0.5.6-beta`. It retains the old HJS IDs and method-mode recipes, adds seven GTL-derived multiblocks, five adaptive wireless parts and an Infinite Energy Unit, and consolidates native registration ownership. The current source passes a Java 21 online clean build; the first 5.6 JAR passed a fresh 0.5.6-beta save-entry check. Feature-level client checks for later texture, UI, transfer-rate, tooltip, formation and processing changes remain pending. See [the port and architecture record](docs/45_dev19_to_056_port_and_architecture.md) for behavior and verification limits. The GTO-compatible ME Placement Tool remains a separate Mod and is not a GTOHJS dependency.
+The target source version is `5.7-spe2-for-gtocore-0.5.6-beta`. It retains the old HJS IDs and method-mode recipes, adds seven GTL-derived multiblocks, five adaptive wireless parts and an Infinite Energy Unit, and consolidates native registration ownership. The current source passes a Java 21 online clean build; the first 5.6 JAR passed a fresh 0.5.6-beta save-entry check. Feature-level client checks for later texture, UI, transfer-rate, tooltip, formation and processing changes remain pending. See [the port and architecture record](docs/45_dev19_to_056_port_and_architecture.md) for behavior and verification limits. The GTO-compatible ME Placement Tool remains a separate Mod and is not a GTOHJS dependency. See [the spe2 comparison](docs/63_5_7_spe2_version_comparison.md) for the exact previous-build delta.
 
 ## Runtime and development dependencies
 
@@ -45,7 +45,7 @@ $env:JAVA_HOME = '<JDK 21 path>'
 The release artifact is written to:
 
 ```text
-build\libs\gtohjs-5.6-spe1-for-gtocore-0.5.6-beta.jar
+build\libs\gtohjs-5.7-spe2-for-gtocore-0.5.6-beta.jar
 ```
 
 Stop the build and wait for manual dependency handling if a network download fails. Do not package against an unknown or incomplete dependency state.

@@ -1,5 +1,31 @@
 # GTOHJS Documentation Index
 
+- `64_idea_commit_inspection_fixes.md`: nineteen IDEA errors and sixteen
+  project-owned warnings repaired; Java 21 clean-build verification and
+  remaining dependency-advisory boundary.
+
+- `63_5_7_spe2_version_comparison.md`: previous deployed5.7-spe1 baseline,
+  entry-payload comparison, version bump, final clean build and deployment.
+
+- `62_mineral_and_biochemical_shortcuts.md`: six mineral shortcuts, five
+  native-derived biochemical batches, nine item inputs, T2 maintenance
+  filtering, preserved source contracts and validation boundaries.
+
+- `61_large_steam_petal_apothecary.md`: supplied 9 x 7 x 7 structure,
+  native large-steam petal recipes, early workbench crafting, shared bus limits
+  and original controller overlay with 14 x 14 artwork.
+
+- `60_basic_ore_processing_plant.md`: EnhancedCore-shaped steam-age ore
+  processor, native GTO recipes/timing,2000 maximum parallel, steam-aware
+  startup budget, native hatch upgrades and workbench acquisition.
+
+- `59_chemical_distorter_halogen_shortcuts.md`: approved HV bromine/iodine
+  shortcuts, exact IO, convenience loss, retained recycling and verification.
+
+- `59_mana_converter.md`: user-confirmed 3x3x3 lossless bidirectional EU/mana
+  converter, hatch/transaction contracts, post-manasteel MV acquisition and
+  existing provenance-tooltip coverage.
+
 - `../AGENT.md`: public contributor guidance for AI-assisted development,
   documentation, privacy, commit messages and release packaging.
 - `../release/USAGE_zh-CN.txt`: public installation instructions included in
@@ -33,9 +59,9 @@
 > [!WARNING]
 > This project contains AI-generated or AI-assisted code, documentation, textures, and quest content. Review and test it before use.
 
-**Target build version:** `gtohjs-5.6-spe1-for-gtocore-0.5.6-beta.jar` (Java 21 online IDEA clean build; per-change save-entry evidence is recorded in document 45)
+**Target build version:** `gtohjs-5.7-spe2-for-gtocore-0.5.6-beta.jar` (Java 21 online IDEA clean build and previous-build comparison are recorded in document 63)
 
-**Current source version:** `gtohjs-5.6-spe1-for-gtocore-0.5.6-beta` (dev19 feature port and architecture refactor; current verification boundaries are recorded in documents 45 and 46)
+**Current source version:** `gtohjs-5.7-spe2-for-gtocore-0.5.6-beta` (current version comparison in document 63; feature-specific verification boundaries remain in the corresponding documents)
 
 **Runtime baseline:** Minecraft 1.20.1, Forge 47.4.20, Java 21, GTOCore 0.5.6-beta, GTOLib 26.7.4.
 

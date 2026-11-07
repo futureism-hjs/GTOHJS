@@ -3,7 +3,7 @@
 > [!WARNING]
 > 本项目部分代码、文档、材质和任务内容由 AI 辅助生成或制作，可能包含错误、安全问题，或与上游 API 和许可证不兼容。使用、修改或再分发前请先检查和测试。
 
-当前目标版本：`gtohjs-5.6-spe1-for-gtocore-0.5.6-beta.jar`。首版已通过 Java 21 联网清洁构建，用户已进入 0.5.6-beta 新存档；随后发现的材质、UI、实际吞吐和提示文字问题已写入源码，仍需重新构建与客户端复查。
+当前目标版本：`gtohjs-5.7-spe2-for-gtocore-0.5.6-beta.jar`。本版以最近部署的 5.7-spe1 为对比基线，保留现有机器、配方和机制；版本对比与构建部署证据见 [5.7-spe2 记录](docs/63_5_7_spe2_version_comparison.md)。游戏内成型、运行与显示验收以对应功能文档为准。
 
 - [完整英文 README](README_EN.md)
 - [README_ZH 文档](README_ZH.md)

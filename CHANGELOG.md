@@ -1,5 +1,99 @@
 # GTO HJS 更新日志 / Changelog
 
+## 5.7-spe2-for-gtocore-0.5.6-beta - 2026-11-07
+
+Compared with `5.7-spe1-for-gtocore-0.5.6-beta`:
+
+### 中文
+
+#### 新增
+
+- 深度化学扭曲仪新增 6 条矿物处理捷径：晶质铀矿、沥青铀矿在 HV 直接分离铀同位素并产氧，沥青铀矿保留钍和铅；白钨矿、钨酸锂在 EV 直接电解为钨及钙／锂和氧；凯金化合物以 ZPM 电解，保留原产物与 28 秒耗时；氧化硅岩混合物在 HV、4200K 免试剂提纯，保留普通硅岩与低纯度溶液。原生配方与已有卤素捷径保留。
+- 超维度生化工厂新增 5 条专属批量配方：ZPM 诱变剂、干细胞、琼脂粉，以及 UV 生物细胞、鲸鱼座 T 星 E 藻类提取物。沿用纳米中心的核心原料、产量、基础耗时与冰星精灵概率消耗，移除纳米消耗、污染纳米产物、模块与原高温门槛；保留原有生化配方。
+- 新增大型蒸汽花药台：使用 9×7×7 结构和现有大型花药台配方，沿用原生大型蒸汽并行、耗时与超频机制；支持 1～5 个物品输入仓和 1 个物品输出仓，空隙可摆放花卉装饰。控制器采用 14×14 魔力花瓣与符文双状态贴图，区分待机和运行。工作台配方为 4 块青铜板、4 块活石和 1 个普通花药台。
+- 移植蒸汽驱动的基础矿石处理厂：保留 GTL-Enhancedcore 的 7×6×12 青铜结构与 32 格水，使用 GTO 集成矿石处理配方及原生时长；一次一种配方，最高 2000 并行，并按可用蒸汽自动降低启动并行。支持普通、大型、高压和超临界蒸汽仓，任意仓均至少支持 MV 及以下配方，高级仓保留原生更高上限。工作台配方为 4 台青铜蒸汽研磨机、2 根大型青铜流体管道、2 个青铜齿轮和 1 个青铜框架。
+
+#### 更改
+
+- 超维度生化处理配方页的物品输入上限由 6 种扩至 9 种，其余输入输出容量不变；新增的 5 条专属生化配方统一要求 T2 无菌维护过滤，无需迁移标记，已有派生配方的标记与半时长机制保留。
+- 所有 9 台带结构来源说明的移植机器，来源文字统一为整行同步彩色渐变且不滚动，保留 GTL-Enhancedcore／GregTech Leisure 的实际来源署名。
+- 更新开发协作规则：每次代码修改完成后，提供按“新增、更改、修复、删除”排列的单行中文提交文本。
+- 版本升级为 `5.7-spe2`，更新与 spe1 源码基线的版本对比记录和开发文档。
+
+#### 修复
+
+无
+
+#### 删除
+
+无
+
+### English
+
+#### Added
+
+- Added six Deep Chemical Distorter mineral shortcuts: HV uraninite/pitchblende isotope separation with oxygen and retained pitchblende thorium/lead; EV scheelite/tungstate electrolysis into tungsten, calcium/lithium and oxygen; ZPM trinium-compound electrolysis retaining native outputs and 28-second duration; reagent-free HV/4200K naquadah-oxide purification retaining ordinary naquadah and low-purity solution. Native recipes and existing halogen shortcuts remain.
+- Added five Hyperdimensional Biochemical Factory batches: ZPM mutagen, stem cells and agar; UV biological cells and Cetus extract. Preserve nanite-center core inputs, yields, base times and glacio-spirit consumption chances; remove nanite inputs, contaminated-nanite outputs, module and original heat requirements. Existing biochemical recipes remain.
+- Added the Large Steam Petal Apothecary: a 9×7×7 structure using existing Large Petal Apothecary recipes and native large-steam parallel, duration and overclock rules. Supports 1–5 item inputs and one item output, with flowers allowed in gaps. Its 14×14 mana-flower/rune artwork has idle and working states. Workbench recipe: four bronze plates, four livingrock and one default apothecary.
+- Ported the steam-powered Basic Ore Processing Plant, preserving GTL-Enhancedcore's 7×6×12 bronze structure and 32 water blocks. It uses native GTO integrated ore recipes and durations, one recipe at a time and up to 2000 parallel, adapting startup parallel to available steam. Ordinary, large, high-pressure and supercritical hatches are supported; every hatch permits at least MV recipes, while advanced hatches retain higher native limits. Workbench recipe: four bronze steam macerators, two large bronze fluid pipes, two bronze gears and one bronze frame.
+
+#### Changed
+
+- Expanded the hyperdimensional biochemical page from six to nine item inputs; other IO capacities are unchanged. The five new batches require T2 sterile maintenance filtering without migration markers. Existing derived families retain their markers and half-duration behavior.
+- Unified source labels across all nine attributed ported machines into a stationary whole-line cycling color, retaining their GTL-Enhancedcore or GregTech Leisure identity.
+- Updated the development workflow to provide one copy-ready Chinese commit line after each code change, ordered as Added, Changed, Fixed and Removed.
+- Bumped the version to `5.7-spe2` and updated the spe1 source-baseline comparison and development documentation.
+
+#### Fixed
+
+None
+
+#### Removed
+
+None
+
+## 5.7-spe1-for-gtocore-0.5.6-beta - 2026-11-06
+
+Compared with `5.6-spe1-for-gtocore-0.5.6-beta`:
+
+### 中文
+
+#### 新增
+
+- 新增魔力转换器：3×3×3 魔力钢外壳与魔力玻璃结构，至少保留 8 个外壳；手动切换电力转魔力、魔力转电力，双向无损 2 EU = 1 Mana。支持普通及无线能源仓、动力仓和魔力输入输出仓，按当前方向的仓室能力转换，输出堵塞时暂停。
+- 魔力转换器在组装机中制作：MV 机器外壳、魔力钢板、魔力钻石、魔力珍珠、MV 电路、电压线圈、传感器和发射器，消耗 288 mB 焊锡合金，120 EU/t、20 秒。
+
+#### 更改
+
+无
+
+#### 修复
+
+- 修复魔力转换器物品缺少“由 GTO HJS 添加”标志的问题，复用现有物品归属提示。
+
+#### 删除
+
+无
+
+### English
+
+#### Added
+
+- Added the Mana Converter: a 3×3×3 manasteel/mana-glass structure retaining at least eight casings, with persisted manual electricity-to-mana and mana-to-electricity modes at lossless 2 EU = 1 Mana. Ordinary and wireless energy, dynamo and mana hatches are supported; conversion respects the selected hatches' ratings and pauses when blocked.
+- Added its MV Assembler acquisition recipe using an MV hull, manasteel plates, mana diamonds, mana pearls, MV circuits, voltage coils, sensor and emitter; 288 mB soldering alloy, 120 EU/t for 20 seconds.
+
+#### Changed
+
+None
+
+#### Fixed
+
+- Restored the missing Added by GTO HJS attribution on the Mana Converter item using the existing provenance tooltip.
+
+#### Removed
+
+None
+
 ## 5.6-spe1-for-gtocore-0.5.6-beta - 2026-10-25
 
 Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`

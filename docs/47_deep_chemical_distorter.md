@@ -1,5 +1,14 @@
 # Deep Chemical Distorter
 
+The 2026-11-07 additions in `62_mineral_and_biochemical_shortcuts.md` add
+six mineral shortcuts: two uranium, two tungsten, ZPM trinium compound and
+ordinary naquadah purification. The page now has 29 recipes: 21 polymer,
+two halogen and six mineral. The 21-polymer transformation remains unchanged.
+
+The 2026-11-06 addition in `59_chemical_distorter_halogen_shortcuts.md` adds
+two independent HV halogen recipes to this provider, reaching 23 at that stage.
+The native-derived polymer family below remains pinned at 21.
+
 The approved late-HV acquisition and voltage-dependent parallel implementation
 is delivered in `52_chemical_distorter_hv_parallel.md`, including current
 build/deployment evidence and pending client acceptance.

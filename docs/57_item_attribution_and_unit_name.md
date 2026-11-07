@@ -1,5 +1,19 @@
 # Item attribution coverage and Infinite Wireless Energy Unit name
 
+## Mana Converter attribution correction (2026-11-07)
+
+`gtocore:mana_converter` was missing from the existing `GTOCORE_ITEM_PATHS`
+set, so the shared ItemTooltipEvent callback returned before appending its
+translated and colored Added by GTO HJS line. Add this one identity to that
+same set. No new handler, translation key, renderer or registration route
+is introduced. Conversion behavior, acquisition recipe and registry ID stay
+unchanged. Java 21 IDEA MCP online clean build passed in 56 seconds;
+the packaged identity and existing bilingual attribution keys were verified.
+The visible correction requires loading the newly built JAR in a client.
+
+The inventory and deployment evidence below describes the historical
+2026-10-25 audit, not a recount of today's concurrent feature work.
+
 Date: 2026-10-25 (Asia/Shanghai)
 Category: GTOHJS-related
 Status: audited, clean-built and deployed; current client preserved, visual check after user restart.

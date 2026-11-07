@@ -22,7 +22,7 @@ public final class HyperdimensionalBiochemicalRecipeTypeRegistration {
 
     public static final String RECIPE_TYPE_PATH = "hyperdimensional_biochemical_processing";
     public static final ResourceLocation RECIPE_TYPE_ID = GTCEu.id(RECIPE_TYPE_PATH);
-    public static final int ITEM_INPUTS = 6;
+    public static final int ITEM_INPUTS = 9;
     public static final int ITEM_OUTPUTS = 18;
     public static final int FLUID_INPUTS = 9;
     public static final int FLUID_OUTPUTS = 3;

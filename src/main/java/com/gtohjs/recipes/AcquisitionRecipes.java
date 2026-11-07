@@ -17,6 +17,7 @@ import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.hepdd.gtmthings.data.CustomItems;
 import com.gtocore.common.data.GTORecipeTypes;
+import com.gtocore.common.data.GTOMaterials;
 import com.gtohjs.GTOHJS;
 import com.gtohjs.api.GTRecipeBatchSource;
 import com.gtohjs.api.RecipeSourceSupport;
@@ -25,21 +26,21 @@ import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeType;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /** Approved acquisition parameters; the existing CoreMod alone saves the builders. */
 public final class AcquisitionRecipes implements GTRecipeBatchSource {
-    private static final int EXPECTED_RECIPES = 15;
+    private static final int EXPECTED_RECIPES = 16;
     private record Spec(String output, RecipeType type, long eut, int ticks,
                         List<ItemIngredient> items, List<FluidStack> fluids) {
         ResourceLocation rawId() {
-            return GTOHJS.id("acquisition/" + new ResourceLocation(output).getPath());
+            return GTOHJS.id("acquisition/" + ResourceLocation.parse(output).getPath());
         }
     }
 
@@ -121,7 +122,7 @@ public final class AcquisitionRecipes implements GTRecipeBatchSource {
 
     static ItemStack requireStack(String id, int count) {
         ItemStack stack = RecipeSourceSupport.itemStack(id, count, "");
-        if (stack.isEmpty() || !new ResourceLocation(id).equals(BuiltInRegistries.ITEM.getKey(stack.getItem()))) {
+        if (stack.isEmpty() || !ResourceLocation.parse(id).equals(ForgeRegistries.ITEMS.getKey(stack.getItem()))) {
             throw new IllegalStateException("Missing acquisition item: " + id);
         }
         return stack;
@@ -212,7 +213,7 @@ public final class AcquisitionRecipes implements GTRecipeBatchSource {
                                          CustomFluidTank[] tanks) {
         // Cheap rejection before allocating copies for the native simulator.
         for (Content<ItemIngredient> input : candidate.itemInputs) {
-            if (!input.isEmpty() && java.util.Arrays.stream(inventory.stacks).noneMatch(input.inner::test)) return false;
+            if (!input.isEmpty() && java.util.Arrays.stream(inventory.stacks).noneMatch(input.inner)) return false;
         }
         for (Content<FluidIngredient> input : candidate.fluidInputs) {
             if (!input.isEmpty() && java.util.Arrays.stream(tanks).noneMatch(tank -> input.inner.test(tank.getFluid()))) {
@@ -229,6 +230,17 @@ public final class AcquisitionRecipes implements GTRecipeBatchSource {
 
     private static List<Spec> createSpecs() {
         return List.of(
+                new Spec("gtocore:mana_converter", GTORecipeTypes.ASSEMBLER_RECIPES, 120L, 400,
+                        List.of(
+                                item("gtceu:mv_machine_hull", 1),
+                                material(TagPrefix.plate, GTOMaterials.Manasteel, 8),
+                                item("botania:mana_diamond", 4),
+                                item("botania:mana_pearl", 4),
+                                circuit(CustomTags.MV_CIRCUITS, 2),
+                                part(GTItems.VOLTAGE_COIL_MV.get(), 2),
+                                part(GTItems.SENSOR_MV.get(), 1),
+                                part(GTItems.EMITTER_MV.get(), 1)),
+                        List.of(GTMaterials.SolderingAlloy.getFluid(288))),
                 new Spec("gtocore:chemical_distort", GTORecipeTypes.ASSEMBLER_RECIPES, 480L, 4800,
                         List.of(
                                 item("gtceu:hv_chemical_reactor", 16),
