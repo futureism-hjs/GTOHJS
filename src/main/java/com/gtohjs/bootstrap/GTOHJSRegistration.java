@@ -42,6 +42,7 @@ public final class GTOHJSRegistration {
         AdvancedSteamArrayRegistration.register();
         AdvancedAlchemyCauldronRegistration.register();
         LargePetalApothecaryRegistration.register();
+        ManaConverterRegistration.register();
         FragmentWorldCollectionMachineRegistration.register();
         ThermalAndIntakeHatchRegistration.register();
         NeutronControlFactoryRegistration.register();
@@ -84,6 +85,7 @@ public final class GTOHJSRegistration {
         AdvancedSteamArrayRegistration.validateLoaded();
         AdvancedAlchemyCauldronRegistration.validateLoaded();
         LargePetalApothecaryRegistration.validateLoaded();
+        ManaConverterRegistration.validateLoaded();
         FragmentWorldCollectionMachineRegistration.validateLoaded();
         ThermalAndIntakeHatchRegistration.validateLoaded();
         NeutronControlFactoryRegistration.validateLoaded();

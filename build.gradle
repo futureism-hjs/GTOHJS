@@ -109,6 +109,16 @@ tasks.register('verifyOptimizationContracts', JavaExec) {
 }
 tasks.named('check') { dependsOn tasks.named('verifyOptimizationContracts') }
 
+tasks.register('verifyManaConversion', JavaExec) {
+    group = 'verification'
+    description = 'Checks lossless native-storage transfer planning, refusal, rollback and overflow.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.gtohjs.machine.ManaConversionChecks'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+}
+tasks.named('check') { dependsOn tasks.named('verifyManaConversion') }
+
 tasks.named('processResources', ProcessResources).configure {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     def encodedTextures = [

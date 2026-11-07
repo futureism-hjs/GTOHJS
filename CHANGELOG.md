@@ -1,5 +1,47 @@
 # GTO HJS 更新日志 / Changelog
 
+## 5.7-spe1-for-gtocore-0.5.6-beta - 2026-11-06
+
+Compared with `5.6-spe1-for-gtocore-0.5.6-beta`:
+
+### 中文
+
+#### 新增
+
+- 新增魔力转换器：3×3×3 魔力钢外壳与魔力玻璃结构，至少保留 8 个外壳；手动切换电力转魔力、魔力转电力，双向无损 2 EU = 1 Mana。支持普通及无线能源仓、动力仓和魔力输入输出仓，按当前方向的仓室能力转换，输出堵塞时暂停。
+- 魔力转换器在组装机中制作：MV 机器外壳、魔力钢板、魔力钻石、魔力珍珠、MV 电路、电压线圈、传感器和发射器，消耗 288 mB 焊锡合金，120 EU/t、20 秒。
+
+#### 更改
+
+无
+
+#### 修复
+
+无
+
+#### 删除
+
+无
+
+### English
+
+#### Added
+
+- Added the Mana Converter: a 3×3×3 manasteel/mana-glass structure retaining at least eight casings, with persisted manual electricity-to-mana and mana-to-electricity modes at lossless 2 EU = 1 Mana. Ordinary and wireless energy, dynamo and mana hatches are supported; conversion respects the selected hatches' ratings and pauses when blocked.
+- Added its MV Assembler acquisition recipe using an MV hull, manasteel plates, mana diamonds, mana pearls, MV circuits, voltage coils, sensor and emitter; 288 mB soldering alloy, 120 EU/t for 20 seconds.
+
+#### Changed
+
+None
+
+#### Fixed
+
+None
+
+#### Removed
+
+None
+
 ## 5.6-spe1-for-gtocore-0.5.6-beta - 2026-10-25
 
 Compared with the latest GitHub release, `5.0-per1-for-gtocore-0.5.6-beta`

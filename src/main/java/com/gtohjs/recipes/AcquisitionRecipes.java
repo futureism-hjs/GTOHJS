@@ -17,6 +17,7 @@ import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.hepdd.gtmthings.data.CustomItems;
 import com.gtocore.common.data.GTORecipeTypes;
+import com.gtocore.common.data.GTOMaterials;
 import com.gtohjs.GTOHJS;
 import com.gtohjs.api.GTRecipeBatchSource;
 import com.gtohjs.api.RecipeSourceSupport;
@@ -35,7 +36,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 /** Approved acquisition parameters; the existing CoreMod alone saves the builders. */
 public final class AcquisitionRecipes implements GTRecipeBatchSource {
-    private static final int EXPECTED_RECIPES = 15;
+    private static final int EXPECTED_RECIPES = 16;
     private record Spec(String output, RecipeType type, long eut, int ticks,
                         List<ItemIngredient> items, List<FluidStack> fluids) {
         ResourceLocation rawId() {
@@ -229,6 +230,17 @@ public final class AcquisitionRecipes implements GTRecipeBatchSource {
 
     private static List<Spec> createSpecs() {
         return List.of(
+                new Spec("gtocore:mana_converter", GTORecipeTypes.ASSEMBLER_RECIPES, 120L, 400,
+                        List.of(
+                                item("gtceu:mv_machine_hull", 1),
+                                material(TagPrefix.plate, GTOMaterials.Manasteel, 8),
+                                item("botania:mana_diamond", 4),
+                                item("botania:mana_pearl", 4),
+                                circuit(CustomTags.MV_CIRCUITS, 2),
+                                part(GTItems.VOLTAGE_COIL_MV.get(), 2),
+                                part(GTItems.SENSOR_MV.get(), 1),
+                                part(GTItems.EMITTER_MV.get(), 1)),
+                        List.of(GTMaterials.SolderingAlloy.getFluid(288))),
                 new Spec("gtocore:chemical_distort", GTORecipeTypes.ASSEMBLER_RECIPES, 480L, 4800,
                         List.of(
                                 item("gtceu:hv_chemical_reactor", 16),
