@@ -17,7 +17,7 @@ Compared with `5.6-spe1-for-gtocore-0.5.6-beta`:
 
 #### 修复
 
-无
+- 修复魔力转换器物品缺少“由 GTO HJS 添加”标志的问题，复用现有物品归属提示。
 
 #### 删除
 
@@ -36,7 +36,7 @@ None
 
 #### Fixed
 
-None
+- Restored the missing Added by GTO HJS attribution on the Mana Converter item using the existing provenance tooltip.
 
 #### Removed
 

@@ -4,7 +4,8 @@
   shortcuts, exact IO, convenience loss, retained recycling and verification.
 
 - `59_mana_converter.md`: user-confirmed 3x3x3 lossless bidirectional EU/mana
-  converter, hatch/transaction contracts and post-manasteel MV acquisition.
+  converter, hatch/transaction contracts, post-manasteel MV acquisition and
+  existing provenance-tooltip coverage.
 
 - `../AGENT.md`: public contributor guidance for AI-assisted development,
   documentation, privacy, commit messages and release packaging.

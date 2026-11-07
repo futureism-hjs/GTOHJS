@@ -7,6 +7,13 @@ passed through IDEA MCP; client-load and hands-on acceptance remain pending.
 
 ## Player behavior
 
+Attribution follow-up (2026-11-07): include `mana_converter` in the existing
+`GTOHJSItemTooltipHandler.GTOCORE_ITEM_PATHS` set so its item displays the
+same localized Added by GTO HJS line as other addon-owned `gtocore` items.
+The original implementation omitted that identity; no second callback or
+new language key is needed. Java 21 IDEA MCP online clean-build and packaged
+identity/language-key checks passed; client visual acceptance remains pending.
+
 `gtocore:mana_converter` has two manually selected, persisted directions:
 electricity to mana (default) and mana to electricity. Both use exactly
 2 EU = 1 Mana without an additional converter loss. Use the left mode tab
